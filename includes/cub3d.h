@@ -10,6 +10,8 @@
 #define HEIGHT 600
 #define TILE_SIZE 64
 #define MINIMAP_SCALE 0.5
+#define MAP_WIDTH 9
+#define MAP_HEIGHT 5
 
 #define WALL_COLOR 0x444444 // Dark gray
 #define PLAYER_COLOR 0xFF0000 // Red

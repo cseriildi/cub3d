@@ -68,6 +68,33 @@ void	draw_line(t_data *data, int start_x, int start_y, int end_x, int end_y, int
 	my_mlx_pixel_put(data, end_x, end_y, color);
 }
 
+void	cast_ray(t_data *data, double ray_angle)
+{
+	double	ray_x;
+	double	ray_y;
+
+	ray_angle = fmod(ray_angle, 2 * M_PI);
+	if (ray_angle < 0)
+		ray_angle += 2 * M_PI;
+	if (ray_angle == 0 || ray_angle == M_PI)
+	{
+		ray_x = data->player_x;
+		ray_y = data->player_y;
+	}
+	else if (ray_angle < M_PI)
+	{
+		ray_y = floor(data->player_y);
+		ray_x = data->player_x + (data->player_y - ray_y) / tan(ray_angle);
+	}
+	else
+	{
+		ray_y = floor(data->player_y) + TILE_SIZE * MINIMAP_SCALE;
+		ray_x = data->player_x + (data->player_y - ray_y) / tan(ray_angle);
+	}
+	draw_line(data, data->player_x,
+		data->player_y, ray_x, ray_y , 0x00FF00);
+}
+
 void	draw_minimap(t_data *data)
 {
 	int	map_rows = 5;
@@ -107,9 +134,10 @@ void	draw_minimap(t_data *data)
 	player_x = (int)(data->player_x * tile_size) + (tile_size / 2);
 	player_y = (int)(data->player_y * tile_size) + (tile_size / 2);
 	draw_rectangle(data, player_x - 3, player_y - 3, 6, 6, PLAYER_COLOR);
-	dir_x = player_x + cos(data->player_angle) * tile_size;
-	dir_y = player_y + sin(data->player_angle) * tile_size;
+	dir_x = player_x + cos(data->player_angle) * 10;
+	dir_y = player_y + sin(data->player_angle) * 10;
 	draw_line(data, player_x, player_y, dir_x, dir_y, PLAYER_COLOR);
+	cast_ray(data, data->player_angle);
 }
 
 void	draw_vertical_line(t_data *data, int x, int wall_top, int wall_bottom, int wall_color)
@@ -204,7 +232,7 @@ void	initialize_map(t_data *data)
 {
 	int		i;
 	int		j;
-	char	temp_map[5][9] = {
+	char	temp_map[MAP_HEIGHT][MAP_WIDTH] = {
 		"11111111",
 		"10000001",
 		"111N0101",
