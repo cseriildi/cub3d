@@ -10,140 +10,66 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-void	draw_rectangle(t_data *data, int x, int y, int width, int height, int color)
+void	draw_rectangle(t_data *data, t_rectangle *rect)
 {
 	int	i;
 	int	j;
 
 	j = 0;
-	while (j < height)
+	while (j < rect->height)
 	{
 		i = 0;
-		while (i < width)
+		while (i < rect->width)
 		{
-			my_mlx_pixel_put(data, x + i, y + j, color);
+			my_mlx_pixel_put(data, rect->x + i, rect->y + j, rect->color);
 			i++;
 		}
 		j++;
 	}
 }
 
-void	draw_line(t_data *data, int start_x, int start_y, int end_x, int end_y, int color)
+void	draw_line(t_data *data, t_line *line)
 {
-	int	delta_x;
-	int	delta_y;
-	int	step_x;
-	int	step_y;
-	int	error2;
-	int	error;
+	t_line_params	params;
 
-	delta_x = abs(end_x - start_x);
-	delta_y = abs(end_y - start_y);
-	if (start_x < end_x)
-		step_x = 1;
+	params.delta_x = abs(line->end_x - line->start_x);
+	params.delta_y = abs(line->end_y - line->start_y);
+	if (line->start_x < line->end_x)
+		params.step_x = 1;
 	else
-		step_x = -1;
-	if (start_y < end_y)
-		step_y = 1;
+		params.step_x = -1;
+	if (line->start_y < line->end_y)
+		params.step_y = 1;
 	else
-		step_y = -1;
-	error = delta_x - delta_y;
+		params.step_y = -1;
+	params.error = params.delta_x - params.delta_y;
 	while (1)
 	{
-		my_mlx_pixel_put(data, start_x, start_y, color);
-		if (start_x == end_x && start_y == end_y)
+		my_mlx_pixel_put(data, line->start_x, line->start_y, line->color);
+		if (line->start_x == line->end_x && line->start_y == line->end_y)
 			break ;
-		error2 = error * 2;
-		if (error2 > -delta_y)
+		params.error2 = params.error * 2;
+		if (params.error2 > -params.delta_y)
 		{
-			error -= delta_y;
-			start_x += step_x;
+			params.error -= params.delta_y;
+			line->start_x += params.step_x;
 		}
-		if (error2 < delta_x)
+		if (params.error2 < params.delta_x)
 		{
-			error += delta_x;
-			start_y += step_y;
+			params.error += params.delta_x;
+			line->start_y += params.step_y;
 		}
 	}
-	my_mlx_pixel_put(data, end_x, end_y, color);
 }
 
-void	cast_ray(t_data *data, double ray_angle)
-{
-	double	ray_x;
-	double	ray_y;
-
-	ray_angle = fmod(ray_angle, 2 * M_PI);
-	if (ray_angle < 0)
-		ray_angle += 2 * M_PI;
-	if (ray_angle == 0 || ray_angle == M_PI)
-	{
-		ray_x = data->player_x;
-		ray_y = data->player_y;
-	}
-	else if (ray_angle < M_PI)
-	{
-		ray_y = floor(data->player_y);
-		ray_x = data->player_x + (data->player_y - ray_y) / tan(ray_angle);
-	}
-	else
-	{
-		ray_y = floor(data->player_y) + TILE_SIZE * MINIMAP_SCALE;
-		ray_x = data->player_x + (data->player_y - ray_y) / tan(ray_angle);
-	}
-	draw_line(data, data->player_x,
-		data->player_y, ray_x, ray_y , 0x00FF00);
-}
-
-void	draw_minimap(t_data *data)
-{
-	int	map_rows = 5;
-	int	map_cols = 8;
-	int	tile_size = TILE_SIZE * MINIMAP_SCALE;
-	int	row;
-	int	col;
-	int	color;
-	int	x;
-	int	y;
-	int	player_x;
-	int	player_y;
-	int	dir_x;
-	int	dir_y;
-
-	row = 0;
-	while (row < map_rows)
-	{
-		col = 0;
-		while (col < map_cols)
-		{
-			if (data->map[row][col] == '1')
-				color = WALL_COLOR;
-			else
-				color = FLOOR_COLOR;
-			x = col * tile_size;
-			y = row * tile_size;
-			draw_rectangle(data, x, y, tile_size, tile_size, color);
-			draw_line(data, x, y, x + tile_size, y, GRID_COLOR);
-			draw_line(data, x, y, x, y + tile_size, GRID_COLOR);
-			col++;
-		}
-		row++;
-	}
-	draw_line(data, 0, map_rows * tile_size, map_cols * tile_size, map_rows * tile_size, GRID_COLOR);
-	draw_line(data, map_cols * tile_size, 0, map_cols * tile_size, map_rows * tile_size, GRID_COLOR);
-	player_x = (int)(data->player_x * tile_size) + (tile_size / 2);
-	player_y = (int)(data->player_y * tile_size) + (tile_size / 2);
-	draw_rectangle(data, player_x - 3, player_y - 3, 6, 6, PLAYER_COLOR);
-	dir_x = player_x + cos(data->player_angle) * 10;
-	dir_y = player_y + sin(data->player_angle) * 10;
-	draw_line(data, player_x, player_y, dir_x, dir_y, PLAYER_COLOR);
-	cast_ray(data, data->player_angle);
-}
-
-void	draw_vertical_line(t_data *data, int x, int wall_top, int wall_bottom, int wall_color)
+void	draw_vertical_line(t_data *data, int x, int wall_height, int wall_color)
 {
 	int	y;
+	int	wall_top;
+	int	wall_bottom;
 
+	wall_top = (HEIGHT - wall_height) / 2;
+	wall_bottom = wall_top + wall_height - 1;
 	y = 0;
 	while (y < wall_top)
 	{
@@ -164,25 +90,270 @@ void	draw_vertical_line(t_data *data, int x, int wall_top, int wall_bottom, int 
 	}
 }
 
+static void	check_horizontal(t_data *data, double player_x,
+	double player_y, t_ray *ray)
+{
+	t_ray_trace_state	ray_state;
+
+	ray_state.direction = (ray->angle > 0 && ray->angle < M_PI);
+	if (ray_state.direction)
+	{
+		ray_state.y_intercept = floor(player_y) + 1;
+		ray_state.y_step = 1;
+	}
+	else
+	{
+		ray_state.y_intercept = floor(player_y);
+		ray_state.y_step = -1;
+	}
+	ray_state.x_intercept
+		= player_x + (ray_state.y_intercept - player_y) / tan(ray->angle);
+	ray_state.x_step = ray_state.y_step / tan(ray->angle);
+	ray_state.cur_x = ray_state.x_intercept;
+	ray_state.cur_y = ray_state.y_intercept;
+	while (ray_state.cur_x >= 0 && ray_state.cur_x < data->map_width
+		&& ray_state.cur_y >= 0 && ray_state.cur_y < data->map_height)
+	{
+		ray_state.map_x = (int)ray_state.cur_x;
+		if (ray_state.direction)
+			ray_state.map_y = (int)ray_state.cur_y;
+		else
+			ray_state.map_y = (int)(ray_state.cur_y - 1);
+		if (data->map[ray_state.map_y][ray_state.map_x] == '1')
+		{
+			ray_state.dist = sqrt(pow(ray_state.cur_x - player_x, 2)
+					+ pow(ray_state.cur_y - player_y, 2));
+			if (ray_state.dist < ray->closest_distance)
+			{
+				ray->closest_distance = ray_state.dist;
+				ray->hit_x = ray_state.cur_x;
+				ray->hit_y = ray_state.cur_y;
+				ray->hit_color = HORIZONTAL_RAY_COLOR;
+			}
+			break ;
+		}
+		ray_state.cur_x += ray_state.x_step;
+		ray_state.cur_y += ray_state.y_step;
+	}
+}
+
+void	check_vertical(t_data *data, double player_x,
+	double player_y, t_ray *ray)
+{
+	t_ray_trace_state	ray_state;
+
+	ray_state.direction = (ray->angle < M_PI_2 || ray->angle > 3 * M_PI_2);
+	if (ray_state.direction)
+	{
+		ray_state.x_intercept = floor(player_x) + 1;
+		ray_state.x_step = 1;
+	}
+	else
+	{
+		ray_state.x_intercept = floor(player_x);
+		ray_state.x_step = -1;
+	}
+	ray_state.y_intercept
+		= player_y + (ray_state.x_intercept - player_x) * tan(ray->angle);
+	ray_state.y_step = ray_state.x_step * tan(ray->angle);
+	ray_state.cur_x = ray_state.x_intercept;
+	ray_state.cur_y = ray_state.y_intercept;
+	while (ray_state.cur_x >= 0 && ray_state.cur_x < data->map_width
+		&& ray_state.cur_y >= 0 && ray_state.cur_y < data->map_height)
+	{
+		if (ray_state.direction)
+			ray_state.map_x = (int)ray_state.cur_x;
+		else
+			ray_state.map_x = (int)(ray_state.cur_x - 1);
+		ray_state.map_y = (int)ray_state.cur_y;
+		if (data->map[ray_state.map_y][ray_state.map_x] == '1')
+		{
+			ray_state.dist = sqrt(pow(ray_state.cur_x - player_x, 2)
+					+ pow(ray_state.cur_y - player_y, 2));
+			if (ray_state.dist < ray->closest_distance)
+			{
+				ray->closest_distance = ray_state.dist;
+				ray->hit_x = ray_state.cur_x;
+				ray->hit_y = ray_state.cur_y;
+				ray->hit_color = VERTICAL_RAY_COLOR;
+			}
+			break ;
+		}
+		ray_state.cur_x += ray_state.x_step;
+		ray_state.cur_y += ray_state.y_step;
+	}
+}
+
+void	cast_ray(t_data *data, double ray_angle, int ray_index)
+{
+	t_ray	ray;
+	t_line	line;
+
+	ray.angle = fmod(ray_angle, 2 * M_PI);
+	if (ray.angle < 0)
+		ray.angle += 2 * M_PI;
+	ray.closest_distance = DBL_MAX;
+	ray.hit_x = 0;
+	ray.hit_y = 0;
+	ray.hit_color = 0;
+	check_horizontal(data, data->player_x + 0.5, data->player_y + 0.5, &ray);
+	check_vertical(data, data->player_x + 0.5, data->player_y + 0.5, &ray);
+	if (ray.closest_distance < DBL_MAX)
+	{
+		line.start_x = (data->player_x + 0.5) * TILE_SIZE * MINIMAP_SCALE;
+		line.start_y = (data->player_y + 0.5) * TILE_SIZE * MINIMAP_SCALE;
+		line.end_x = ray.hit_x * TILE_SIZE * MINIMAP_SCALE;
+		line.end_y = ray.hit_y * TILE_SIZE * MINIMAP_SCALE;
+		line.color = ray.hit_color;
+		draw_line(data, &line);
+		if (ray.closest_distance > 0.01)
+		{
+			data->ray_distance[ray_index]
+				= ray.closest_distance * cos(ray.angle - data->player_angle);
+			data->ray_color[ray_index] = ray.hit_color;
+		}
+		else
+		{
+			data->ray_distance[ray_index] = DBL_MAX;
+			data->ray_color[ray_index] = 0;
+		}
+	}
+	else
+	{
+		data->ray_distance[ray_index] = DBL_MAX;
+		data->ray_color[ray_index] = 0;
+	}
+}
+
+void	cast_rays(t_data *data)
+{
+	double	ray_angle;
+	double	angle_increment;
+	int		ray_index;
+
+	ray_index = 0;
+	angle_increment = FIELD_OF_VIEW / WIDTH;
+	ray_angle = data->player_angle - FIELD_OF_VIEW / 2;
+	while (ray_angle < data->player_angle + FIELD_OF_VIEW / 2)
+	{
+		cast_ray(data, ray_angle, ray_index);
+		ray_angle += angle_increment;
+		ray_index++;
+	}
+}
+
 void	render_scene(t_data *data)
 {
 	int	x;
-	int	wall_top;
-	int	wall_bottom;
+	int	wall_height;
 
 	x = 0;
 	while (x < WIDTH)
 	{
-		wall_top = HEIGHT / 2;
-		wall_bottom = HEIGHT / 2;
-		draw_vertical_line(data, x, wall_top, wall_bottom, WALL_COLOR);
+		if (data->ray_distance[x] > 0)
+		{
+			wall_height = (TILE_SIZE / data->ray_distance[x]) * 10;
+			if (wall_height > HEIGHT)
+				wall_height = HEIGHT;
+			draw_vertical_line(data, x, wall_height, data->ray_color[x]);
+		}
 		x++;
 	}
 }
 
+void draw_minimap(t_data *data)
+{
+	int			row;
+	int			col;
+	t_line		line;
+	t_minimap	minimap;
+	t_rectangle	rect;
+
+	minimap.map_rows = 5;
+	minimap.map_cols = 8;
+	minimap.tile_size = TILE_SIZE * MINIMAP_SCALE;
+	minimap.player_x
+		= (int)(data->player_x * minimap.tile_size) + (minimap.tile_size / 2);
+	minimap.player_y
+		= (int)(data->player_y * minimap.tile_size) + (minimap.tile_size / 2);
+	row = 0;
+	while (row < minimap.map_rows)
+	{
+		col = 0;
+		while (col < minimap.map_cols)
+		{
+			if (data->map[row][col] == '1')
+			{
+				rect.x = col * minimap.tile_size;
+				rect.y = row * minimap.tile_size;
+				rect.width = minimap.tile_size;
+				rect.height = minimap.tile_size;
+				rect.color = WALL_COLOR;
+				draw_rectangle(data, &rect);
+			}
+			else
+			{
+				rect.x = col * minimap.tile_size;
+				rect.y = row * minimap.tile_size;
+				rect.width = minimap.tile_size;
+				rect.height = minimap.tile_size;
+				rect.color = FLOOR_COLOR;
+				draw_rectangle(data, &rect);
+			}
+			line.start_x = col * minimap.tile_size;
+			line.start_y = row * minimap.tile_size;
+			line.end_x = col * minimap.tile_size + minimap.tile_size;
+			line.end_y = row * minimap.tile_size;
+			line.color = GRID_COLOR;
+			draw_line(data, &line);
+			line.start_x = col * minimap.tile_size;
+			line.start_y = row * minimap.tile_size;
+			line.end_x = col * minimap.tile_size;
+			line.end_y = row * minimap.tile_size + minimap.tile_size;
+			draw_line(data, &line);
+			col++;
+		}
+		row++;
+	}
+	line.start_x = 0;
+	line.start_y = minimap.map_rows * minimap.tile_size;
+	line.end_x = minimap.map_cols * minimap.tile_size;
+	line.end_y = minimap.map_rows * minimap.tile_size;
+	line.color = GRID_COLOR;
+	draw_line(data, &line);
+	line.start_x = minimap.map_cols * minimap.tile_size;
+	line.start_y = 0;
+	line.end_x = minimap.map_cols * minimap.tile_size;
+	line.end_y = minimap.map_rows * minimap.tile_size;
+	draw_line(data, &line);
+	minimap.dir_x = minimap.player_x + cos(data->player_angle) * 10;
+	minimap.dir_y = minimap.player_y + sin(data->player_angle) * 10;
+	rect.x = minimap.player_x - 3;
+	rect.y = minimap.player_y - 3;
+	rect.width = 6;
+	rect.height = 6;
+	rect.color = PLAYER_COLOR;
+	draw_rectangle(data, &rect);
+	line.start_x = minimap.player_x;
+	line.start_y = minimap.player_y;
+	line.end_x = minimap.dir_x;
+	line.end_y = minimap.dir_y;
+	line.color = PLAYER_COLOR;
+	draw_line(data, &line);
+	cast_rays(data);
+}
+
 int	close_window(t_data *data)
 {
-	mlx_destroy_window(data->mlx, data->win);
+	if (data->img)
+		mlx_destroy_image(data->mlx, data->img);
+	if (data->win)
+		mlx_destroy_window(data->mlx, data->win);
+	if (data->mlx)
+	{
+		mlx_destroy_display(data->mlx);
+		free(data->mlx);
+	}
 	exit(0);
 }
 
@@ -208,7 +379,7 @@ void	update_player_position(t_data *data, int keycode)
 		data->player_angle -= 2 * M_PI;
 }
 
-int key_hook(int keycode, t_data *data)
+int	key_hook(int keycode, t_data *data)
 {
 	if (keycode == KEY_ESC)
 		close_window(data);
@@ -219,14 +390,15 @@ int key_hook(int keycode, t_data *data)
 		printf("Error: Failed to recreate image.\n");
 		close_window(data);
 	}
-	data->addr = mlx_get_data_addr(data->img, &data->bpp, &data->line_len, &data->endian);
+	data->addr = mlx_get_data_addr(data->img, &data->bpp,
+			&data->line_len, &data->endian);
 	update_player_position(data, keycode);
+	cast_rays(data);
 	render_scene(data);
 	draw_minimap(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
 	return (0);
 }
-
 
 void	initialize_map(t_data *data)
 {
@@ -235,7 +407,7 @@ void	initialize_map(t_data *data)
 	char	temp_map[MAP_HEIGHT][MAP_WIDTH] = {
 		"11111111",
 		"10000001",
-		"111N0101",
+		"111E0101",
 		"10000101",
 		"11111111"
 	};
@@ -247,7 +419,8 @@ void	initialize_map(t_data *data)
 		while (j < 8)
 		{
 			data->map[i][j] = temp_map[i][j];
-			if (temp_map[i][j] == 'N' || temp_map[i][j] == 'S' || temp_map[i][j] == 'E' || temp_map[i][j] == 'W')
+			if (temp_map[i][j] == 'N' || temp_map[i][j] == 'S'
+				|| temp_map[i][j] == 'E' || temp_map[i][j] == 'W')
 			{
 				data->player_x = j;
 				data->player_y = i;
@@ -264,12 +437,15 @@ void	initialize_map(t_data *data)
 		}
 		i++;
 	}
+	data->map_width = MAP_WIDTH;
+	data->map_height = MAP_HEIGHT;
 }
 
 int	main(void)
 {
 	t_data	data;
 
+	data = (t_data){0};
 	data.mlx = mlx_init();
 	if (!data.mlx)
 	{
@@ -278,12 +454,23 @@ int	main(void)
 	}
 	data.win = mlx_new_window(data.mlx, WIDTH, HEIGHT, "cub3d");
 	if (!data.win)
+	{
+		mlx_destroy_display(data.mlx);
+		free(data.mlx);
 		return (1);
+	}
 	data.img = mlx_new_image(data.mlx, WIDTH, HEIGHT);
 	if (!data.img)
+	{
+		mlx_destroy_window(data.mlx, data.win);
+		mlx_destroy_display(data.mlx);
+		free(data.mlx);
 		return (1);
-	data.addr = mlx_get_data_addr(data.img, &data.bpp, &data.line_len, &data.endian);
+	}
+	data.addr = mlx_get_data_addr(data.img,
+			&data.bpp, &data.line_len, &data.endian);
 	initialize_map(&data);
+	cast_rays(&data);
 	render_scene(&data);
 	draw_minimap(&data);
 	mlx_put_image_to_window(data.mlx, data.win, data.img, 0, 0);
