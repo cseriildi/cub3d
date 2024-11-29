@@ -23,9 +23,10 @@
 #define GRID_COLOR 0x000000 // Black
 #define FLOOR_COLOR 0x8B4513 // Brown
 #define CEIL_COLOR 0x87CEEB // Light blue
-#define RAY_COLOR 0x00FF00 // Green
-#define HORIZONTAL_RAY_COLOR 0x00FF00 // Green
-#define VERTICAL_RAY_COLOR 0x0000FF // Blue
+#define SOUTH_RAY_COLOR 0xFF0000 // Red
+#define EAST_RAY_COLOR 0x0000FF // Blue
+#define NORTH_RAY_COLOR 0xFFFF00 // Yellow
+#define WEST_RAY_COLOR 0xFF00FF // Magenta
 
 # define KEY_ESC 65307
 # define KEY_W 119
@@ -36,7 +37,6 @@
 # define ARROW_DOWN 65364
 # define ARROW_LEFT 65361
 # define ARROW_RIGHT 65363
-
 
 typedef struct s_map
 {
@@ -126,5 +126,24 @@ typedef struct s_minimap
 	int	dir_x;
 	int	dir_y;
 }	t_minimap;
+
+void	cast_rays(t_data *data);
+void	render_scene(t_data *data);
+int		close_window(t_data *data);
+
+//draw_utils.c
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+void	draw_rectangle(t_data *data, t_rectangle *rect);
+void	draw_line(t_data *data, t_line *line);
+void	draw_vertical_line(t_data *data, int x, int wall_height, int wall_color);
+
+//minimap.c
+void	draw_minimap(t_data *data);
+
+//movement.c
+int		key_hook(int keycode, t_data *data);
+
+//raycaster.c
+void	cast_rays(t_data *data);
 
 #endif

@@ -7,7 +7,12 @@ SRCS_DIR = srcs
 INCLUDES_DIR = includes
 MLX_DIR = /home/csicsi/minilibx-linux
 
-SRCS = $(SRCS_DIR)/cub3d.c
+SRCS = $(SRCS_DIR)/cub3d.c \
+		$(SRCS_DIR)/draw_utils.c \
+		$(SRCS_DIR)/minimap.c \
+		$(SRCS_DIR)/movement.c \
+		$(SRCS_DIR)/raycaster.c
+
 
 OBJS = $(SRCS:.c=.o)
 INCLUDES = -I $(INCLUDES_DIR) -I $(MLX_DIR)
