@@ -85,7 +85,16 @@ void	draw_vertical_line(t_data *data, int x, int wall_height, int wall_color)
 	y = wall_top;
 	while (y <= wall_bottom)
 	{
-		my_mlx_pixel_put(data, x, y, wall_color);
+		if (data->texture_x[x] < 0.5)
+			if (y < wall_top + wall_height / 2)
+				my_mlx_pixel_put(data, x, y, wall_color);
+			else
+				my_mlx_pixel_put(data, x, y, 0xFFFFFF);
+		else
+			if (y > wall_top + wall_height / 2)
+				my_mlx_pixel_put(data, x, y, wall_color);
+			else
+				my_mlx_pixel_put(data, x, y, 0xFFFFFF);
 		y++;
 	}
 	y = wall_bottom + 1;

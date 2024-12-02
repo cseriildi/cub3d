@@ -42,6 +42,7 @@ static void	check_horizontal(t_data *data, double player_x,
 					ray->hit_color = EAST_RAY_COLOR;
 				else
 					ray->hit_color = WEST_RAY_COLOR;
+				data->texture_x[ray->index] = ray->hit_x - floor(ray->hit_x);
 			}
 			break ;
 		}
@@ -92,6 +93,7 @@ static void	check_vertical(t_data *data, double player_x,
 					ray->hit_color = SOUTH_RAY_COLOR;
 				else
 					ray->hit_color = NORTH_RAY_COLOR;
+				data->texture_x[ray->index] = ray->hit_y - floor(ray->hit_y);
 			}
 			break ;
 		}
@@ -105,6 +107,7 @@ static void	cast_ray(t_data *data, double ray_angle, int ray_index)
 	t_ray	ray;
 	t_line	line;
 
+	ray.index = ray_index;
 	ray.angle = fmod(ray_angle, 2 * M_PI);
 	if (ray.angle < 0)
 		ray.angle += 2 * M_PI;

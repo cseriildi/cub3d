@@ -63,6 +63,7 @@ typedef struct s_data
 	double	player_angle;
 	double	ray_distance[WIDTH];
 	int		ray_color[WIDTH];
+	double	texture_x[WIDTH];
 }	t_data;
 
 typedef struct s_line
@@ -100,6 +101,7 @@ typedef struct s_ray
 	double	hit_x;
 	double	hit_y;
 	int		hit_color;
+	int		index;
 }	t_ray;
 
 typedef struct s_ray_trace_state
