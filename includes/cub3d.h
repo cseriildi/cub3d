@@ -27,6 +27,7 @@
 #define EAST_RAY_COLOR 0x0000FF // Blue
 #define NORTH_RAY_COLOR 0xFFFF00 // Yellow
 #define WEST_RAY_COLOR 0xFF00FF // Magenta
+#define TEXTURE_SIZE 8
 
 # define KEY_ESC 65307
 # define KEY_W 119

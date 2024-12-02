@@ -11,8 +11,6 @@ void	render_scene(t_data *data)
 		if (data->ray_distance[x] > 0)
 		{
 			wall_height = (TILE_SIZE / data->ray_distance[x]) * (HEIGHT / 55);
-			if (wall_height > HEIGHT)
-				wall_height = HEIGHT;
 			draw_vertical_line(data, x, wall_height, data->ray_color[x]);
 		}
 		x++;
