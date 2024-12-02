@@ -39,10 +39,15 @@ static void	check_horizontal(t_data *data, double player_x,
 				ray->hit_x = ray_state.cur_x;
 				ray->hit_y = ray_state.cur_y;
 				if (ray_state.direction)
-					ray->hit_color = EAST_RAY_COLOR;
+				{
+					ray->hit_color = SOUTH_RAY_COLOR;
+					data->texture_x[ray->index] = 1 - (ray->hit_x - floor(ray->hit_x));
+				}
 				else
-					ray->hit_color = WEST_RAY_COLOR;
-				data->texture_x[ray->index] = ray->hit_x - floor(ray->hit_x);
+				{
+					ray->hit_color = NORTH_RAY_COLOR;
+					data->texture_x[ray->index] = ray->hit_x - floor(ray->hit_x);
+				}
 			}
 			break ;
 		}
@@ -90,10 +95,15 @@ static void	check_vertical(t_data *data, double player_x,
 				ray->hit_x = ray_state.cur_x;
 				ray->hit_y = ray_state.cur_y;
 				if (ray_state.direction)
-					ray->hit_color = SOUTH_RAY_COLOR;
+				{
+					ray->hit_color = EAST_RAY_COLOR;
+					data->texture_x[ray->index] = ray->hit_y - floor(ray->hit_y);
+				}
 				else
-					ray->hit_color = NORTH_RAY_COLOR;
-				data->texture_x[ray->index] = ray->hit_y - floor(ray->hit_y);
+				{
+					ray->hit_color = WEST_RAY_COLOR;
+					data->texture_x[ray->index] = 1 - (ray->hit_y - floor(ray->hit_y));
+				}
 			}
 			break ;
 		}

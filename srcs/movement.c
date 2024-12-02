@@ -30,9 +30,9 @@ static void	move_player(t_data *data, double move_x, double move_y)
 
 static void	turn_player(t_data *data, int keycode)
 {
-	if (keycode == KEY_A || keycode == ARROW_LEFT)
+	if (keycode == ARROW_LEFT)
 		data->player_angle -= TURN_SPEED;
-	else if (keycode == KEY_D || keycode == ARROW_RIGHT)
+	else if (keycode == ARROW_RIGHT)
 		data->player_angle += TURN_SPEED;
 	if (data->player_angle < 0)
 		data->player_angle += 2 * M_PI;
@@ -44,13 +44,22 @@ void	update_player_position(t_data *data, int keycode)
 {
 	double	move_x;
 	double	move_y;
+	double	strafe_x;
+	double	strafe_y;
 
 	move_x = cos(data->player_angle) * MOVE_SPEED;
 	move_y = sin(data->player_angle) * MOVE_SPEED;
-	if (keycode == KEY_W || keycode == ARROW_UP)
+	strafe_x = cos(data->player_angle + M_PI_2) * MOVE_SPEED;
+	strafe_y = sin(data->player_angle + M_PI_2) * MOVE_SPEED;
+
+	if (keycode == KEY_W)
 		move_player(data, move_x, move_y);
-	else if (keycode == KEY_S || keycode == ARROW_DOWN)
+	else if (keycode == KEY_S)
 		move_player(data, -move_x, -move_y);
+	else if (keycode == KEY_A)
+		move_player(data, -strafe_x, -strafe_y);
+	else if (keycode == KEY_D)
+		move_player(data, strafe_x, strafe_y);
 	else
 		turn_player(data, keycode);
 }
