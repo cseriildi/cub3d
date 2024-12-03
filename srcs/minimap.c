@@ -8,9 +8,9 @@ void	draw_minimap(t_data *data)
 	t_minimap	minimap;
 	t_rectangle	rect;
 
-	minimap.map_rows = 5;
-	minimap.map_cols = 8;
-	minimap.tile_size = TILE_SIZE * MINIMAP_SCALE;
+	minimap.map_rows = data->map_height;
+	minimap.map_cols = data->map_width;
+	minimap.tile_size = (HEIGHT / 3) / minimap.map_rows;
 	minimap.player_x
 		= (int)(data->player_x * minimap.tile_size) + (minimap.tile_size / 2);
 	minimap.player_y
@@ -59,25 +59,6 @@ void	draw_minimap(t_data *data)
 	line.end_x = minimap.map_cols * minimap.tile_size;
 	line.end_y = minimap.map_rows * minimap.tile_size;
 	line.color = GRID_COLOR;
-	draw_line(data, &line);
-	line.start_x = minimap.map_cols * minimap.tile_size;
-	line.start_y = 0;
-	line.end_x = minimap.map_cols * minimap.tile_size;
-	line.end_y = minimap.map_rows * minimap.tile_size;
-	draw_line(data, &line);
-	minimap.dir_x = minimap.player_x + cos(data->player_angle) * 10;
-	minimap.dir_y = minimap.player_y + sin(data->player_angle) * 10;
-	rect.x = minimap.player_x - 3;
-	rect.y = minimap.player_y - 3;
-	rect.width = 6;
-	rect.height = 6;
-	rect.color = PLAYER_COLOR;
-	draw_rectangle(data, &rect);
-	line.start_x = minimap.player_x;
-	line.start_y = minimap.player_y;
-	line.end_x = minimap.dir_x;
-	line.end_y = minimap.dir_y;
-	line.color = PLAYER_COLOR;
 	draw_line(data, &line);
 	cast_rays(data);
 }

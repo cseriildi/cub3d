@@ -129,10 +129,10 @@ static void	cast_ray(t_data *data, double ray_angle, int ray_index)
 	check_vertical(data, data->player_x + 0.5, data->player_y + 0.5, &ray);
 	if (ray.closest_distance < DBL_MAX)
 	{
-		line.start_x = (data->player_x + 0.5) * TILE_SIZE * MINIMAP_SCALE;
-		line.start_y = (data->player_y + 0.5) * TILE_SIZE * MINIMAP_SCALE;
-		line.end_x = ray.hit_x * TILE_SIZE * MINIMAP_SCALE;
-		line.end_y = ray.hit_y * TILE_SIZE * MINIMAP_SCALE;
+		line.start_x = (data->player_x + 0.5) * (HEIGHT / 3) / data->map_height;
+		line.start_y = (data->player_y + 0.5) * (HEIGHT / 3) / data->map_height;
+		line.end_x = ray.hit_x * (HEIGHT / 3) / data->map_height;
+		line.end_y = ray.hit_y * (HEIGHT / 3) / data->map_height;
 		line.color = ray.hit_color;
 		draw_line(data, &line);
 		if (ray.closest_distance > 0.01)

@@ -15,8 +15,8 @@
 #define MOVE_SPEED 0.2
 #define TURN_SPEED 0.1
 
-#define MAP_WIDTH 8
-#define MAP_HEIGHT 5
+#define MAP_WIDTH 15
+#define MAP_HEIGHT 15
 
 #define WALL_COLOR 0x444444 // Dark gray
 #define PLAYER_COLOR 0xFF0000 // Red

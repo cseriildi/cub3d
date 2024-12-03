@@ -35,19 +35,31 @@ void	initialize_map(t_data *data)
 {
 	int		i;
 	int		j;
-	char	temp_map[MAP_HEIGHT][MAP_WIDTH] = {
-		"11111111",
-		"10000001",
-		"111E0101",
-		"10000101",
-		"11111111"
+char temp_map[MAP_HEIGHT][MAP_WIDTH] = {
+		"111111111111111",
+		"100000000000001",
+		"100111110111101",
+		"100100010100001",
+		"10010E010100001",
+		"100100010111101",
+		"100111110000001",
+		"100000011111101",
+		"101110010000001",
+		"101010010111101",
+		"101000010100001",
+		"111111111010111",
+		"100000000010001",
+		"100000000000001",
+		"111111111111111"
 	};
 
+	data->map_width = MAP_WIDTH;
+	data->map_height = MAP_HEIGHT;
 	i = 0;
-	while (i < 5)
+	while (i < data->map_height)
 	{
 		j = 0;
-		while (j < 8)
+		while (j < data->map_width)
 		{
 			data->map[i][j] = temp_map[i][j];
 			if (temp_map[i][j] == 'N' || temp_map[i][j] == 'S'
@@ -68,8 +80,6 @@ void	initialize_map(t_data *data)
 		}
 		i++;
 	}
-	data->map_width = MAP_WIDTH;
-	data->map_height = MAP_HEIGHT;
 }
 
 int	main(void)
