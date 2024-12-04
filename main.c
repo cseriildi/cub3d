@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:22 by icseri            #+#    #+#             */
-/*   Updated: 2024/11/20 17:02:39 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/04 17:23:24 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,14 @@ int	main(int argc, char **argv)
 
 void	init_data(t_data *data)
 {
-	data->map.north = NULL;
-	data->map.south = NULL;
-	data->map.west = NULL;
-	data->map.east = NULL;
-	data->map.map = NULL;
+	data->north = NULL;
+	data->south = NULL;
+	data->west = NULL;
+	data->east = NULL;
+	data->map = NULL;
+	data->row = 0;
+	data->column = 0;
+	data->floor = NULL;
+	data->ceiling = NULL;
 	data->fd = -1;
 }

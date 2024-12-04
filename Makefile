@@ -6,7 +6,7 @@
 #    By: icseri <icseri@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/20 10:41:15 by icseri            #+#    #+#              #
-#    Updated: 2024/12/05 12:46:43 by icseri           ###   ########.fr        #
+#    Updated: 2024/12/05 12:49:19 by icseri           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,8 @@ INCLUDES = -I $(INCLUDES_DIR) -I $(MLX_DIR)
 SRCS = main.c \
 		parsing.c \
 		cleanup.c \
-		get_texture.c \
+		parsing_utils.c \
+		parsing_textures.c \
 		$(SRCS_DIR)/cub3d.c \
 		$(SRCS_DIR)/draw_utils.c \
 		$(SRCS_DIR)/minimap.c \

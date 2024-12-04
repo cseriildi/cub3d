@@ -6,11 +6,25 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:51:15 by icseri            #+#    #+#             */
-/*   Updated: 2024/11/20 17:02:54 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/04 14:28:15 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+void	free_array(char ***arr)
+{
+	int	i;
+
+	i = 0;
+	if (arr && *arr)
+	{
+		while ((*arr)[i])
+			ft_free(&(*arr)[i++]);
+		free(*arr);
+		*arr = NULL;
+	}
+}
 
 void	print_error(int count, ...)
 {
@@ -30,11 +44,11 @@ void	print_error(int count, ...)
 
 void	safe_exit(t_data *data, int exit_code)
 {
-	ft_free(&data->map.north);
-	ft_free(&data->map.south);
-	ft_free(&data->map.west);
-	ft_free(&data->map.east);
-	//free_array(&data->map->map);
+	ft_free(&data->north);
+	ft_free(&data->south);
+	ft_free(&data->west);
+	ft_free(&data->east);
+	free_array(&data->map);
 	if (data->fd != -1)
 	{
 		close(data->fd);
