@@ -7,8 +7,8 @@ static int	is_wall_at_position(t_data *data, double new_x, double new_y)
 
 	map_x = (int)new_x;
 	map_y = (int)new_y;
-	if (map_x < 0 || map_x >= data->map_width
-		|| map_y < 0 || map_y >= data->map_height)
+	if (map_x < 0 || map_x >= MAP_WIDTH
+		|| map_y < 0 || map_y >= MAP_HEIGHT)
 		return (1);
 	if (data->map[map_y][map_x] == '1')
 		return (1);

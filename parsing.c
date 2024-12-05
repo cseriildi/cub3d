@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:55:03 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/05 12:28:45 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/05 13:27:06 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
 void	check_file(char	*filename, bool is_cub);
-void	parse_file(t_data *data);
+void	parse_file(t_map *map);
 
-void	parsing(int argc, char **argv, t_data *data)
+void	parsing(int argc, char **argv, t_map *map)
 {
 	if (argc != 2)
 	{
@@ -23,13 +23,13 @@ void	parsing(int argc, char **argv, t_data *data)
 		exit(EXIT_FAILURE);
 	}
 	check_file(argv[1], true);
-	data->fd = open(argv[1], O_RDONLY, 0644);
-	if (data->fd == -1)
+	map->fd = open(argv[1], O_RDONLY, 0644);
+	if (map->fd == -1)
 	{
 		print_error(4, "Error\n", argv[1], " ", strerror(errno));
 		exit(EXIT_FAILURE);
 	}
-	parse_file(data);
+	parse_file(map);
 }
 
 void	check_file(char	*filename, bool is_cub)
@@ -54,58 +54,58 @@ void	check_file(char	*filename, bool is_cub)
 	}
 }
 
-void	parse_file(t_data *data)
+void	parse_file(t_map *map)
 {
 	char	*line;
 
-	line = get_next_line(data->fd);
+	line = get_next_line(map->fd);
 	while (line)
 	{
 		if (ft_strncmp(line, "NO ", 3) == 0)
-			get_texture(line, &data->north, data);
+			get_texture(line, &map->north, map);
 		else if (ft_strncmp(line, "EA ", 3) == 0)
-			get_texture(line, &data->east, data);
+			get_texture(line, &map->east, map);
 		else if (ft_strncmp(line, "WE ", 3) == 0)
-			get_texture(line, &data->west, data);
+			get_texture(line, &map->west, map);
 		else if (ft_strncmp(line, "SO ", 3) == 0)
-			get_texture(line, &data->south, data);
+			get_texture(line, &map->south, map);
 		else if (ft_strncmp(line, "C ", 2) == 0)
-			get_color(line, &data->ceiling, data);
+			get_color(line, &map->ceiling, map);
 		else if (ft_strncmp(line, "F ", 2) == 0)
-			get_color(line, &data->floor, data);
+			get_color(line, &map->floor, map);
 		else if (ft_strncmp(line, "\n", 2) != 0)
 		{
-			get_map(line, data);
+			get_map(line, map);
 			break ;
 		}
 		else
 			ft_free(&line);
-		line = get_next_line(data->fd);
+		line = get_next_line(map->fd);
 	}
 }
 
-bool	is_in(int row, int col, t_data *data)
+bool	is_in(int row, int col, t_map *map)
 {
-	if (row == 0 || col == 0 || row == data->row - 1 || col == data->column - 1
-		|| data->map[row][col - 1] == ' ' || data->map[row][col + 1] == ' '
-		|| data->map[row - 1][col] == ' ' || data->map[row + 1][col] == ' ')
+	if (row == 0 || col == 0 || row == map->row - 1 || col == map->column - 1
+		|| map->map[row][col - 1] == ' ' || map->map[row][col + 1] == ' '
+		|| map->map[row - 1][col] == ' ' || map->map[row + 1][col] == ' ')
 		return (false);
 	return (true);
 }
 
-bool	door_is_good(int row, int col, t_data *data)
+bool	door_is_good(int row, int col, t_map *map)
 {
 	bool east;
 	bool west;
 	bool south;
 	bool north;
 
-	east = data->map[row][col + 1] == '1';
-	west = data->map[row][col - 1] == '1';
-	south = data->map[row + 1][col] == '1';
-	north = data->map[row - 1][col] == '1';
+	east = map->map[row][col + 1] == '1';
+	west = map->map[row][col - 1] == '1';
+	south = map->map[row + 1][col] == '1';
+	north = map->map[row - 1][col] == '1';
 
-	if (is_in(row, col, data) == false
+	if (is_in(row, col, map) == false
 		|| (east && (west == false || south || north))
 		|| (north && (south == false || east || west))
 		|| (east == false && north == false))
@@ -113,7 +113,7 @@ bool	door_is_good(int row, int col, t_data *data)
 	return (true);
 }
 
-void	check_map(t_data *data)
+void	check_map(t_map *map)
 {
 	int		player_count;
 	int		row;
@@ -123,72 +123,72 @@ void	check_map(t_data *data)
 	player_count = 0;
 	row = -1;
 	valid = true;
-	while (valid && ++row < data->row)
+	while (valid && ++row < map->row)
 	{
 		column = -1;
-		while (valid && data->map && data->map[row][++column])
+		while (valid && map->map && map->map[row][++column])
 		{
-			if (!ft_strchr("WENS01XD ", data->map[row][column]))
+			if (!ft_strchr("WENS01XD ", map->map[row][column]))
 				valid = false;
-			else if (!ft_strchr("D1 ", data->map[row][column]))
+			else if (!ft_strchr("D1 ", map->map[row][column]))
 			{
-				if (ft_strchr("WENS", data->map[row][column]) )
+				if (ft_strchr("WENS", map->map[row][column]) )
 				{
 					valid = (++player_count <= 1);
-					data->player[0] = row;
-					data->player[1] = column;
+					map->player[0] = row;
+					map->player[1] = column;
 				}
-				else if (data->map[row][column] == 'X')
+				else if (map->map[row][column] == 'X')
 				{
-					data->enemy[0] = row;
-					data->enemy[1] = column;
+					map->enemy[0] = row;
+					map->enemy[1] = column;
 				}
-				valid = is_in(row, column, data);
+				valid = is_in(row, column, map);
 			}
-			else if (data->map[row][column] == 'D')
-				valid = door_is_good(row, column, data);
+			else if (map->map[row][column] == 'D')
+				valid = door_is_good(row, column, map);
 		}
 	}
 	if (valid == false || player_count == 0)
 	{
 		print_error(1, "Error\nInvalid map");
-		safe_exit(data, 1);
+		safe_exit(map, 1);
 	}
 }
 
-void	list_to_arr(t_list **map_list, t_data *data)
+void	list_to_arr(t_list **map_list, t_map *map)
 {
 	int		row;
 	t_list	*current;
 
 	row = 0;
-	data->map = ft_calloc(sizeof(char *), data->row + 1);
-	if (!data->map)
+	map->map = ft_calloc(sizeof(char *), map->row + 1);
+	if (!map->map)
 	{
 		print_error(1, "Error\nMalloc fail");
 		free_list(map_list);
-		safe_exit(data, EXIT_FAILURE);
+		safe_exit(map, EXIT_FAILURE);
 	}
 	current = *map_list;
 	while (current)
 	{
-		if ((int)(ft_strlen(current->content)) > data->column)
-			data->column = ft_strlen(current->content);
+		if ((int)(ft_strlen(current->content)) > map->column)
+			map->column = ft_strlen(current->content);
 		current = current->next;
 	}
 	current = *map_list;
 	while (current)
 	{
-		data->map[row] = malloc(data->column + 1);
-		if (!data->map[row])
+		map->map[row] = malloc(map->column + 1);
+		if (!map->map[row])
 		{
 			print_error(1, "Error\nMalloc fail");
 			free_list(map_list);
-			safe_exit(data, EXIT_FAILURE);
+			safe_exit(map, EXIT_FAILURE);
 		}
-		ft_memset(data->map[row], ' ', data->column);
-		data->map[row][data->column] = '\0';
-		ft_memcpy(data->map[row], current->content, ft_strlen(current->content));
+		ft_memset(map->map[row], ' ', map->column);
+		map->map[row][map->column] = '\0';
+		ft_memcpy(map->map[row], current->content, ft_strlen(current->content));
 		row++;
 		current = current->next;
 	}

@@ -6,6 +6,7 @@ void	render_scene(t_data *data)
 	int	wall_height;
 
 	x = 0;
+	printf("kurva3\n");
 	while (x < WIDTH)
 	{
 		if (data->ray_distance[x] > 0)
@@ -28,6 +29,7 @@ int	close_window(t_data *data)
 		mlx_destroy_display(data->mlx);
 		free(data->mlx);
 	}
+	//safe_exit(data->map_data, EXIT_SUCCESS);
 	exit(0);
 }
 
@@ -35,7 +37,7 @@ void	initialize_map(t_data *data)
 {
 	int		i;
 	int		j;
-char temp_map[MAP_HEIGHT][MAP_WIDTH] = {
+	char temp_map[MAP_HEIGHT][MAP_WIDTH] = {
 		"111111111111111",
 		"100000000000001",
 		"100111110111101",
@@ -52,14 +54,11 @@ char temp_map[MAP_HEIGHT][MAP_WIDTH] = {
 		"100000000000001",
 		"111111111111111"
 	};
-
-	data->map_width = MAP_WIDTH;
-	data->map_height = MAP_HEIGHT;
 	i = 0;
-	while (i < data->map_height)
+	while (i < MAP_HEIGHT)
 	{
 		j = 0;
-		while (j < data->map_width)
+		while (j < MAP_WIDTH)
 		{
 			data->map[i][j] = temp_map[i][j];
 			if (temp_map[i][j] == 'N' || temp_map[i][j] == 'S'
@@ -86,9 +85,7 @@ int	main(int argc, char **argv)
 {
 	t_data	data;
 
-	//parse(argc, argv);
-	(void)argc;
-	(void)argv;
+	parse(argc, argv, &data);
 	data = (t_data){0};
 	data.mlx = mlx_init();
 	if (!data.mlx)
@@ -121,5 +118,6 @@ int	main(int argc, char **argv)
 	mlx_hook(data.win, 2, 1L << 0, key_hook, &data);
 	mlx_hook(data.win, 17, 0, close_window, &data);
 	mlx_loop(data.mlx);
+	safe_exit(data.map_data, EXIT_SUCCESS);
 	return (0);
 }

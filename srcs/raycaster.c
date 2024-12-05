@@ -21,8 +21,8 @@ static void	check_horizontal(t_data *data, double player_x,
 	ray_state.x_step = ray_state.y_step / tan(ray->angle);
 	ray_state.cur_x = ray_state.x_intercept;
 	ray_state.cur_y = ray_state.y_intercept;
-	while (ray_state.cur_x >= 0 && ray_state.cur_x < data->map_width
-		&& ray_state.cur_y >= 0 && ray_state.cur_y < data->map_height)
+	while (ray_state.cur_x >= 0 && ray_state.cur_x < MAP_WIDTH
+		&& ray_state.cur_y >= 0 && ray_state.cur_y < MAP_HEIGHT)
 	{
 		ray_state.map_x = (int)ray_state.cur_x;
 		if (ray_state.direction)
@@ -77,8 +77,8 @@ static void	check_vertical(t_data *data, double player_x,
 	ray_state.y_step = ray_state.x_step * tan(ray->angle);
 	ray_state.cur_x = ray_state.x_intercept;
 	ray_state.cur_y = ray_state.y_intercept;
-	while (ray_state.cur_x >= 0 && ray_state.cur_x < data->map_width
-		&& ray_state.cur_y >= 0 && ray_state.cur_y < data->map_height)
+	while (ray_state.cur_x >= 0 && ray_state.cur_x < MAP_WIDTH
+		&& ray_state.cur_y >= 0 && ray_state.cur_y < MAP_HEIGHT)
 	{
 		if (ray_state.direction)
 			ray_state.map_x = (int)ray_state.cur_x;
@@ -129,10 +129,10 @@ static void	cast_ray(t_data *data, double ray_angle, int ray_index)
 	check_vertical(data, data->player_x + 0.5, data->player_y + 0.5, &ray);
 	if (ray.closest_distance < DBL_MAX)
 	{
-		line.start_x = (data->player_x + 0.5) * (HEIGHT / 3) / data->map_height;
-		line.start_y = (data->player_y + 0.5) * (HEIGHT / 3) / data->map_height;
-		line.end_x = ray.hit_x * (HEIGHT / 3) / data->map_height;
-		line.end_y = ray.hit_y * (HEIGHT / 3) / data->map_height;
+		line.start_x = (data->player_x + 0.5) * (HEIGHT / 3) / MAP_HEIGHT;
+		line.start_y = (data->player_y + 0.5) * (HEIGHT / 3) / MAP_HEIGHT;
+		line.end_x = ray.hit_x * (HEIGHT / 3) / MAP_HEIGHT;
+		line.end_y = ray.hit_y * (HEIGHT / 3) / MAP_HEIGHT;
 		line.color = ray.hit_color;
 		draw_line(data, &line);
 		if (ray.closest_distance > 0.01)

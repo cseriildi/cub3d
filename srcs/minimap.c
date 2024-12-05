@@ -8,8 +8,8 @@ void	draw_minimap(t_data *data)
 	t_minimap	minimap;
 	t_rectangle	rect;
 
-	minimap.map_rows = data->map_height;
-	minimap.map_cols = data->map_width;
+	minimap.map_rows = MAP_HEIGHT;
+	minimap.map_cols = MAP_WIDTH;
 	minimap.tile_size = (HEIGHT / 3) / minimap.map_rows;
 	minimap.player_x
 		= (int)(data->player_x * minimap.tile_size) + (minimap.tile_size / 2);
