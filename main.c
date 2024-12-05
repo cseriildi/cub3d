@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:22 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/05 11:50:39 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/05 12:56:26 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	init_data(t_data *data);
 
-int	main(int argc, char **argv)
+int	parse(int argc, char **argv)
 {
 	t_data	data;
 
@@ -29,6 +29,7 @@ int	main(int argc, char **argv)
 	data.row,
 	data.column);
 	safe_exit(&data, EXIT_SUCCESS);
+	return 0;
 }
 
 void	init_data(t_data *data)

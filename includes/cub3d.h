@@ -149,4 +149,9 @@ int		key_hook(int keycode, t_data *data);
 //raycaster.c
 void	cast_rays(t_data *data);
 
+
+
+
+int	parse(int argc, char **argv);
+
 #endif
