@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:51:15 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/05 11:48:36 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/05 15:42:11 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,19 +62,17 @@ void	print_error(int count, ...)
 	ft_putstr_fd("\n", STDERR_FILENO);
 }
 
-void	safe_exit(t_data *data, int exit_code)
+void	safe_exit(t_map *map, int exit_code)
 {
-	ft_free(&data->north);
-	ft_free(&data->south);
-	ft_free(&data->west);
-	ft_free(&data->east);
-	ft_free(&data->floor);
-	ft_free(&data->ceiling);
-	free_array(&data->map);
-	if (data->fd != -1)
+	ft_free(&map->north);
+	ft_free(&map->south);
+	ft_free(&map->west);
+	ft_free(&map->east);
+	free_array(&map->map);
+	if (map->fd != -1)
 	{
-		close(data->fd);
-		data->fd = -1;
+		close(map->fd);
+		map->fd = -1;
 	}
 	exit(exit_code);
 }

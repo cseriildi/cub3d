@@ -76,7 +76,7 @@ int	main(int argc, char **argv)
 {
 	t_data	data;
 
-	//parse(argc, argv);
+	parse(argc, argv);
 	(void)argc;
 	(void)argv;
 	data = (t_data){0};
