@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:55:03 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/04 17:24:11 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/05 12:28:45 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,32 +62,53 @@ void	parse_file(t_data *data)
 	while (line)
 	{
 		if (ft_strncmp(line, "NO ", 3) == 0)
-			get_texture(line, data->north, data);
+			get_texture(line, &data->north, data);
 		else if (ft_strncmp(line, "EA ", 3) == 0)
-			get_texture(line, data->east, data);
+			get_texture(line, &data->east, data);
 		else if (ft_strncmp(line, "WE ", 3) == 0)
-			get_texture(line, data->west, data);
+			get_texture(line, &data->west, data);
 		else if (ft_strncmp(line, "SO ", 3) == 0)
-			get_texture(line, data->south, data);
+			get_texture(line, &data->south, data);
 		else if (ft_strncmp(line, "C ", 2) == 0)
-			data->ceiling = get_color(line, data->ceiling, data);
+			get_color(line, &data->ceiling, data);
 		else if (ft_strncmp(line, "F ", 2) == 0)
-			data->floor = get_color(line, data->floor, data);
+			get_color(line, &data->floor, data);
 		else if (ft_strncmp(line, "\n", 2) != 0)
 		{
 			get_map(line, data);
 			break ;
 		}
-		//ft_free(&line); //double free
+		else
+			ft_free(&line);
 		line = get_next_line(data->fd);
 	}
 }
 
 bool	is_in(int row, int col, t_data *data)
 {
-	if (row == 0 || col == 0 || row == data->row || col == data->column
+	if (row == 0 || col == 0 || row == data->row - 1 || col == data->column - 1
 		|| data->map[row][col - 1] == ' ' || data->map[row][col + 1] == ' '
 		|| data->map[row - 1][col] == ' ' || data->map[row + 1][col] == ' ')
+		return (false);
+	return (true);
+}
+
+bool	door_is_good(int row, int col, t_data *data)
+{
+	bool east;
+	bool west;
+	bool south;
+	bool north;
+
+	east = data->map[row][col + 1] == '1';
+	west = data->map[row][col - 1] == '1';
+	south = data->map[row + 1][col] == '1';
+	north = data->map[row - 1][col] == '1';
+
+	if (is_in(row, col, data) == false
+		|| (east && (west == false || south || north))
+		|| (north && (south == false || east || west))
+		|| (east == false && north == false))
 		return (false);
 	return (true);
 }
@@ -105,23 +126,30 @@ void	check_map(t_data *data)
 	while (valid && ++row < data->row)
 	{
 		column = -1;
-		while (valid && data->map[row][++column])
+		while (valid && data->map && data->map[row][++column])
 		{
-			if (!ft_strchr("WENS01 ", data->map[row][column]))
+			if (!ft_strchr("WENS01XD ", data->map[row][column]))
 				valid = false;
-			else if (!ft_strchr("1 ", data->map[row][column]))
+			else if (!ft_strchr("D1 ", data->map[row][column]))
 			{
-				if (data->map[row][column] != '0')
+				if (ft_strchr("WENS", data->map[row][column]) )
 				{
 					valid = (++player_count <= 1);
 					data->player[0] = row;
 					data->player[1] = column;
 				}
+				else if (data->map[row][column] == 'X')
+				{
+					data->enemy[0] = row;
+					data->enemy[1] = column;
+				}
 				valid = is_in(row, column, data);
 			}
+			else if (data->map[row][column] == 'D')
+				valid = door_is_good(row, column, data);
 		}
 	}
-	if (valid == false)
+	if (valid == false || player_count == 0)
 	{
 		print_error(1, "Error\nInvalid map");
 		safe_exit(data, 1);
@@ -138,7 +166,7 @@ void	list_to_arr(t_list **map_list, t_data *data)
 	if (!data->map)
 	{
 		print_error(1, "Error\nMalloc fail");
-		//free list
+		free_list(map_list);
 		safe_exit(data, EXIT_FAILURE);
 	}
 	current = *map_list;
@@ -155,12 +183,14 @@ void	list_to_arr(t_list **map_list, t_data *data)
 		if (!data->map[row])
 		{
 			print_error(1, "Error\nMalloc fail");
+			free_list(map_list);
 			safe_exit(data, EXIT_FAILURE);
 		}
-			//malloc fail
 		ft_memset(data->map[row], ' ', data->column);
+		data->map[row][data->column] = '\0';
 		ft_memcpy(data->map[row], current->content, ft_strlen(current->content));
 		row++;
 		current = current->next;
 	}
+	free_list(map_list);
 }

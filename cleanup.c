@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:51:15 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/04 14:28:15 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/05 11:48:36 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,26 @@ void	free_array(char ***arr)
 		free(*arr);
 		*arr = NULL;
 	}
+}
+
+void	free_list(t_list **list)
+{
+	t_list	*current;
+	t_list	*next;
+
+	if (list && *list)
+	{
+		current = *list;
+		while (current != NULL)
+		{
+			next = current->next;
+			ft_free((char**)&current->content);
+			free(current);
+			current = next;
+		}
+		*list = NULL;
+	}
+	free(list);
 }
 
 void	print_error(int count, ...)
@@ -48,6 +68,8 @@ void	safe_exit(t_data *data, int exit_code)
 	ft_free(&data->south);
 	ft_free(&data->west);
 	ft_free(&data->east);
+	ft_free(&data->floor);
+	ft_free(&data->ceiling);
 	free_array(&data->map);
 	if (data->fd != -1)
 	{
