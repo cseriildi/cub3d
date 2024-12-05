@@ -82,10 +82,13 @@ char temp_map[MAP_HEIGHT][MAP_WIDTH] = {
 	}
 }
 
-int	main(void)
+int	main(int argc, char **argv)
 {
 	t_data	data;
 
+	//parse(argc, argv);
+	(void)argc;
+	(void)argv;
 	data = (t_data){0};
 	data.mlx = mlx_init();
 	if (!data.mlx)
