@@ -72,10 +72,13 @@ void	initialize_map(t_data *data)
 	data->map_height = MAP_HEIGHT;
 }
 
-int	main(void)
+int	main(int argc, char **argv)
 {
 	t_data	data;
 
+	//parse(argc, argv);
+	(void)argc;
+	(void)argv;
 	data = (t_data){0};
 	data.mlx = mlx_init();
 	if (!data.mlx)
