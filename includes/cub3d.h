@@ -6,11 +6,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include <float.h>
-#include "../libft/libft.h"
-# include <stdbool.h>
-# include <errno.h>
-# include <fcntl.h>
-# include <stddef.h>
 
 #define WIDTH 800
 #define HEIGHT 600
@@ -20,8 +15,8 @@
 #define MOVE_SPEED 0.2
 #define TURN_SPEED 0.1
 
-#define MAP_WIDTH 15
-#define MAP_HEIGHT 15
+#define MAP_WIDTH 8
+#define MAP_HEIGHT 5
 
 #define WALL_COLOR 0x444444 // Dark gray
 #define PLAYER_COLOR 0xFF0000 // Red
@@ -46,18 +41,10 @@
 
 typedef struct s_map
 {
-	char	*north; //mlx_xpm_file_to_image
-	char	*south;
-	char	*west;
-	char	*east;
-	char	*floor;
-	char	*ceiling;
-	char	**map;
-	int		row;
-	int		column;
-	int		player[2];
-	int		enemy[2];
-	int		fd;
+	int		map_width;
+	int		map_height;
+	int		floor_color;
+	int		ceil_color;
 }	t_map;
 
 typedef struct s_data
@@ -70,13 +57,14 @@ typedef struct s_data
 	int		line_len;
 	int		endian;
 	char	map[MAP_HEIGHT][MAP_WIDTH];
+	int		map_width;
+	int		map_height;
 	double	player_x;
 	double	player_y;
 	double	player_angle;
 	double	ray_distance[WIDTH];
 	int		ray_color[WIDTH];
 	double	texture_x[WIDTH];
-	t_map	*map_data;
 }	t_data;
 
 typedef struct s_line
@@ -161,19 +149,9 @@ int		key_hook(int keycode, t_data *data);
 //raycaster.c
 void	cast_rays(t_data *data);
 
-int		parse(int argc, char **argv, t_data *data);
-void	safe_exit(t_map *map, int exit_code);
-//parsing
-void	parsing(int argc, char **argv, t_map *map);
-void	get_texture(char *line, char **texture, t_map *map);
-void	get_color(char *line, char **color, t_map *map);
-void	get_map(char *line, t_map *map);
-void	check_map(t_map *map);
-void	list_to_arr(t_list **map_list, t_map *map);
 
-//cleanup
-void	print_error(int count, ...);
-void	free_array(char ***arr);
-void	free_list(t_list **list);
+
+
+int	parse(int argc, char **argv);
 
 #endif

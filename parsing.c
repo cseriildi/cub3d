@@ -6,13 +6,13 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:55:03 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/05 13:27:06 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/05 16:16:24 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	check_file(char	*filename, bool is_cub);
+void	check_file(char	*filename, bool is_cub, t_map *map);
 void	parse_file(t_map *map);
 
 void	parsing(int argc, char **argv, t_map *map)
@@ -20,19 +20,14 @@ void	parsing(int argc, char **argv, t_map *map)
 	if (argc != 2)
 	{
 		print_error(3, "Error\nUsage: ", argv[0], " <map-filename>.cub");
-		exit(EXIT_FAILURE);
+		safe_exit(map, EXIT_FAILURE);
 	}
-	check_file(argv[1], true);
-	map->fd = open(argv[1], O_RDONLY, 0644);
-	if (map->fd == -1)
-	{
-		print_error(4, "Error\n", argv[1], " ", strerror(errno));
-		exit(EXIT_FAILURE);
-	}
+	check_file(argv[1], true, map);
 	parse_file(map);
+	close(map->fd);
 }
 
-void	check_file(char	*filename, bool is_cub)
+void	check_file(char	*filename, bool is_cub, t_map *map)
 {
 	size_t	len;
 
@@ -40,18 +35,62 @@ void	check_file(char	*filename, bool is_cub)
 	if (is_cub && (len <= 4 || ft_strncmp(filename + len - 4, ".cub", 5) != 0))
 	{
 		print_error(1, "Error\nFilename should end with .cub");
-		exit(EXIT_FAILURE);
+		safe_exit(map, EXIT_FAILURE);
 	}
-	if (access(filename, F_OK) == -1)
+	if (ft_strncmp(filename, "./", 2) == 0)
+		map->fd = open(filename + 2, O_RDONLY, 0644);
+	else
+		map->fd = open(filename, O_RDONLY, 0644);
+	if (map->fd == -1)
 	{
 		print_error(4, "Error\n", filename, " ", strerror(errno));
-		exit(EXIT_FAILURE);
+		safe_exit(map, EXIT_FAILURE);
 	}
-	if (access(filename, R_OK) == -1)
+}
+
+void	set_size(int *size, char *texture, t_map *map)
+{
+	char	*line;
+	char	**numbers;
+
+	check_file(texture, false, map);
+	line = get_next_line(map->fd);
+	ft_free(&line);
+	line = get_next_line(map->fd);
+	ft_free(&line);
+	line = get_next_line(map->fd);
+	close(map->fd);
+	if (!line || ft_strlen(line) < 10)
 	{
-		print_error(4, "Error\n", filename, " ", strerror(errno));
-		exit(EXIT_FAILURE);
+		ft_free(&line);
+		print_error(1, "Error\nInvalid texture");
+		safe_exit(map, EXIT_FAILURE);
 	}
+	numbers = ft_split(line + 1, ' ');
+	ft_free(&line);
+	if (!numbers)
+	{
+		print_error(1, "Error\nMalloc fail");
+		safe_exit(map, EXIT_FAILURE);
+	}
+	size[0] = ft_atoi(numbers[0]);
+	size[1] = ft_atoi(numbers[1]);
+	free_array(&numbers);
+}
+
+
+void	check_textures(t_map *map)
+{
+	if (map->ceiling < 0 || map->floor < 0
+		|| !map->east || !map->west || !map->north || !map->south)
+	{
+		print_error(1, "Error\nInvalid map");
+		safe_exit(map, EXIT_FAILURE);
+	}
+	set_size(map->n_size, map->north, map);
+	set_size(map->s_size, map->south, map);
+	set_size(map->w_size, map->west, map);
+	set_size(map->e_size, map->east, map);
 }
 
 void	parse_file(t_map *map)
@@ -76,6 +115,7 @@ void	parse_file(t_map *map)
 		else if (ft_strncmp(line, "\n", 2) != 0)
 		{
 			get_map(line, map);
+			check_textures(map);
 			break ;
 		}
 		else
@@ -123,25 +163,26 @@ void	check_map(t_map *map)
 	player_count = 0;
 	row = -1;
 	valid = true;
-	while (valid && ++row < map->row)
+	while (valid && map->map[++row])
 	{
 		column = -1;
-		while (valid && map->map && map->map[row][++column])
+		while (valid && map->map[row][++column])
 		{
 			if (!ft_strchr("WENS01XD ", map->map[row][column]))
 				valid = false;
 			else if (!ft_strchr("D1 ", map->map[row][column]))
 			{
-				if (ft_strchr("WENS", map->map[row][column]) )
-				{
-					valid = (++player_count <= 1);
-					map->player[0] = row;
-					map->player[1] = column;
-				}
-				else if (map->map[row][column] == 'X')
+				if (map->map[row][column] == 'X')
 				{
 					map->enemy[0] = row;
 					map->enemy[1] = column;
+				}
+				else if (map->map[row][column] != '0')
+				{
+					player_count++;
+					valid = (player_count <= 1);
+					map->player[0] = row;
+					map->player[1] = column;
 				}
 				valid = is_in(row, column, map);
 			}

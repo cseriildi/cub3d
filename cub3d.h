@@ -6,7 +6,7 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/05 13:24:43 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/05 16:52:33 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,40 @@
 # include <stdio.h>
 # include <fcntl.h>
 # include <stddef.h>
+#include <mlx.h>
+#include <stdlib.h>
+#include <math.h>
+#include <float.h>
+
+# define WIDTH 800
+# define HEIGHT 600
+#define TILE_SIZE 64
+#define MOVE_SPEED 0.2
+#define TURN_SPEED 0.1
+
+#define PLAYER_COLOR 0xFF0000 // Red
+#define GRID_COLOR 0xFF0000 // Red
+
+# define KEY_ESC 65307
+# define KEY_W 119
+# define KEY_A 97
+# define KEY_S 115
+# define KEY_D 100
+# define ARROW_LEFT 65361
+# define ARROW_RIGHT 65363
 
 typedef struct s_map
 {
 	char	*north; //mlx_xpm_file_to_image
+	int		n_size[2];
 	char	*south;
+	int		s_size[2];
 	char	*west;
+	int		w_size[2];
 	char	*east;
-	char	*floor;
-	char	*ceiling;
+	int		e_size[2];
+	int		floor;
+	int		ceiling;
 	char	**map;
 	int		row;
 	int		column;
@@ -36,10 +61,64 @@ typedef struct s_map
 	int		fd;
 }	t_map;
 
+typedef struct s_data
+{
+	void			*mlx;
+	void			*win;
+	void			*img;
+	char			*addr;
+	int				bpp;
+	int				line_len;
+	int				endian;
+	struct s_map	map;
+	double			player_x;
+	double			player_y;
+	double			player_angle;
+}	t_data;
+
+typedef struct s_line
+{
+	int	start_x;
+	int	start_y;
+	int	end_x;
+	int	end_y;
+	int	color;
+}	t_line;
+
+typedef struct s_line_params
+{
+	int	delta_x;
+	int	delta_y;
+	int	step_x;
+	int	step_y;
+	int	error;
+	int	error2;
+}	t_line_params;
+
+typedef struct s_rectangle
+{
+	int	x;
+	int	y;
+	int	width;
+	int	height;
+	int	color;
+}	t_rectangle;
+
+typedef struct s_minimap
+{
+	int	map_rows;
+	int	map_cols;
+	int	tile_size;
+	int	player_x;
+	int	player_y;
+	int	dir_x;
+	int	dir_y;
+}	t_minimap;
+
 //parsing
 void	parsing(int argc, char **argv, t_map *map);
 void	get_texture(char *line, char **texture, t_map *map);
-void	get_color(char *line, char **color, t_map *map);
+void	get_color(char *line, int *color, t_map *map);
 void	get_map(char *line, t_map *map);
 void	check_map(t_map *map);
 void	list_to_arr(t_list **map_list, t_map *map);

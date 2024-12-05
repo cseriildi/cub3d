@@ -6,7 +6,7 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:51:15 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/05 14:04:53 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/05 16:10:56 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,17 +64,16 @@ void	print_error(int count, ...)
 
 void	safe_exit(t_map *map, int exit_code)
 {
-	(void)exit_code;
 	ft_free(&map->north);
 	ft_free(&map->south);
 	ft_free(&map->west);
 	ft_free(&map->east);
-	ft_free(&map->floor);
-	ft_free(&map->ceiling);
 	free_array(&map->map);
 	if (map->fd != -1)
 	{
 		close(map->fd);
 		map->fd = -1;
 	}
+	get_next_line(-1);
+	exit(exit_code);
 }

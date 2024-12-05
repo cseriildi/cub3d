@@ -6,20 +6,20 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 16:26:07 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/05 13:26:51 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/05 16:17:15 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void			set_colors(char **colors, char **color, t_map *map);
+void			set_colors(char **colors, int *color, t_map *map);
 unsigned char	get_number(char *str, char **colors, t_map *map);
 
-void	get_color(char *line, char **color, t_map *map)
+void	get_color(char *line, int *color, t_map *map)
 {
 	char	**color_list;
 
-	if (*color)
+	if (*color != -1)
 	{
 		ft_free(&line);
 		print_error(1, "Error\nDuplicate color");
@@ -36,13 +36,6 @@ void	get_color(char *line, char **color, t_map *map)
 	if (!color_list)
 	{
 		print_error(1, "Error\nMalloc fail");
-		safe_exit(map, EXIT_FAILURE);
-	}
-	*color = ft_calloc(sizeof(char), 8);
-	if (!*color)
-	{
-		print_error(1, "Error\nMalloc failed");
-		free_array(&color_list);
 		safe_exit(map, EXIT_FAILURE);
 	}
 	set_colors(color_list, color, map);
@@ -93,7 +86,7 @@ void	get_map(char *line, t_map *map)
 	check_map(map);
 }
 
-void	set_colors(char **colors, char **color, t_map *map)
+void	set_colors(char **colors, int *color, t_map *map)
 {
 	int	r;
 	int	g;
@@ -108,13 +101,7 @@ void	set_colors(char **colors, char **color, t_map *map)
 	r = get_number(colors[0], colors, map);
 	g = get_number(colors[1], colors, map);
 	b = get_number(colors[2], colors, map);
-	(*color)[0] = '#';
-    (*color)[1] = "0123456789ABCDEF"[r / 16];
-    (*color)[2] = "0123456789ABCDEF"[r % 16];
-    (*color)[3] = "0123456789ABCDEF"[g / 16];
-    (*color)[4] = "0123456789ABCDEF"[g % 16];
-    (*color)[5] = "0123456789ABCDEF"[b / 16];
-    (*color)[6] = "0123456789ABCDEF"[b % 16];
+	*color = (r << 16) | (g << 8) | b;
 	free_array(&colors);
 }
 
