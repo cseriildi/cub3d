@@ -6,7 +6,7 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 10:00:59 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/06 12:40:49 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,13 +153,17 @@ typedef struct s_rectangle
 
 typedef struct s_minimap
 {
-	int	map_rows;
-	int	map_cols;
-	int	tile_size;
-	int	player_x;
-	int	player_y;
-	int	dir_x;
-	int	dir_y;
+	int		map_row;
+	int		map_col;
+	int		size;
+	int		tile_size;
+	int		player_x;
+	int		player_y;
+	int		dir_x;
+	int		dir_y;
+	char	tile;
+	double	offset_x;
+	double	offset_y;
 }	t_minimap;
 
 //parsing
