@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 13:44:30 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/06 15:38:01 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,14 @@
 
 # define PLAYER_COLOR 0xFF0000 // Red
 # define GRID_COLOR 0xFF0000 // Red
+# define DOOR_COLOR 0xA52A2A // Brown
 
 # define KEY_ESC 65307
 # define KEY_W 119
 # define KEY_A 97
 # define KEY_S 115
 # define KEY_D 100
+# define KEY_E 101
 # define ARROW_LEFT 65361
 # define ARROW_RIGHT 65363
 
@@ -48,7 +50,8 @@ typedef enum e_dir
 	NORTH,
 	EAST,
 	SOUTH,
-	WEST
+	WEST,
+	DOOR
 }	t_dir;
 
 typedef enum e_error
@@ -106,7 +109,7 @@ typedef struct s_data
 	int			ray_dir[WIDTH];
 	void		*texture_img;
 	int			*texture_data;
-	t_texture	textures[4];
+	t_texture	textures[5];
 }	t_data;
 
 typedef struct s_line
@@ -196,6 +199,7 @@ void	safe_open(char	*filename, bool is_cub, t_map *map);
 //mlx utils
 void	render_scene(t_data *data);
 int		close_window(t_data *data);
+int		track_mouse(void *param);
 
 //cleanup
 void	print_error(int count, ...);

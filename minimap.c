@@ -33,9 +33,11 @@ void	draw_minimap(t_data *data)
 			rect.height = minimap.tile_size;
 			if (minimap.tile == '1')
 				rect.color = data->map.ceiling;
+			else if (minimap.tile == 'D')
+				rect.color = DOOR_COLOR;
 			else if (minimap.tile == '0' || minimap.tile == 'N'
 				|| minimap.tile == 'S' || minimap.tile == 'E'
-				|| minimap.tile == 'W')
+				|| minimap.tile == 'W' || minimap.tile == 'd')
 				rect.color = data->map.floor;
 			else
 				rect.color = 0;

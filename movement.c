@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   movement.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:08:57 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 13:22:14 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/06 15:37:43 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,14 +72,12 @@ static void	check_and_open_door_nearby(t_data *data, double new_x, double new_y)
 	int		adj_x;
 	int		adj_y;
 
-	radius = 0.5;
+	radius = 1.5;
 	map_x = (int)new_x;
 	map_y = (int)new_y;
-
 	if (map_x < 0 || map_x >= data->map.column
 		|| map_y < 0 || map_y >= data->map.row)
-		return;
-
+		return ;
 	dx = -radius;
 	while (dx <= radius)
 	{
@@ -103,12 +101,39 @@ static void	check_and_open_door_nearby(t_data *data, double new_x, double new_y)
 			}
 			if (data->map.map[adj_y][adj_x] == 'D')
 			{
-				data->map.map[adj_y][adj_x] = '0';
+				data->map.map[adj_y][adj_x] = 'd';
 				render_scene(data);
 			}
 			dy += 0.1;
 		}
 		dx += 0.1;
+	}
+}
+
+static void	check_and_close_doors(t_data *data)
+{
+	double	radius = 1.5;
+	double	player_x = data->player_x;
+	double	player_y = data->player_y;
+	double	dist;
+	int		x;
+	int		y;
+
+	y = 0;
+	while (y < data->map.row)
+	{
+		x = 0;
+		while (x < data->map.column)
+		{
+			if (data->map.map[y][x] == 'd')
+			{
+				dist = sqrt(pow(player_x - x, 2) + pow(player_y - y, 2));
+				if (dist > radius)
+					data->map.map[y][x] = 'D';
+			}
+			x++;
+		}
+		y++;
 	}
 }
 
@@ -123,7 +148,7 @@ static void	move_player(t_data *data, double move_x, double move_y)
 		data->player_x = new_player_x;
 	if (!is_wall_at_position(data, data->player_x + 0.5, new_player_y + 0.5))
 		data->player_y = new_player_y;
-	check_and_open_door_nearby(data, new_player_x, new_player_y);
+	check_and_close_doors(data);
 }
 
 static void	turn_player(t_data *data, int keycode)
@@ -175,6 +200,8 @@ int	key_hook(int keycode, t_data *data)
 	data->addr = mlx_get_data_addr(data->img, &data->bpp,
 			&data->line_len, &data->endian);
 	update_player_position(data, keycode);
+	if (keycode == KEY_E)
+		check_and_open_door_nearby(data, data->player_x + 0.5, data->player_y + 0.5);
 	cast_rays(data);
 	render_scene(data);
 	draw_minimap(data);
