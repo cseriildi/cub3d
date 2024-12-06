@@ -28,17 +28,21 @@ void	draw_rectangle(t_data *data, t_rectangle *rect)
 	int	j;
 
 	j = 0;
-	while (j < rect->height)
+	while (j <= rect->height)
 	{
 		i = 0;
-		while (i < rect->width)
+		while (i <= rect->width)
 		{
-			my_mlx_pixel_put(data, rect->x + i, rect->y + j, rect->color);
+			if (j == 0 || j == rect->height || i == 0 || i == rect->width)
+				my_mlx_pixel_put(data, rect->x + i, rect->y + j, GRID_COLOR);
+			else
+				my_mlx_pixel_put(data, rect->x + i, rect->y + j, rect->color);
 			i++;
 		}
 		j++;
 	}
 }
+
 
 static void	draw_line_with_params(t_data *data,
 	t_line *line, t_line_params *params)

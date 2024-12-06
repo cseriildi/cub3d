@@ -4,81 +4,56 @@ void	draw_minimap(t_data *data)
 {
 	int			row;
 	int			col;
-	t_line		line;
 	t_minimap	minimap;
 	t_rectangle	rect;
-	char		tile;
+	t_line		line;
 
-	minimap.map_rows = data->map.row;
-	minimap.map_cols = data->map.column;
-	if (WIDTH / 3 < HEIGHT / 3)
-		minimap.tile_size = (WIDTH / 3) / minimap.map_cols;
-	else
-		minimap.tile_size = (HEIGHT / 3) / minimap.map_rows;
-	minimap.player_x = (int)(data->player_x * minimap.tile_size)
-		+ (minimap.tile_size / 2);
-	minimap.player_y = (int)(data->player_y * minimap.tile_size)
-		+ (minimap.tile_size / 2);
 	row = 0;
-	while (row < minimap.map_rows)
+	minimap.size = 7;
+	minimap.tile_size = 25;
+	minimap.offset_x
+		= (data->player_x - floor(data->player_x)) * minimap.tile_size;
+	minimap.offset_y
+		= (data->player_y - floor(data->player_y)) * minimap.tile_size;
+	while (row < minimap.size)
 	{
 		col = 0;
-		while (col < minimap.map_cols)
+		while (col < minimap.size)
 		{
-			tile = data->map.map[row][col];
-			if (tile == '1' || tile == '0' || tile == 'N'
-				|| tile == 'S' || tile == 'E' || tile == 'W')
-			{
-				rect.x = col * minimap.tile_size;
-				rect.y = row * minimap.tile_size;
-				rect.width = minimap.tile_size;
-				rect.height = minimap.tile_size;
-				if (tile == '1')
-					rect.color = data->map.ceiling;
-				else
-					rect.color = data->map.floor;
-				draw_rectangle(data, &rect);
-				line.start_x = col * minimap.tile_size;
-				line.start_y = row * minimap.tile_size;
-				line.end_x = (col + 1) * minimap.tile_size;
-				line.end_y = row * minimap.tile_size;
-				line.color = GRID_COLOR;
-				draw_line(data, &line);
-				line.start_x = col * minimap.tile_size;
-				line.start_y = (row + 1) * minimap.tile_size;
-				line.end_x = (col + 1) * minimap.tile_size;
-				line.end_y = (row + 1) * minimap.tile_size;
-				draw_line(data, &line);
-				line.start_x = col * minimap.tile_size;
-				line.start_y = row * minimap.tile_size;
-				line.end_x = col * minimap.tile_size;
-				line.end_y = (row + 1) * minimap.tile_size;
-				line.color = GRID_COLOR;
-				draw_line(data, &line);
-				line.start_x = (col + 1) * minimap.tile_size;
-				line.start_y = row * minimap.tile_size;
-				line.end_x = (col + 1) * minimap.tile_size;
-				line.end_y = (row + 1) * minimap.tile_size;
-				line.color = GRID_COLOR;
-				draw_line(data, &line);
-			}
+			minimap.map_row = floor(data->player_y) - (minimap.size / 2) + row;
+			minimap.map_col = floor(data->player_x) - (minimap.size / 2) + col;
+			if (minimap.map_row >= 0 && minimap.map_row < data->map.row
+				&& minimap.map_col >= 0 && minimap.map_col < data->map.column)
+				minimap.tile = data->map.map[minimap.map_row][minimap.map_col];
+			else
+				minimap.tile = ' ';
+			rect.x = col * minimap.tile_size - minimap.offset_x;
+			rect.y = row * minimap.tile_size - minimap.offset_y;
+			rect.width = minimap.tile_size;
+			rect.height = minimap.tile_size;
+			if (minimap.tile == '1')
+				rect.color = data->map.ceiling;
+			else if (minimap.tile == '0' || minimap.tile == 'N'
+				|| minimap.tile == 'S' || minimap.tile == 'E'
+				|| minimap.tile == 'W')
+				rect.color = data->map.floor;
+			else
+				rect.color = 0;
+			draw_rectangle(data, &rect);
 			col++;
 		}
 		row++;
 	}
-	rect.x = minimap.player_x - 3;
-	rect.y = minimap.player_y - 3;
+	rect.x = ((minimap.size / 2) + 0.5) * minimap.tile_size - 3;
+	rect.y = ((minimap.size / 2) + 0.5) * minimap.tile_size - 3;
 	rect.width = 6;
 	rect.height = 6;
 	rect.color = PLAYER_COLOR;
 	draw_rectangle(data, &rect);
-	minimap.dir_x = minimap.player_x + cos(data->player_angle) * 10;
-	minimap.dir_y = minimap.player_y + sin(data->player_angle) * 10;
-	line.start_x = minimap.player_x;
-	line.start_y = minimap.player_y;
-	line.end_x = minimap.dir_x;
-	line.end_y = minimap.dir_y;
+	line.start_x = rect.x + 3;
+	line.start_y = rect.y + 3;
+	line.end_x = rect.x + 3 + cos(data->player_angle) * 10;
+	line.end_y = rect.y + 3 + sin(data->player_angle) * 10;
 	line.color = PLAYER_COLOR;
 	draw_line(data, &line);
-	cast_rays(data);
 }

@@ -49,7 +49,8 @@ static void	check_horizontal(t_data *data, double player_x,
 			ray_state.map_y = 0;
 		else if (ray_state.map_y >= data->map.row)
 			ray_state.map_y = data->map.row - 1;
-		if (data->map.map[ray_state.map_y][ray_state.map_x] == '1')
+		if (data->map.map[ray_state.map_y][ray_state.map_x] == '1'
+			|| data->map.map[ray_state.map_y][ray_state.map_x] == 'D')
 		{
 			ray_state.dist = sqrt(pow(ray_state.cur_x - player_x, 2)
 					+ pow(ray_state.cur_y - player_y, 2));
@@ -115,7 +116,8 @@ static void	check_vertical(t_data *data, double player_x,
 			ray_state.map_y = 0;
 		else if (ray_state.map_y >= data->map.row)
 			ray_state.map_y = data->map.row - 1;
-		if (data->map.map[ray_state.map_y][ray_state.map_x] == '1')
+		if (data->map.map[ray_state.map_y][ray_state.map_x] == '1'
+			|| data->map.map[ray_state.map_y][ray_state.map_x] == 'D')
 		{
 			ray_state.dist = sqrt(pow(ray_state.cur_x - player_x, 2)
 					+ pow(ray_state.cur_y - player_y, 2));
