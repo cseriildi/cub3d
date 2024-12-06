@@ -48,6 +48,58 @@ static int	is_wall_at_position(t_data *data, double new_x, double new_y)
 	return (0);
 }
 
+static void	check_and_open_door_nearby(t_data *data, double new_x, double new_y)
+{
+	int		map_x;
+	int		map_y;
+	double	radius;
+	double	dx;
+	double	dy;
+	double	check_x;
+	double	check_y;
+	int		adj_x;
+	int		adj_y;
+
+	radius = 0.5;
+	map_x = (int)new_x;
+	map_y = (int)new_y;
+
+	if (map_x < 0 || map_x >= data->map.column
+		|| map_y < 0 || map_y >= data->map.row)
+		return;
+
+	dx = -radius;
+	while (dx <= radius)
+	{
+		dy = -radius;
+		while (dy <= radius)
+		{
+			check_x = new_x + dx;
+			check_y = new_y + dy;
+			if (sqrt(dx * dx + dy * dy) > radius)
+			{
+				dy += 0.1;
+				continue ;
+			}
+			adj_x = (int)check_x;
+			adj_y = (int)check_y;
+			if (adj_x < 0 || adj_x >= data->map.column
+				|| adj_y < 0 || adj_y >= data->map.row)
+			{
+				dy += 0.1;
+				continue ;
+			}
+			if (data->map.map[adj_y][adj_x] == 'D')
+			{
+				data->map.map[adj_y][adj_x] = '0';
+				render_scene(data);
+			}
+			dy += 0.1;
+		}
+		dx += 0.1;
+	}
+}
+
 static void	move_player(t_data *data, double move_x, double move_y)
 {
 	double	new_player_x;
@@ -59,6 +111,7 @@ static void	move_player(t_data *data, double move_x, double move_y)
 		data->player_x = new_player_x;
 	if (!is_wall_at_position(data, data->player_x + 0.5, new_player_y + 0.5))
 		data->player_y = new_player_y;
+	check_and_open_door_nearby(data, new_player_x, new_player_y);
 }
 
 static void	turn_player(t_data *data, int keycode)
