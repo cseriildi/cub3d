@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:01:37 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 13:01:38 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/06 15:32:33 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	draw_vertical_line(t_data *data, int x, int wall_height)
 	int			original_wall_top;
 	t_texture	*texture;
 
-	if (data->ray_dir[x] < 0 || data->ray_dir[x] >= 4)
+	if (data->ray_dir[x] < 0 || data->ray_dir[x] >= 5)
 		data->ray_dir[x] = NORTH;
 	texture = &data->textures[data->ray_dir[x]];
 	wall_top = (HEIGHT - wall_height) / 2;

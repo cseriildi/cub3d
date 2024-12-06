@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cast_rays.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:31:42 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 13:31:43 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/06 15:31:45 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ static void	check_horizontal(t_data *data, double player_x,
 					data->texture_x[ray->index]
 						= ray->hit_x - floor(ray->hit_x);
 				}
+				if (data->map.map[ray_state.map_y][ray_state.map_x] == 'D')
+					data->ray_dir[ray->index] = DOOR;
 			}
 			break ;
 		}
@@ -138,6 +140,8 @@ static void	check_vertical(t_data *data, double player_x,
 					data->texture_x[ray->index]
 						= 1 - (ray->hit_y - floor(ray->hit_y));
 				}
+				if (data->map.map[ray_state.map_y][ray_state.map_x] == 'D')
+					data->ray_dir[ray->index] = DOOR;
 			}
 			break ;
 		}
