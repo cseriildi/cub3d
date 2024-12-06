@@ -6,7 +6,7 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 09:16:01 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/06 10:00:59 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,5 +175,25 @@ void	print_error(int count, ...);
 void	safe_exit(t_map *map, int exit_code);
 void	free_array(char ***arr);
 void	free_list(t_list **list);
+
+//raycasting
+void	cast_rays(t_data *data);
+
+//minimap
+void	draw_minimap(t_data *data);
+
+//draw_utils
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+void	draw_rectangle(t_data *data, t_rectangle *rect);
+void	draw_line(t_data *data, t_line *line);
+void	draw_vertical_line(t_data *data, int x, int wall_height);
+
+//movement
+int		key_hook(int keycode, t_data *data);
+
+
+
+int		close_window(t_data *data);
+void	render_scene(t_data *data);
 
 #endif

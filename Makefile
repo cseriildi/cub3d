@@ -6,7 +6,7 @@
 #    By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/20 10:41:15 by icseri            #+#    #+#              #
-#    Updated: 2024/12/05 15:29:51 by dcsicsak         ###   ########.fr        #
+#    Updated: 2024/12/06 10:00:14 by dcsicsak         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,11 @@ SRCS = main.c \
 		parsing.c \
 		cleanup.c \
 		parsing_utils.c \
-		parsing_textures.c
+		parsing_textures.c \
+		cast_rays.c \
+		minimap.c \
+		draw_utils.c \
+		movement.c \
 
 OBJS = ${SRCS:.c=.o}
 
