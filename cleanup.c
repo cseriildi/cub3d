@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
+/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:51:15 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/05 16:10:56 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/06 13:00:45 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	free_list(t_list **list)
 		while (current != NULL)
 		{
 			next = current->next;
-			ft_free((char**)&current->content);
+			ft_free((char **)&current->content);
 			free(current);
 			current = next;
 		}
@@ -62,6 +62,18 @@ void	print_error(int count, ...)
 	ft_putstr_fd("\n", STDERR_FILENO);
 }
 
+void	errors(int exit_code)
+{
+	if (exit_code == MALLOC)
+		print_error(1, "Error\nMalloc fail");
+	else if (exit_code == COLOR)
+		print_error(1, "Error\nInvalid color");
+	else if (exit_code == TEXTURE)
+		print_error(1, "Error\nInvalid texture");
+	else if (exit_code == MAP)
+		print_error(1, "Error\nInvalid map");
+}
+
 void	safe_exit(t_map *map, int exit_code)
 {
 	ft_free(&map->north);
@@ -75,5 +87,6 @@ void	safe_exit(t_map *map, int exit_code)
 		map->fd = -1;
 	}
 	get_next_line(-1);
+	errors(exit_code);
 	exit(exit_code);
 }

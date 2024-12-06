@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
+/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:22 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 13:29:34 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/06 13:47:32 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,51 +134,10 @@ int	main(int argc, char **argv)
 
 	init_data(&data);
 	parsing(argc, argv, &data.map);
-	printf("[%s], [%s], [%s], [%s], [%d], [%d], [%d], [%d], [%d], [%d]\n", data.map.north,
-	data.map.south,
-	data.map.west ,
-	data.map.east ,
-	data.map.floor,
-	data.map.ceiling,
-	data.map.row,
-	data.map.column,
-	data.map.player[0],
-	data.map.player[1]);
-	data.mlx = mlx_init();
-	if (!data.mlx)
-	{
-		print_error(1, "Error: Failed to initialize mlx\n");
-		safe_exit(&data.map, EXIT_FAILURE);
-	}
-	data.win = mlx_new_window(data.mlx, WIDTH, HEIGHT, "cub3d");
-	if (!data.win)
-	{
-		mlx_destroy_display(data.mlx);
-		free(data.mlx);
-		safe_exit(&data.map, EXIT_FAILURE);
-	}
-	data.img = mlx_new_image(data.mlx, WIDTH, HEIGHT);
-	if (!data.img)
-	{
-		mlx_destroy_window(data.mlx, data.win);
-		mlx_destroy_display(data.mlx);
-		free(data.mlx);
-		safe_exit(&data.map, EXIT_FAILURE);
-	}
-	data.addr = mlx_get_data_addr(data.img,
-			&data.bpp, &data.line_len, &data.endian);
+	init_mlx(&data);
 	mlx_mouse_move(data.mlx, data.win, WIDTH / 2, HEIGHT / 2);
 	mlx_mouse_hide(data.mlx, data.win);
-	data.player_x = data.map.player[1];
-	data.player_y = data.map.player[0];
-	if (data.map.map[data.map.player[0]][data.map.player[1]] == 'N')
-		data.player_angle = 3 * M_PI / 2;
-	else if (data.map.map[data.map.player[0]][data.map.player[1]] == 'S')
-		data.player_angle = M_PI / 2;
-	else if (data.map.map[data.map.player[0]][data.map.player[1]] == 'E')
-		data.player_angle = 0;
-	else if (data.map.map[data.map.player[0]][data.map.player[1]] == 'W')
-		data.player_angle = M_PI;
+	set_player(&data);
 	cast_rays(&data);
 	load_all_textures(&data);
 	render_scene(&data);
@@ -191,5 +150,4 @@ int	main(int argc, char **argv)
 	mlx_loop_hook(data.mlx, track_mouse, &data);
 	mlx_loop(data.mlx);
 	safe_exit(&data.map, EXIT_SUCCESS);
-	return (0);
 }

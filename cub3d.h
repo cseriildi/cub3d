@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
+/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 13:00:40 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/06 13:44:30 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,21 +19,21 @@
 # include <stdio.h>
 # include <fcntl.h>
 # include <stddef.h>
-#include <mlx.h>
-#include <stdlib.h>
-#include <math.h>
-#include <float.h>
+# include <mlx.h>
+# include <stdlib.h>
+# include <math.h>
 
 # define WIDTH 800
 # define HEIGHT 600
-#define TILE_SIZE 64
-#define MOVE_SPEED 0.2
-#define TURN_SPEED 0.1
-#define FIELD_OF_VIEW M_PI / 3
+# define TILE_SIZE 64
+# define MOVE_SPEED 0.2
+# define TURN_SPEED 0.1
+# define FIELD_OF_VIEW 1.047198
+# define DBL_MAX 1.7976931348623157E+308
 #define MOUSE_SENSITIVITY 0.002
 
-#define PLAYER_COLOR 0xFF0000 // Red
-#define GRID_COLOR 0xFF0000 // Red
+# define PLAYER_COLOR 0xFF0000 // Red
+# define GRID_COLOR 0xFF0000 // Red
 
 # define KEY_ESC 65307
 # define KEY_W 119
@@ -51,9 +51,18 @@ typedef enum e_dir
 	WEST
 }	t_dir;
 
+typedef enum e_error
+{
+	MALLOC = 2,
+	MAP,
+	TEXTURE,
+	COLOR,
+	WORNG_FILE
+}	t_erorr;
+
 typedef struct s_map
 {
-	char	*north; //mlx_xpm_file_to_image
+	char	*north;
 	int		n_size[2];
 	char	*south;
 	int		s_size[2];
@@ -71,33 +80,33 @@ typedef struct s_map
 	int		fd;
 }	t_map;
 
-typedef struct s_texture {
+typedef struct s_texture
+{
 	void	*img;
 	int		*data;
 	int		width;
 	int		height;
 }	t_texture;
 
-
 typedef struct s_data
 {
-	void			*mlx;
-	void			*win;
-	void			*img;
-	char			*addr;
-	int				bpp;
-	int				line_len;
-	int				endian;
-	struct s_map	map;
-	double			player_x;
-	double			player_y;
-	double			player_angle;
-	double			ray_distance[WIDTH];
-	double			texture_x[WIDTH];
-	int				ray_dir[WIDTH];
-	void			*texture_img;
-	int				*texture_data;
-	t_texture		textures[4];
+	void		*mlx;
+	void		*win;
+	void		*img;
+	char		*addr;
+	int			bpp;
+	int			line_len;
+	int			endian;
+	t_map		map;
+	double		player_x;
+	double		player_y;
+	double		player_angle;
+	double		ray_distance[WIDTH];
+	double		texture_x[WIDTH];
+	int			ray_dir[WIDTH];
+	void		*texture_img;
+	int			*texture_data;
+	t_texture	textures[4];
 }	t_data;
 
 typedef struct s_line
@@ -167,6 +176,13 @@ typedef struct s_minimap
 	double	offset_y;
 }	t_minimap;
 
+//init
+void	load_texture(t_data *data, t_texture *texture, char *file);
+void	load_all_textures(t_data *data);
+void	init_data(t_data *data);
+void	init_mlx(t_data *data);
+void	set_player(t_data *data);
+
 //parsing
 void	parsing(int argc, char **argv, t_map *map);
 void	get_texture(char *line, char **texture, t_map *map);
@@ -174,6 +190,12 @@ void	get_color(char *line, int *color, t_map *map);
 void	get_map(char *line, t_map *map);
 void	check_map(t_map *map);
 void	list_to_arr(t_list **map_list, t_map *map);
+void	check_textures(t_map *map);
+void	safe_open(char	*filename, bool is_cub, t_map *map);
+
+//mlx utils
+void	render_scene(t_data *data);
+int		close_window(t_data *data);
 
 //cleanup
 void	print_error(int count, ...);
@@ -195,10 +217,5 @@ void	draw_vertical_line(t_data *data, int x, int wall_height);
 
 //movement
 int		key_hook(int keycode, t_data *data);
-
-
-
-int		close_window(t_data *data);
-void	render_scene(t_data *data);
 
 #endif
