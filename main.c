@@ -6,7 +6,7 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:22 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 10:37:14 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/06 13:29:34 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ void	load_texture(t_data *data, t_texture *texture, char *file)
 	}
 }
 
-
 void	load_all_textures(t_data *data)
 {
 	load_texture(data, &data->textures[NORTH], data->map.north);
@@ -53,7 +52,6 @@ void	load_all_textures(t_data *data)
 	load_texture(data, &data->textures[SOUTH], data->map.south);
 	load_texture(data, &data->textures[WEST], data->map.west);
 }
-
 
 void	render_scene(t_data *data)
 {
@@ -97,7 +95,38 @@ void	init_data(t_data *data)
 	data->map.ceiling = -1;
 	data->map.floor = -1;
 }
+int track_mouse(void *param)
+{
+	t_data	*data;
+	int		x;
+	int		y;
+	int		center_x;
+	int		center_y;
 
+	data = (t_data *)param;
+	center_x = WIDTH / 2;
+	center_y = HEIGHT / 2;
+	mlx_mouse_get_pos(data->mlx, data->win, &x, &y);
+	if (x != center_x)
+		data->player_angle += (x - center_x) * MOUSE_SENSITIVITY;
+	data->player_angle = fmod(data->player_angle + 2 * M_PI, 2 * M_PI);
+	mlx_mouse_move(data->mlx, data->win, center_x, center_y);
+	mlx_mouse_hide(data->mlx, data->win);
+	mlx_destroy_image(data->mlx, data->img);
+	data->img = mlx_new_image(data->mlx, WIDTH, HEIGHT);
+	if (!data->img)
+	{
+		print_error(1, "Error: Failed to create new image\n");
+		close_window(data);
+	}
+	data->addr = mlx_get_data_addr(data->img, &data->bpp,
+			&data->line_len, &data->endian);
+	cast_rays(data);
+	render_scene(data);
+	draw_minimap(data);
+	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
+	return (0);
+}
 
 int	main(int argc, char **argv)
 {
@@ -115,16 +144,6 @@ int	main(int argc, char **argv)
 	data.map.column,
 	data.map.player[0],
 	data.map.player[1]);
-	data.player_x = data.map.player[1];
-	data.player_y = data.map.player[0];
-	if (data.map.map[data.map.player[0]][data.map.player[1]] == 'N')
-		data.player_angle = 3 * M_PI / 2;
-	else if (data.map.map[data.map.player[0]][data.map.player[1]] == 'S')
-		data.player_angle = M_PI / 2;
-	else if (data.map.map[data.map.player[0]][data.map.player[1]] == 'E')
-		data.player_angle = 0;
-	else if (data.map.map[data.map.player[0]][data.map.player[1]] == 'W')
-		data.player_angle = M_PI;
 	data.mlx = mlx_init();
 	if (!data.mlx)
 	{
@@ -148,15 +167,28 @@ int	main(int argc, char **argv)
 	}
 	data.addr = mlx_get_data_addr(data.img,
 			&data.bpp, &data.line_len, &data.endian);
+	mlx_mouse_move(data.mlx, data.win, WIDTH / 2, HEIGHT / 2);
+	mlx_mouse_hide(data.mlx, data.win);
+	data.player_x = data.map.player[1];
+	data.player_y = data.map.player[0];
+	if (data.map.map[data.map.player[0]][data.map.player[1]] == 'N')
+		data.player_angle = 3 * M_PI / 2;
+	else if (data.map.map[data.map.player[0]][data.map.player[1]] == 'S')
+		data.player_angle = M_PI / 2;
+	else if (data.map.map[data.map.player[0]][data.map.player[1]] == 'E')
+		data.player_angle = 0;
+	else if (data.map.map[data.map.player[0]][data.map.player[1]] == 'W')
+		data.player_angle = M_PI;
 	cast_rays(&data);
 	load_all_textures(&data);
 	render_scene(&data);
 	draw_minimap(&data);
-	key_hook(KEY_W, &data); // really sketchy solution
-	key_hook(KEY_S, &data); // really sketchy solution
+	//key_hook(KEY_W, &data); // really sketchy solution
+	//key_hook(KEY_S, &data); // really sketchy solution
 	mlx_put_image_to_window(data.mlx, data.win, data.img, 0, 0);
 	mlx_hook(data.win, 2, 1L << 0, key_hook, &data);
 	mlx_hook(data.win, 17, 0, close_window, &data);
+	mlx_loop_hook(data.mlx, track_mouse, &data);
 	mlx_loop(data.mlx);
 	safe_exit(&data.map, EXIT_SUCCESS);
 	return (0);

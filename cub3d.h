@@ -6,7 +6,7 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 10:00:59 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/06 13:00:40 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 #define MOVE_SPEED 0.2
 #define TURN_SPEED 0.1
 #define FIELD_OF_VIEW M_PI / 3
+#define MOUSE_SENSITIVITY 0.002
 
 #define PLAYER_COLOR 0xFF0000 // Red
 #define GRID_COLOR 0xFF0000 // Red
@@ -153,13 +154,17 @@ typedef struct s_rectangle
 
 typedef struct s_minimap
 {
-	int	map_rows;
-	int	map_cols;
-	int	tile_size;
-	int	player_x;
-	int	player_y;
-	int	dir_x;
-	int	dir_y;
+	int		map_row;
+	int		map_col;
+	int		size;
+	int		tile_size;
+	int		player_x;
+	int		player_y;
+	int		dir_x;
+	int		dir_y;
+	char	tile;
+	double	offset_x;
+	double	offset_y;
 }	t_minimap;
 
 //parsing
