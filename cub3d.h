@@ -6,7 +6,7 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/05 16:52:33 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/06 09:16:01 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #define TILE_SIZE 64
 #define MOVE_SPEED 0.2
 #define TURN_SPEED 0.1
+#define FIELD_OF_VIEW M_PI / 3
 
 #define PLAYER_COLOR 0xFF0000 // Red
 #define GRID_COLOR 0xFF0000 // Red
@@ -40,6 +41,14 @@
 # define KEY_D 100
 # define ARROW_LEFT 65361
 # define ARROW_RIGHT 65363
+
+typedef enum e_dir
+{
+	NORTH,
+	EAST,
+	SOUTH,
+	WEST
+}	t_dir;
 
 typedef struct s_map
 {
@@ -61,6 +70,14 @@ typedef struct s_map
 	int		fd;
 }	t_map;
 
+typedef struct s_texture {
+	void	*img;
+	int		*data;
+	int		width;
+	int		height;
+}	t_texture;
+
+
 typedef struct s_data
 {
 	void			*mlx;
@@ -74,6 +91,12 @@ typedef struct s_data
 	double			player_x;
 	double			player_y;
 	double			player_angle;
+	double			ray_distance[WIDTH];
+	double			texture_x[WIDTH];
+	int				ray_dir[WIDTH];
+	void			*texture_img;
+	int				*texture_data;
+	t_texture		textures[4];
 }	t_data;
 
 typedef struct s_line
@@ -94,6 +117,30 @@ typedef struct s_line_params
 	int	error;
 	int	error2;
 }	t_line_params;
+
+typedef struct s_ray
+{
+	double	angle;
+	double	closest_distance;
+	double	hit_x;
+	double	hit_y;
+	int		hit_color;
+	int		index;
+}	t_ray;
+
+typedef struct s_ray_trace_state
+{
+	int		direction;
+	double	y_intercept;
+	double	x_intercept;
+	double	y_step;
+	double	x_step;
+	double	cur_x;
+	double	cur_y;
+	int		map_x;
+	int		map_y;
+	double	dist;
+}	t_ray_trace_state;
 
 typedef struct s_rectangle
 {

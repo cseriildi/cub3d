@@ -6,7 +6,7 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:22 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/05 17:10:03 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/06 09:27:15 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,6 +180,200 @@ void	draw_line(t_data *data, t_line *line)
 	draw_line_with_params(data, line, &params);
 }
 
+static void	check_horizontal(t_data *data, double player_x,
+	double player_y, t_ray *ray)
+{
+	t_ray_trace_state	ray_state;
+
+	ray_state.direction = (ray->angle > 0 && ray->angle < M_PI);
+	if (ray_state.direction)
+	{
+		ray_state.y_intercept = floor(player_y) + 1;
+		ray_state.y_step = 1;
+	}
+	else
+	{
+		ray_state.y_intercept = floor(player_y);
+		ray_state.y_step = -1;
+	}
+	ray_state.x_intercept
+		= player_x + (ray_state.y_intercept - player_y) / tan(ray->angle);
+	ray_state.x_step = ray_state.y_step / tan(ray->angle);
+	ray_state.cur_x = ray_state.x_intercept;
+	ray_state.cur_y = ray_state.y_intercept;
+	while (ray_state.cur_x >= 0 && ray_state.cur_x < data->map.column
+		&& ray_state.cur_y >= 0 && ray_state.cur_y < data->map.row)
+	{
+		ray_state.map_x = (int)ray_state.cur_x;
+		if (ray_state.direction)
+			ray_state.map_y = (int)ray_state.cur_y;
+		else
+			ray_state.map_y = (int)(ray_state.cur_y - 1);
+		if (ray_state.map_x < 0)
+			ray_state.map_x = 0;
+		else if (ray_state.map_x >= data->map.column)
+			ray_state.map_x = data->map.column - 1;
+		if (ray_state.map_y < 0)
+			ray_state.map_y = 0;
+		else if (ray_state.map_y >= data->map.row)
+			ray_state.map_y = data->map.row - 1;
+		if (data->map.map[ray_state.map_y][ray_state.map_x] == '1')
+		{
+			ray_state.dist = sqrt(pow(ray_state.cur_x - player_x, 2)
+					+ pow(ray_state.cur_y - player_y, 2));
+			if (ray_state.dist < ray->closest_distance)
+			{
+				ray->closest_distance = ray_state.dist;
+				ray->hit_x = ray_state.cur_x;
+				ray->hit_y = ray_state.cur_y;
+				if (ray_state.direction)
+				{
+					data->ray_dir[ray->index] = SOUTH;
+					data->texture_x[ray->index]
+						= 1 - (ray->hit_x - floor(ray->hit_x));
+				}
+				else
+				{
+					data->ray_dir[ray->index] = NORTH;
+					data->texture_x[ray->index]
+						= ray->hit_x - floor(ray->hit_x);
+				}
+			}
+			break ;
+		}
+		ray_state.cur_x += ray_state.x_step;
+		ray_state.cur_y += ray_state.y_step;
+	}
+}
+
+static void	check_vertical(t_data *data, double player_x,
+	double player_y, t_ray *ray)
+{
+	t_ray_trace_state	ray_state;
+
+	ray_state.direction = (ray->angle < M_PI_2 || ray->angle > 3 * M_PI_2);
+	if (ray_state.direction)
+	{
+		ray_state.x_intercept = floor(player_x) + 1;
+		ray_state.x_step = 1;
+	}
+	else
+	{
+		ray_state.x_intercept = floor(player_x);
+		ray_state.x_step = -1;
+	}
+	ray_state.y_intercept
+		= player_y + (ray_state.x_intercept - player_x) * tan(ray->angle);
+	ray_state.y_step = ray_state.x_step * tan(ray->angle);
+	ray_state.cur_x = ray_state.x_intercept;
+	ray_state.cur_y = ray_state.y_intercept;
+	while (ray_state.cur_x >= 0 && ray_state.cur_x < data->map.column
+		&& ray_state.cur_y >= 0 && ray_state.cur_y < data->map.row)
+	{
+		if (ray_state.direction)
+			ray_state.map_x = (int)ray_state.cur_x;
+		else
+			ray_state.map_x = (int)(ray_state.cur_x - 1);
+		ray_state.map_y = (int)ray_state.cur_y;
+		if (ray_state.map_x < 0)
+			ray_state.map_x = 0;
+		else if (ray_state.map_x >= data->map.column)
+			ray_state.map_x = data->map.column - 1;
+		if (ray_state.map_y < 0)
+			ray_state.map_y = 0;
+		else if (ray_state.map_y >= data->map.row)
+			ray_state.map_y = data->map.row - 1;
+		if (data->map.map[ray_state.map_y][ray_state.map_x] == '1')
+		{
+			ray_state.dist = sqrt(pow(ray_state.cur_x - player_x, 2)
+					+ pow(ray_state.cur_y - player_y, 2));
+			if (ray_state.dist < ray->closest_distance)
+			{
+				ray->closest_distance = ray_state.dist;
+				ray->hit_x = ray_state.cur_x;
+				ray->hit_y = ray_state.cur_y;
+				if (ray_state.direction)
+				{
+					data->ray_dir[ray->index] = EAST;
+					data->texture_x[ray->index]
+						= ray->hit_y - floor(ray->hit_y);
+				}
+				else
+				{
+					data->ray_dir[ray->index] = WEST;
+					data->texture_x[ray->index]
+						= 1 - (ray->hit_y - floor(ray->hit_y));
+				}
+			}
+			break ;
+		}
+		ray_state.cur_x += ray_state.x_step;
+		ray_state.cur_y += ray_state.y_step;
+	}
+}
+
+static void	cast_ray(t_data *data, double ray_angle, int ray_index)
+{
+	t_ray	ray;
+	t_line	line;
+	int		tile_size;
+
+	ray.index = ray_index;
+	ray.angle = fmod(ray_angle, 2 * M_PI);
+	if (ray.angle < 0)
+		ray.angle += 2 * M_PI;
+	ray.closest_distance = DBL_MAX;
+	ray.hit_x = 0;
+	ray.hit_y = 0;
+	ray.hit_color = 0;
+	if (WIDTH / 3 < HEIGHT / 3)
+		tile_size = (WIDTH / 3) / data->map.column;
+	else
+		tile_size = (HEIGHT / 3) / data->map.row;
+	check_horizontal(data, data->player_x + 0.5, data->player_y + 0.5, &ray);
+	check_vertical(data, data->player_x + 0.5, data->player_y + 0.5, &ray);
+	if (ray.closest_distance < DBL_MAX)
+	{
+		line.start_x = (data->player_x + 0.5) * tile_size;
+		line.start_y = (data->player_y + 0.5) * tile_size;
+		line.end_x = ray.hit_x * tile_size;
+		line.end_y = ray.hit_y * tile_size;
+		line.color = ray.hit_color;
+		draw_line(data, &line);
+		if (ray.closest_distance > 0.01)
+		{
+			data->ray_distance[ray_index]
+				= ray.closest_distance * cos(ray.angle - data->player_angle);
+		}
+		else
+		{
+			data->ray_distance[ray_index] = DBL_MAX;
+		}
+	}
+	else
+	{
+		data->ray_distance[ray_index] = DBL_MAX;
+	}
+}
+
+void	cast_rays(t_data *data)
+{
+	double	ray_angle;
+	double	angle_increment;
+	int		ray_index;
+
+	ray_index = 0;
+	angle_increment = FIELD_OF_VIEW / WIDTH;
+	ray_angle = data->player_angle - FIELD_OF_VIEW / 2;
+	while (ray_angle < data->player_angle + FIELD_OF_VIEW / 2)
+	{
+		cast_ray(data, ray_angle, ray_index);
+		ray_angle += angle_increment;
+		ray_index++;
+	}
+}
+
+
 void	draw_minimap(t_data *data)
 {
 	int			row;
@@ -195,8 +389,10 @@ void	draw_minimap(t_data *data)
 		minimap.tile_size = (WIDTH / 3) / minimap.map_cols;
 	else
 		minimap.tile_size = (HEIGHT / 3) / minimap.map_rows;
-	minimap.player_x = (int)(data->player_x * minimap.tile_size) + (minimap.tile_size / 2);
-	minimap.player_y = (int)(data->player_y * minimap.tile_size) + (minimap.tile_size / 2);
+	minimap.player_x = (int)(data->player_x * minimap.tile_size)
+		+ (minimap.tile_size / 2);
+	minimap.player_y = (int)(data->player_y * minimap.tile_size)
+		+ (minimap.tile_size / 2);
 	row = 0;
 	while (row < minimap.map_rows)
 	{
@@ -258,28 +454,74 @@ void	draw_minimap(t_data *data)
 	line.end_y = minimap.dir_y;
 	line.color = PLAYER_COLOR;
 	draw_line(data, &line);
+	cast_rays(data);
 }
 
-void	draw_vertical_line(t_data *data, int x, int wall_height, int wall_color)
+void	draw_vertical_line(t_data *data, int x, int wall_height)
 {
-	int		y;
-	int		wall_top;
-	int		wall_bottom;
+	int			y;
+	int			wall_top;
+	int			wall_bottom;
+	int			texture_y;
+	double		step;
+	double		texture_pos;
+	t_texture	*texture;
 
+	if (data->ray_dir[x] < 0 || data->ray_dir[x] >= 4)
+		data->ray_dir[x] = NORTH;
+	texture = &data->textures[data->ray_dir[x]];
 	wall_top = (HEIGHT - wall_height) / 2;
 	wall_bottom = wall_top + wall_height - 1;
 	if (wall_top < 0)
 		wall_top = 0;
 	if (wall_bottom >= HEIGHT)
 		wall_bottom = HEIGHT - 1;
+	printf("wall_top: %d, wall_bottom: %d\n", wall_top, wall_bottom);
+	step = (double)texture->height / wall_height;
+	texture_pos = (wall_top < 0) ? -wall_top * step : 0;
 	y = 0;
 	while (y < wall_top)
 		my_mlx_pixel_put(data, x, y++, data->map.ceiling);
 	while (y <= wall_bottom)
-		my_mlx_pixel_put(data, x, y++, wall_color);
+	{
+		texture_y = (int)texture_pos % texture->height;
+		my_mlx_pixel_put(data, x, y++,
+			texture->data[texture_y * texture->width
+			+ ((int)(data->texture_x[x] * texture->width) % texture->width)]);
+		texture_pos += step;
+	}
 	while (y < HEIGHT)
 		my_mlx_pixel_put(data, x, y++, data->map.floor);
+	printf("y: %d\n", y);
 }
+
+void	load_texture(t_data *data, t_texture *texture, char *file)
+{
+	texture->img = mlx_xpm_file_to_image(data->mlx, file,
+			&texture->width, &texture->height);
+	if (!texture->img)
+	{
+		ft_putstr_fd("Error: Failed to load texture\n", 2);
+		exit(EXIT_FAILURE);
+	}
+	texture->data = (int *)mlx_get_data_addr(texture->img,
+			&data->bpp, &data->line_len, &data->endian);
+	if (!texture->data)
+	{
+		ft_putstr_fd("Error: Failed to retrieve texture data\n", 2);
+		exit(EXIT_FAILURE);
+	}
+}
+
+
+void	load_all_textures(t_data *data)
+{
+	load_texture(data, &data->textures[NORTH], data->map.north);
+	load_texture(data, &data->textures[EAST], data->map.east);
+	load_texture(data, &data->textures[SOUTH], data->map.south);
+	load_texture(data, &data->textures[WEST], data->map.west);
+}
+
 
 void	render_scene(t_data *data)
 {
@@ -290,12 +532,12 @@ void	render_scene(t_data *data)
 	x = 0;
 	while (x < WIDTH)
 	{
-		/*if (data->ray_distance[x] > 0)
+		if (data->ray_distance[x] > 0)
 		{
+			printf("ray_distance[%d]: %f\n", x, data->ray_distance[x]);
 			wall_height = (TILE_SIZE / data->ray_distance[x]) * (HEIGHT / 55);
-			draw_vertical_line(data, x, wall_height, data->ray_color[x]);
-		}*/
-		draw_vertical_line(data, x, wall_height, 0x000000);
+			draw_vertical_line(data, x, wall_height);
+		}
 		x++;
 	}
 }
@@ -314,24 +556,44 @@ int	key_hook(int keycode, t_data *data)
 	data->addr = mlx_get_data_addr(data->img, &data->bpp,
 			&data->line_len, &data->endian);
 	update_player_position(data, keycode);
+	cast_rays(data);
 	render_scene(data);
 	draw_minimap(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
 	return (0);
 }
 
+void	init_data(t_data *data)
+{
+
+	int	i;
+
+	i = 0;
+	while (i < WIDTH)
+	{
+		data->ray_dir[i] = -1;
+		i++;
+	}
+	data->textures[0] = (t_texture){0};
+	data->textures[1] = (t_texture){0};
+	data->textures[2] = (t_texture){0};
+	data->textures[3] = (t_texture){0};
+	data->map = (t_map){0};
+	data->map.fd = -1;
+	data->map.player[0] = -1;
+	data->map.player[1] = -1;
+	data->map.enemy[0] = -1;
+	data->map.enemy[1] = -1;
+	data->map.ceiling = -1;
+	data->map.floor = -1;
+}
+
+
 int	main(int argc, char **argv)
 {
 	t_data	data;
 
-	data.map = (t_map){0};
-	data.map.fd = -1;
-	data.map.player[0] = -1;
-	data.map.player[1] = -1;
-	data.map.enemy[0] = -1;
-	data.map.enemy[1] = -1;
-	data.map.ceiling = -1;
-	data.map.floor = -1;
+	init_data(&data);
 	parsing(argc, argv, &data.map);
 	printf("[%s], [%s], [%s], [%s], [%d], [%d], [%d], [%d], [%d], [%d]\n", data.map.north,
 	data.map.south,
@@ -346,7 +608,14 @@ int	main(int argc, char **argv)
 	print_map(&data.map);
 	data.player_x = data.map.player[1];
 	data.player_y = data.map.player[0];
-	data.player_angle = 0;
+	if (data.map.map[data.map.player[0]][data.map.player[1]] == 'N')
+		data.player_angle = 3 * M_PI / 2;
+	else if (data.map.map[data.map.player[0]][data.map.player[1]] == 'S')
+		data.player_angle = M_PI / 2;
+	else if (data.map.map[data.map.player[0]][data.map.player[1]] == 'E')
+		data.player_angle = 0;
+	else if (data.map.map[data.map.player[0]][data.map.player[1]] == 'W')
+		data.player_angle = M_PI;
 	data.mlx = mlx_init();
 	if (!data.mlx)
 	{
@@ -370,6 +639,8 @@ int	main(int argc, char **argv)
 	}
 	data.addr = mlx_get_data_addr(data.img,
 			&data.bpp, &data.line_len, &data.endian);
+	cast_rays(&data);
+	load_all_textures(&data);
 	render_scene(&data);
 	draw_minimap(&data);
 	mlx_put_image_to_window(data.mlx, data.win, data.img, 0, 0);
@@ -379,29 +650,3 @@ int	main(int argc, char **argv)
 	safe_exit(&data.map, EXIT_SUCCESS);
 	return (0);
 }
-
-/*void	init_map(t_map *map)
-{
-	map->north = NULL;
-	map->south = NULL;
-	map->west = NULL;
-	map->east = NULL;
-	map->map = NULL;
-	map->row = 0;
-	map->column = 0;
-	map->floor = 0;
-	map->ceiling = 0;
-	map->fd = -1;
-	map->player[0] = -1;
-	map->player[1] = -1;
-	map->enemy[0] = -1;
-	map->enemy[1] = -1;
-	map->n_size[0] = 0;
-	map->n_size[1] = 0;
-	map->s_size[0] = 0;
-	map->s_size[1] = 0;
-	map->e_size[0] = 0;
-	map->e_size[1] = 0;
-	map->w_size[0] = 0;
-	map->w_size[1] = 0;
-}*/
