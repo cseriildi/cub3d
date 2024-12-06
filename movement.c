@@ -1,4 +1,4 @@
-#include "../includes/cub3d.h"
+#include "cub3d.h"
 
 static int	is_wall_at_position(t_data *data, double new_x, double new_y)
 {
@@ -7,10 +7,10 @@ static int	is_wall_at_position(t_data *data, double new_x, double new_y)
 
 	map_x = (int)new_x;
 	map_y = (int)new_y;
-	if (map_x < 0 || map_x >= data->map_width
-		|| map_y < 0 || map_y >= data->map_height)
+	if (map_x < 0 || map_x >= data->map.column
+		|| map_y < 0 || map_y >= data->map.row)
 		return (1);
-	if (data->map[map_y][map_x] == '1')
+	if (data->map.map[map_y][map_x] == '1')
 		return (1);
 	return (0);
 }
@@ -40,7 +40,7 @@ static void	turn_player(t_data *data, int keycode)
 		data->player_angle -= 2 * M_PI;
 }
 
-void	update_player_position(t_data *data, int keycode)
+static void	update_player_position(t_data *data, int keycode)
 {
 	double	move_x;
 	double	move_y;
@@ -72,7 +72,7 @@ int	key_hook(int keycode, t_data *data)
 	data->img = mlx_new_image(data->mlx, WIDTH, HEIGHT);
 	if (!data->img)
 	{
-		printf("Error: Failed to recreate image.\n");
+		print_error(1, "Error: Failed to create new image\n");
 		close_window(data);
 	}
 	data->addr = mlx_get_data_addr(data->img, &data->bpp,

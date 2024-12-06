@@ -1,4 +1,4 @@
-#include "../includes/cub3d.h"
+#include "cub3d.h"
 
 static void	check_horizontal(t_data *data, double player_x,
 	double player_y, t_ray *ray)
@@ -21,15 +21,23 @@ static void	check_horizontal(t_data *data, double player_x,
 	ray_state.x_step = ray_state.y_step / tan(ray->angle);
 	ray_state.cur_x = ray_state.x_intercept;
 	ray_state.cur_y = ray_state.y_intercept;
-	while (ray_state.cur_x >= 0 && ray_state.cur_x < data->map_width
-		&& ray_state.cur_y >= 0 && ray_state.cur_y < data->map_height)
+	while (ray_state.cur_x >= 0 && ray_state.cur_x < data->map.column
+		&& ray_state.cur_y >= 0 && ray_state.cur_y < data->map.row)
 	{
 		ray_state.map_x = (int)ray_state.cur_x;
 		if (ray_state.direction)
 			ray_state.map_y = (int)ray_state.cur_y;
 		else
 			ray_state.map_y = (int)(ray_state.cur_y - 1);
-		if (data->map[ray_state.map_y][ray_state.map_x] == '1')
+		if (ray_state.map_x < 0)
+			ray_state.map_x = 0;
+		else if (ray_state.map_x >= data->map.column)
+			ray_state.map_x = data->map.column - 1;
+		if (ray_state.map_y < 0)
+			ray_state.map_y = 0;
+		else if (ray_state.map_y >= data->map.row)
+			ray_state.map_y = data->map.row - 1;
+		if (data->map.map[ray_state.map_y][ray_state.map_x] == '1')
 		{
 			ray_state.dist = sqrt(pow(ray_state.cur_x - player_x, 2)
 					+ pow(ray_state.cur_y - player_y, 2));
@@ -40,13 +48,15 @@ static void	check_horizontal(t_data *data, double player_x,
 				ray->hit_y = ray_state.cur_y;
 				if (ray_state.direction)
 				{
-					ray->hit_color = SOUTH_RAY_COLOR;
-					data->texture_x[ray->index] = 1 - (ray->hit_x - floor(ray->hit_x));
+					data->ray_dir[ray->index] = SOUTH;
+					data->texture_x[ray->index]
+						= 1 - (ray->hit_x - floor(ray->hit_x));
 				}
 				else
 				{
-					ray->hit_color = NORTH_RAY_COLOR;
-					data->texture_x[ray->index] = ray->hit_x - floor(ray->hit_x);
+					data->ray_dir[ray->index] = NORTH;
+					data->texture_x[ray->index]
+						= ray->hit_x - floor(ray->hit_x);
 				}
 			}
 			break ;
@@ -77,15 +87,23 @@ static void	check_vertical(t_data *data, double player_x,
 	ray_state.y_step = ray_state.x_step * tan(ray->angle);
 	ray_state.cur_x = ray_state.x_intercept;
 	ray_state.cur_y = ray_state.y_intercept;
-	while (ray_state.cur_x >= 0 && ray_state.cur_x < data->map_width
-		&& ray_state.cur_y >= 0 && ray_state.cur_y < data->map_height)
+	while (ray_state.cur_x >= 0 && ray_state.cur_x < data->map.column
+		&& ray_state.cur_y >= 0 && ray_state.cur_y < data->map.row)
 	{
 		if (ray_state.direction)
 			ray_state.map_x = (int)ray_state.cur_x;
 		else
 			ray_state.map_x = (int)(ray_state.cur_x - 1);
 		ray_state.map_y = (int)ray_state.cur_y;
-		if (data->map[ray_state.map_y][ray_state.map_x] == '1')
+		if (ray_state.map_x < 0)
+			ray_state.map_x = 0;
+		else if (ray_state.map_x >= data->map.column)
+			ray_state.map_x = data->map.column - 1;
+		if (ray_state.map_y < 0)
+			ray_state.map_y = 0;
+		else if (ray_state.map_y >= data->map.row)
+			ray_state.map_y = data->map.row - 1;
+		if (data->map.map[ray_state.map_y][ray_state.map_x] == '1')
 		{
 			ray_state.dist = sqrt(pow(ray_state.cur_x - player_x, 2)
 					+ pow(ray_state.cur_y - player_y, 2));
@@ -96,13 +114,15 @@ static void	check_vertical(t_data *data, double player_x,
 				ray->hit_y = ray_state.cur_y;
 				if (ray_state.direction)
 				{
-					ray->hit_color = EAST_RAY_COLOR;
-					data->texture_x[ray->index] = ray->hit_y - floor(ray->hit_y);
+					data->ray_dir[ray->index] = EAST;
+					data->texture_x[ray->index]
+						= ray->hit_y - floor(ray->hit_y);
 				}
 				else
 				{
-					ray->hit_color = WEST_RAY_COLOR;
-					data->texture_x[ray->index] = 1 - (ray->hit_y - floor(ray->hit_y));
+					data->ray_dir[ray->index] = WEST;
+					data->texture_x[ray->index]
+						= 1 - (ray->hit_y - floor(ray->hit_y));
 				}
 			}
 			break ;
@@ -116,6 +136,7 @@ static void	cast_ray(t_data *data, double ray_angle, int ray_index)
 {
 	t_ray	ray;
 	t_line	line;
+	int		tile_size;
 
 	ray.index = ray_index;
 	ray.angle = fmod(ray_angle, 2 * M_PI);
@@ -125,32 +146,33 @@ static void	cast_ray(t_data *data, double ray_angle, int ray_index)
 	ray.hit_x = 0;
 	ray.hit_y = 0;
 	ray.hit_color = 0;
+	if (WIDTH / 3 < HEIGHT / 3)
+		tile_size = (WIDTH / 3) / data->map.column;
+	else
+		tile_size = (HEIGHT / 3) / data->map.row;
 	check_horizontal(data, data->player_x + 0.5, data->player_y + 0.5, &ray);
 	check_vertical(data, data->player_x + 0.5, data->player_y + 0.5, &ray);
 	if (ray.closest_distance < DBL_MAX)
 	{
-		line.start_x = (data->player_x + 0.5) * TILE_SIZE * MINIMAP_SCALE;
-		line.start_y = (data->player_y + 0.5) * TILE_SIZE * MINIMAP_SCALE;
-		line.end_x = ray.hit_x * TILE_SIZE * MINIMAP_SCALE;
-		line.end_y = ray.hit_y * TILE_SIZE * MINIMAP_SCALE;
+		line.start_x = (data->player_x + 0.5) * tile_size;
+		line.start_y = (data->player_y + 0.5) * tile_size;
+		line.end_x = ray.hit_x * tile_size;
+		line.end_y = ray.hit_y * tile_size;
 		line.color = ray.hit_color;
 		draw_line(data, &line);
 		if (ray.closest_distance > 0.01)
 		{
 			data->ray_distance[ray_index]
 				= ray.closest_distance * cos(ray.angle - data->player_angle);
-			data->ray_color[ray_index] = ray.hit_color;
 		}
 		else
 		{
 			data->ray_distance[ray_index] = DBL_MAX;
-			data->ray_color[ray_index] = 0;
 		}
 	}
 	else
 	{
 		data->ray_distance[ray_index] = DBL_MAX;
-		data->ray_color[ray_index] = 0;
 	}
 }
 
