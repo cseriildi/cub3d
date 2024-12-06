@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   movement.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/06 13:08:57 by icseri            #+#    #+#             */
+/*   Updated: 2024/12/06 13:22:14 by icseri           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 static int	is_wall_at_position(t_data *data, double new_x, double new_y)
@@ -51,7 +63,6 @@ static void	update_player_position(t_data *data, int keycode)
 	move_y = sin(data->player_angle) * MOVE_SPEED;
 	strafe_x = cos(data->player_angle + M_PI_2) * MOVE_SPEED;
 	strafe_y = sin(data->player_angle + M_PI_2) * MOVE_SPEED;
-
 	if (keycode == KEY_W)
 		move_player(data, move_x, move_y);
 	else if (keycode == KEY_S)
