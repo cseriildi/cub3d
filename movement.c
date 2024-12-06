@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:08:57 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 13:22:14 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/06 15:28:57 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,11 +75,9 @@ static void	check_and_open_door_nearby(t_data *data, double new_x, double new_y)
 	radius = 0.5;
 	map_x = (int)new_x;
 	map_y = (int)new_y;
-
 	if (map_x < 0 || map_x >= data->map.column
 		|| map_y < 0 || map_y >= data->map.row)
-		return;
-
+		return ;
 	dx = -radius;
 	while (dx <= radius)
 	{
@@ -138,7 +136,7 @@ static void	turn_player(t_data *data, int keycode)
 		data->player_angle -= 2 * M_PI;
 }
 
-static void	update_player_position(t_data *data, int keycode)
+void	update_player_position(t_data *data, int keycode)
 {
 	double	move_x;
 	double	move_y;
@@ -159,25 +157,4 @@ static void	update_player_position(t_data *data, int keycode)
 		move_player(data, strafe_x, strafe_y);
 	else
 		turn_player(data, keycode);
-}
-
-int	key_hook(int keycode, t_data *data)
-{
-	if (keycode == KEY_ESC)
-		close_window(data);
-	mlx_destroy_image(data->mlx, data->img);
-	data->img = mlx_new_image(data->mlx, WIDTH, HEIGHT);
-	if (!data->img)
-	{
-		print_error(1, "Error: Failed to create new image\n");
-		close_window(data);
-	}
-	data->addr = mlx_get_data_addr(data->img, &data->bpp,
-			&data->line_len, &data->endian);
-	update_player_position(data, keycode);
-	cast_rays(data);
-	render_scene(data);
-	draw_minimap(data);
-	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
-	return (0);
 }

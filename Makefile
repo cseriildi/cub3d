@@ -6,7 +6,7 @@
 #    By: icseri <icseri@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/20 10:41:15 by icseri            #+#    #+#              #
-#    Updated: 2024/12/06 13:30:36 by icseri           ###   ########.fr        #
+#    Updated: 2024/12/06 17:27:46 by icseri           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,8 @@ SRCS = main.c \
 		mlx_utils.c \
 		cleanup.c \
 		cast_rays.c \
+		cast_rays_horizontal.c \
+		cast_rays_vertical.c \
 		minimap.c \
 		draw_utils.c \
 		movement.c \
