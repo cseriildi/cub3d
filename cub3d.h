@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: csicsi <csicsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 17:29:58 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/08 13:16:12 by csicsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,17 @@ typedef struct s_minimap
 	double	offset_x;
 	double	offset_y;
 }	t_minimap;
+
+typedef struct s_proximity
+{
+	double	radius;
+	double	dx;
+	double	dy;
+	double	check_x;
+	double	check_y;
+	int		adj_x;
+	int		adj_y;
+}	t_proximity;
 
 typedef struct s_data
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cast_rays.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: csicsi <csicsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:31:42 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 17:29:29 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/08 13:14:37 by csicsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 static int	get_tilesize(t_ray *ray, double ray_angle,
 	int ray_index, t_data *data)
 {
-	//rename this
 	ray->index = ray_index;
 	ray->angle = fmod(ray_angle, 2 * M_PI);
 	if (ray->angle < 0)

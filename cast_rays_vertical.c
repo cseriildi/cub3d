@@ -3,19 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   cast_rays_vertical.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: csicsi <csicsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:09:40 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 17:45:07 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/08 13:13:46 by csicsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static void	vertical_no_clue(t_ray_trace_state *ray_state, double player_x,
+static void	init_ray_state(t_ray_trace_state *ray_state, double player_x,
 	double player_y, t_ray *ray)
 {
-	//rename this
 	ray_state->direction = (ray->angle < M_PI_2 || ray->angle > 3 * M_PI_2);
 	if (ray_state->direction)
 	{
@@ -34,9 +33,8 @@ static void	vertical_no_clue(t_ray_trace_state *ray_state, double player_x,
 	ray_state->cur_y = ray_state->y_intercept;
 }
 
-static void	vertical_still_no_clue(t_ray_trace_state *ray_state, t_data *data)
+static void	check_boundaries(t_ray_trace_state *ray_state, t_data *data)
 {
-	//rename this
 	if (ray_state->direction)
 		ray_state->map_x = (int)ray_state->cur_x;
 	else
@@ -52,10 +50,9 @@ static void	vertical_still_no_clue(t_ray_trace_state *ray_state, t_data *data)
 		ray_state->map_y = data->map.row - 1;
 }
 
-static void	vertical_no_clue_again(t_ray_trace_state *ray_state,
+static void	process_hit(t_ray_trace_state *ray_state,
 	t_ray *ray, t_data *data)
 {
-	//rename this
 	ray->closest_distance = ray_state->dist;
 	ray->hit_x = ray_state->cur_x;
 	ray->hit_y = ray_state->cur_y;
@@ -76,18 +73,18 @@ void	check_vertical(t_data *data, double player_x,
 {
 	t_ray_trace_state	ray_state;
 
-	vertical_no_clue(&ray_state, player_x, player_y, ray);
+	init_ray_state(&ray_state, player_x, player_y, ray);
 	while (ray_state.cur_x >= 0 && ray_state.cur_x < data->map.column
 		&& ray_state.cur_y >= 0 && ray_state.cur_y < data->map.row)
 	{
-		vertical_still_no_clue(&ray_state, data);
+		check_boundaries(&ray_state, data);
 		if (data->map.map[ray_state.map_y][ray_state.map_x] == '1'
 			|| data->map.map[ray_state.map_y][ray_state.map_x] == 'D')
 		{
 			ray_state.dist = sqrt(pow(ray_state.cur_x - player_x, 2)
 					+ pow(ray_state.cur_y - player_y, 2));
 			if (ray_state.dist < ray->closest_distance)
-				vertical_no_clue_again(&ray_state, ray, data);
+				process_hit(&ray_state, ray, data);
 			break ;
 		}
 		ray_state.cur_x += ray_state.x_step;
