@@ -1,61 +1,79 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minimap.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/06 14:54:17 by icseri            #+#    #+#             */
+/*   Updated: 2024/12/06 15:25:09 by icseri           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
+
+void	draw_tile(t_data *data, int row, int col)
+{
+	int	r;
+	int	c;
+
+	r = floor(data->player_y) - (data->minimap.size / 2) + row;
+	c = floor(data->player_x) - (data->minimap.size / 2) + col;
+	data->minimap.map_row = r;
+	data->minimap.map_col = c;
+	if (r >= 0 && r < data->map.row && c >= 0 && c < data->map.column)
+		data->minimap.tile = data->map.map[r][c];
+	else
+		data->minimap.tile = ' ';
+	data->rect.x = col * data->minimap.tile_size - data->minimap.offset_x;
+	data->rect.y = row * data->minimap.tile_size - data->minimap.offset_y;
+	data->rect.width = data->minimap.tile_size;
+	data->rect.height = data->minimap.tile_size;
+	if (data->minimap.tile == '1')
+		data->rect.color = data->map.ceiling;
+	else if (ft_strchr("WENS0", data->minimap.tile) != 0)
+		data->rect.color = data->map.floor;
+	else
+		data->rect.color = 0;
+	draw_rectangle(data, &data->rect);
+}
+
+void	draw_player(t_data *data, t_line *line)
+{
+	data->rect.x
+		= ((data->minimap.size / 2) + 0.5) * data->minimap.tile_size - 3;
+	data->rect.y
+		= ((data->minimap.size / 2) + 0.5) * data->minimap.tile_size - 3;
+	data->rect.width = 6;
+	data->rect.height = 6;
+	data->rect.color = PLAYER_COLOR;
+	draw_rectangle(data, &data->rect);
+	line->start_x = data->rect.x + 3;
+	line->start_y = data->rect.y + 3;
+	line->end_x = data->rect.x + 3 + cos(data->player_angle) * 10;
+	line->end_y = data->rect.y + 3 + sin(data->player_angle) * 10;
+	line->color = PLAYER_COLOR;
+	draw_line(data, line);
+}
 
 void	draw_minimap(t_data *data)
 {
 	int			row;
 	int			col;
-	t_minimap	minimap;
-	t_rectangle	rect;
 	t_line		line;
 
-	row = 0;
-	minimap.size = 7;
-	minimap.tile_size = 25;
-	minimap.offset_x
-		= (data->player_x - floor(data->player_x)) * minimap.tile_size;
-	minimap.offset_y
-		= (data->player_y - floor(data->player_y)) * minimap.tile_size;
-	while (row < minimap.size)
+	data->minimap.size = 7;
+	data->minimap.tile_size = 25;
+	data->minimap.offset_x
+		= (data->player_x - floor(data->player_x)) * data->minimap.tile_size;
+	data->minimap.offset_y
+		= (data->player_y - floor(data->player_y)) * data->minimap.tile_size;
+	row = -1;
+	while (++row < data->minimap.size)
 	{
-		col = 0;
-		while (col < minimap.size)
-		{
-			minimap.map_row = floor(data->player_y) - (minimap.size / 2) + row;
-			minimap.map_col = floor(data->player_x) - (minimap.size / 2) + col;
-			if (minimap.map_row >= 0 && minimap.map_row < data->map.row
-				&& minimap.map_col >= 0 && minimap.map_col < data->map.column)
-				minimap.tile = data->map.map[minimap.map_row][minimap.map_col];
-			else
-				minimap.tile = ' ';
-			rect.x = col * minimap.tile_size - minimap.offset_x;
-			rect.y = row * minimap.tile_size - minimap.offset_y;
-			rect.width = minimap.tile_size;
-			rect.height = minimap.tile_size;
-			if (minimap.tile == '1')
-				rect.color = data->map.ceiling;
-			else if (minimap.tile == 'D')
-				rect.color = DOOR_COLOR;
-			else if (minimap.tile == '0' || minimap.tile == 'N'
-				|| minimap.tile == 'S' || minimap.tile == 'E'
-				|| minimap.tile == 'W' || minimap.tile == 'd')
-				rect.color = data->map.floor;
-			else
-				rect.color = 0;
-			draw_rectangle(data, &rect);
-			col++;
-		}
-		row++;
+		col = -1;
+		while (++col < data->minimap.size)
+			draw_tile(data, row, col);
 	}
-	rect.x = ((minimap.size / 2) + 0.5) * minimap.tile_size - 3;
-	rect.y = ((minimap.size / 2) + 0.5) * minimap.tile_size - 3;
-	rect.width = 6;
-	rect.height = 6;
-	rect.color = PLAYER_COLOR;
-	draw_rectangle(data, &rect);
-	line.start_x = rect.x + 3;
-	line.start_y = rect.y + 3;
-	line.end_x = rect.x + 3 + cos(data->player_angle) * 10;
-	line.end_y = rect.y + 3 + sin(data->player_angle) * 10;
-	line.color = PLAYER_COLOR;
-	draw_line(data, &line);
+	draw_player(data, &line);
 }

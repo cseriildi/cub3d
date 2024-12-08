@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
+/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:01:37 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 15:32:33 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/06 17:39:32 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ void	draw_rectangle(t_data *data, t_rectangle *rect)
 		j++;
 	}
 }
-
 
 static void	draw_line_with_params(t_data *data,
 	t_line *line, t_line_params *params)
@@ -95,7 +94,7 @@ void	draw_vertical_line(t_data *data, int x, int wall_height)
 	int			original_wall_top;
 	t_texture	*texture;
 
-	if (data->ray_dir[x] < 0 || data->ray_dir[x] >= 5)
+	if (data->ray_dir[x] < 0 || data->ray_dir[x] >= 4)
 		data->ray_dir[x] = NORTH;
 	texture = &data->textures[data->ray_dir[x]];
 	wall_top = (HEIGHT - wall_height) / 2;
