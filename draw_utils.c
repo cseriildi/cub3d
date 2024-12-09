@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:01:37 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 13:01:38 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/06 17:39:32 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ void	draw_rectangle(t_data *data, t_rectangle *rect)
 		j++;
 	}
 }
-
 
 static void	draw_line_with_params(t_data *data,
 	t_line *line, t_line_params *params)
