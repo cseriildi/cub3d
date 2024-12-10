@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 13:44:30 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/10 10:05:57 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,18 @@
 # define TURN_SPEED 0.1
 # define FIELD_OF_VIEW 1.047198
 # define DBL_MAX 1.7976931348623157E+308
-#define MOUSE_SENSITIVITY 0.002
+# define MOUSE_SENSITIVITY 0.002
 
 # define PLAYER_COLOR 0xFF0000 // Red
 # define GRID_COLOR 0xFF0000 // Red
+# define DOOR_COLOR 0xA52A2A // Brown
 
 # define KEY_ESC 65307
 # define KEY_W 119
 # define KEY_A 97
 # define KEY_S 115
 # define KEY_D 100
+# define KEY_E 101
 # define ARROW_LEFT 65361
 # define ARROW_RIGHT 65363
 
@@ -48,7 +50,8 @@ typedef enum e_dir
 	NORTH,
 	EAST,
 	SOUTH,
-	WEST
+	WEST,
+	DOOR
 }	t_dir;
 
 typedef enum e_error
@@ -87,27 +90,6 @@ typedef struct s_texture
 	int		width;
 	int		height;
 }	t_texture;
-
-typedef struct s_data
-{
-	void		*mlx;
-	void		*win;
-	void		*img;
-	char		*addr;
-	int			bpp;
-	int			line_len;
-	int			endian;
-	t_map		map;
-	double		player_x;
-	double		player_y;
-	double		player_angle;
-	double		ray_distance[WIDTH];
-	double		texture_x[WIDTH];
-	int			ray_dir[WIDTH];
-	void		*texture_img;
-	int			*texture_data;
-	t_texture	textures[4];
-}	t_data;
 
 typedef struct s_line
 {
@@ -176,6 +158,40 @@ typedef struct s_minimap
 	double	offset_y;
 }	t_minimap;
 
+typedef struct s_proximity
+{
+	double	radius;
+	double	dx;
+	double	dy;
+	double	check_x;
+	double	check_y;
+	int		adj_x;
+	int		adj_y;
+}	t_proximity;
+
+typedef struct s_data
+{
+	void		*mlx;
+	void		*win;
+	void		*img;
+	char		*addr;
+	int			bpp;
+	int			line_len;
+	int			endian;
+	t_map		map;
+	double		player_x;
+	double		player_y;
+	double		player_angle;
+	double		ray_distance[WIDTH];
+	double		texture_x[WIDTH];
+	int			ray_dir[WIDTH];
+	void		*texture_img;
+	int			*texture_data;
+	t_texture	textures[5];
+	t_minimap	minimap;
+	t_rectangle	rect;
+}	t_data;
+
 //init
 void	load_texture(t_data *data, t_texture *texture, char *file);
 void	load_all_textures(t_data *data);
@@ -196,6 +212,8 @@ void	safe_open(char	*filename, bool is_cub, t_map *map);
 //mlx utils
 void	render_scene(t_data *data);
 int		close_window(t_data *data);
+int		track_mouse(void *param);
+int		key_hook(int keycode, t_data *data);
 
 //cleanup
 void	print_error(int count, ...);
@@ -205,6 +223,8 @@ void	free_list(t_list **list);
 
 //raycasting
 void	cast_rays(t_data *data);
+void	check_horizontal(t_data *data, double x, double y, t_ray *ray);
+void	check_vertical(t_data *data, double x, double y, t_ray *ray);
 
 //minimap
 void	draw_minimap(t_data *data);
@@ -216,6 +236,7 @@ void	draw_line(t_data *data, t_line *line);
 void	draw_vertical_line(t_data *data, int x, int wall_height);
 
 //movement
-int		key_hook(int keycode, t_data *data);
+void	update_player_position(t_data *data, int keycode);
+void	check_and_open_door_nearby(t_data *data, double new_x, double new_y);
 
 #endif

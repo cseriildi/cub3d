@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 16:26:07 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 12:59:40 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/06 14:52:51 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,12 @@ void	get_map(char *line, t_map *map)
 	while (line)
 	{
 		map->row++;
+		if (*line == '\n')
+		{
+			ft_free(&line);
+			free_list(map_list);
+			safe_exit(map, MAP);
+		}
 		create_and_add(line, map_list, map);
 		line = get_next_line(map->fd);
 	}

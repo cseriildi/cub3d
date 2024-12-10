@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 12:32:37 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 12:57:16 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/06 15:44:07 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,44 +40,50 @@ bool	door_is_good(int row, int col, t_map *map)
 	return (true);
 }
 
+bool	is_valid(int row, int col, int *player_count, t_map *map)
+{
+	if (!ft_strchr("WENS01XD ", map->map[row][col]))
+		return (false);
+	else if (!ft_strchr("D1 ", map->map[row][col]))
+	{
+		if (map->map[row][col] == 'X')
+		{
+			map->enemy[0] = row;
+			map->enemy[1] = col;
+		}
+		else if (map->map[row][col] != '0')
+		{
+			(*player_count)++;
+			if (*player_count > 1)
+				return (false);
+			map->player[0] = row;
+			map->player[1] = col;
+		}
+		return (is_in(row, col, map));
+	}
+	else if (map->map[row][col] == 'D')
+		return (door_is_good(row, col, map));
+	return (true);
+}
+
 void	check_map(t_map *map)
 {
 	int		player_count;
 	int		row;
 	int		column;
-	bool	valid;
 
 	player_count = 0;
 	row = -1;
-	valid = true;
-	while (valid && map->map[++row])
+	while (map->map[++row])
 	{
 		column = -1;
-		while (valid && map->map[row][++column])
+		while (map->map[row][++column])
 		{
-			if (!ft_strchr("WENS01XD ", map->map[row][column]))
-				valid = false;
-			else if (!ft_strchr("D1 ", map->map[row][column]))
-			{
-				if (map->map[row][column] == 'X')
-				{
-					map->enemy[0] = row;
-					map->enemy[1] = column;
-				}
-				else if (map->map[row][column] != '0')
-				{
-					player_count++;
-					valid = (player_count <= 1);
-					map->player[0] = row;
-					map->player[1] = column;
-				}
-				valid = is_in(row, column, map);
-			}
-			else if (map->map[row][column] == 'D')
-				valid = door_is_good(row, column, map);
+			if (!is_valid(row, column, &player_count, map))
+				safe_exit(map, COLOR);
 		}
 	}
-	if (valid == false || player_count == 0)
+	if (player_count == 0)
 		safe_exit(map, COLOR);
 }
 
@@ -100,11 +106,10 @@ void	list_to_arr(t_list **map_list, t_map *map)
 	row = -1;
 	while (current)
 	{
-		map->map[++row] = malloc(map->column + 1);
+		map->map[++row] = ft_calloc(map->column + 1, 1);
 		if (!map->map[row])
 			return (free_list(map_list), safe_exit(map, MALLOC));
 		ft_memset(map->map[row], ' ', map->column);
-		map->map[row][map->column] = '\0';
 		ft_memcpy(map->map[row], current->content, ft_strlen(current->content));
 		current = current->next;
 	}
