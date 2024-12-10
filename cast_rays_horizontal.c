@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cast_rays_horizontal.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csicsi <csicsi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:09:40 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/08 13:12:39 by csicsi           ###   ########.fr       */
+/*   Updated: 2024/12/10 10:01:56 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ static void	process_hit(t_ray_trace_state *ray_state,
 		data->texture_x[ray->index]
 			= ray->hit_x - floor(ray->hit_x);
 	}
+	if (data->map.map[ray_state->map_y][ray_state->map_x] == 'D')
+		data->ray_dir[ray->index] = DOOR;
 }
 
 void	check_horizontal(t_data *data, double player_x,

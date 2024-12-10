@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minimap.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 14:54:17 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 15:25:09 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/10 09:57:10 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,9 @@ void	draw_tile(t_data *data, int row, int col)
 	data->rect.height = data->minimap.tile_size;
 	if (data->minimap.tile == '1')
 		data->rect.color = data->map.ceiling;
-	else if (ft_strchr("WENS0", data->minimap.tile) != 0)
+	else if (data->minimap.tile == 'D')
+		data->rect.color = DOOR_COLOR;
+	else if (ft_strchr("WENS0d", data->minimap.tile) != 0)
 		data->rect.color = data->map.floor;
 	else
 		data->rect.color = 0;

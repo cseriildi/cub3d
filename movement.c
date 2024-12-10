@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   movement.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csicsi <csicsi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:08:57 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/08 13:18:41 by csicsi           ###   ########.fr       */
+/*   Updated: 2024/12/10 10:05:40 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static int	is_wall_at_position(t_data *data, double new_x, double new_y)
 	return (0);
 }
 
-static void	check_and_open_door_nearby(t_data *data, double new_x, double new_y)
+void	check_and_open_door_nearby(t_data *data, double new_x, double new_y)
 {
 	t_proximity	params;
 	int			map_x;
@@ -94,6 +94,32 @@ static void	check_and_open_door_nearby(t_data *data, double new_x, double new_y)
 	}
 }
 
+static void	check_and_close_doors(t_data *data)
+{
+	double	radius = 1.5;
+	double	player_x = data->player_x;
+	double	player_y = data->player_y;
+	double	dist;
+	int		x;
+	int		y;
+	y = 0;
+	while (y < data->map.row)
+	{
+		x = 0;
+		while (x < data->map.column)
+		{
+			if (data->map.map[y][x] == 'd')
+			{
+				dist = sqrt(pow(player_x - x, 2) + pow(player_y - y, 2));
+				if (dist > radius)
+					data->map.map[y][x] = 'D';
+			}
+			x++;
+		}
+		y++;
+	}
+}
+
 static void	move_player(t_data *data, double move_x, double move_y)
 {
 	double	new_player_x;
@@ -105,7 +131,7 @@ static void	move_player(t_data *data, double move_x, double move_y)
 		data->player_x = new_player_x;
 	if (!is_wall_at_position(data, data->player_x + 0.5, new_player_y + 0.5))
 		data->player_y = new_player_y;
-	check_and_open_door_nearby(data, new_player_x, new_player_y);
+	check_and_close_doors(data);
 }
 
 static void	turn_player(t_data *data, int keycode)

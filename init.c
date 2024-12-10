@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:25:09 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 13:31:10 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/10 09:59:53 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	load_all_textures(t_data *data)
 	load_texture(data, &data->textures[EAST], data->map.east);
 	load_texture(data, &data->textures[SOUTH], data->map.south);
 	load_texture(data, &data->textures[WEST], data->map.west);
+	load_texture(data, &data->textures[4], "./textures/door.xpm");
 }
 
 void	init_data(t_data *data)
@@ -70,7 +71,7 @@ void	init_mlx(t_data *data)
 	{
 		mlx_destroy_display(data->mlx);
 		free(data->mlx);
-		//throw error
+		print_error(1, "Error: Failed to create window\n");
 		safe_exit(&data->map, EXIT_FAILURE);
 	}
 	data->img = mlx_new_image(data->mlx, WIDTH, HEIGHT);
@@ -79,7 +80,7 @@ void	init_mlx(t_data *data)
 		mlx_destroy_window(data->mlx, data->win);
 		mlx_destroy_display(data->mlx);
 		free(data->mlx);
-		//throw error
+		print_error(1, "Error: Failed to create image\n");
 		safe_exit(&data->map, EXIT_FAILURE);
 	}
 	data->addr = mlx_get_data_addr(data->img,
