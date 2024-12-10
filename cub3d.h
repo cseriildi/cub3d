@@ -6,7 +6,7 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/10 15:33:30 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/10 15:50:31 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <mlx.h>
 # include <stdlib.h>
 # include <math.h>
+# include <sys/time.h>
 
 # define WIDTH 800
 # define HEIGHT 600
@@ -31,6 +32,8 @@
 # define FIELD_OF_VIEW 1.047198
 # define DBL_MAX 1.7976931348623157E+308
 # define MOUSE_SENSITIVITY 0.002
+# define NUM_FRAMES 5
+# define FRAME_DURATION 0.1
 
 # define PLAYER_COLOR 0xFF0000 // Red
 # define GRID_COLOR 0xFF0000 // Red
@@ -179,6 +182,7 @@ typedef struct s_data
 	int			line_len;
 	int			endian;
 	int			frame;
+	double		last_frame;
 	t_map		map;
 	double		player_x;
 	double		player_y;
@@ -215,6 +219,7 @@ void	render_scene(t_data *data);
 int		close_window(t_data *data);
 int		track_mouse(void *param);
 int		key_hook(int keycode, t_data *data);
+double	get_time(void);
 
 //cleanup
 void	print_error(int count, ...);

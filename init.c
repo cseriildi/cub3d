@@ -6,7 +6,7 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:25:09 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/10 15:37:14 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/10 15:41:09 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	init_data(t_data *data)
 	data->textures[3] = (t_texture){0};
 	data->map = (t_map){0};
 	data->frame = 1;
+	data->last_frame = get_time();
 	data->map.fd = -1;
 	data->map.enemy[0] = -1;
 	data->map.enemy[1] = -1;
