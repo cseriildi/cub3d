@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 12:32:37 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 15:44:07 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/10 11:11:22 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ bool	door_is_good(int row, int col, t_map *map)
 	west = map->map[row][col - 1] == '1';
 	south = map->map[row + 1][col] == '1';
 	north = map->map[row - 1][col] == '1';
-	if (is_in(row, col, map) == false
+	if (map->is_bonus == false || map->door == NULL
+		|| is_in(row, col, map) == false
 		|| (east && (west == false || south || north))
 		|| (north && (south == false || east || west))
 		|| (east == false && north == false))
@@ -42,16 +43,11 @@ bool	door_is_good(int row, int col, t_map *map)
 
 bool	is_valid(int row, int col, int *player_count, t_map *map)
 {
-	if (!ft_strchr("WENS01XD ", map->map[row][col]))
+	if (!ft_strchr("WENS01D ", map->map[row][col]))
 		return (false);
 	else if (!ft_strchr("D1 ", map->map[row][col]))
 	{
-		if (map->map[row][col] == 'X')
-		{
-			map->enemy[0] = row;
-			map->enemy[1] = col;
-		}
-		else if (map->map[row][col] != '0')
+		if (map->map[row][col] != '0')
 		{
 			(*player_count)++;
 			if (*player_count > 1)
@@ -80,11 +76,11 @@ void	check_map(t_map *map)
 		while (map->map[row][++column])
 		{
 			if (!is_valid(row, column, &player_count, map))
-				safe_exit(map, COLOR);
+				safe_exit(map, MAP);
 		}
 	}
 	if (player_count == 0)
-		safe_exit(map, COLOR);
+		safe_exit(map, MAP);
 }
 
 void	list_to_arr(t_list **map_list, t_map *map)

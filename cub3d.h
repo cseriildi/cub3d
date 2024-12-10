@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/10 10:15:27 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/10 11:09:41 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,14 +73,16 @@ typedef struct s_map
 	int		w_size[2];
 	char	*east;
 	int		e_size[2];
+	char	*door;
+	int		d_size[2];
 	int		floor;
 	int		ceiling;
 	char	**map;
 	int		row;
 	int		column;
 	int		player[2];
-	int		enemy[2];
 	int		fd;
+	bool	is_bonus;
 }	t_map;
 
 typedef struct s_texture
