@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:28:30 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 15:32:32 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/10 10:17:27 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	render_scene(t_data *data)
 	int	x;
 	int	wall_height;
 
+	cast_rays(data);
 	wall_height = 0;
 	x = -1;
 	while (++x < WIDTH)
@@ -27,6 +28,8 @@ void	render_scene(t_data *data)
 			draw_vertical_line(data, x, wall_height);
 		}
 	}
+	draw_minimap(data);
+	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
 }
 
 int	close_window(t_data *data)
@@ -66,10 +69,7 @@ int	track_mouse(void *param)
 	}
 	data->addr = mlx_get_data_addr(data->img, &data->bpp,
 			&data->line_len, &data->endian);
-	cast_rays(data);
 	render_scene(data);
-	draw_minimap(data);
-	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
 	return (0);
 }
 
@@ -87,9 +87,8 @@ int	key_hook(int keycode, t_data *data)
 	data->addr = mlx_get_data_addr(data->img, &data->bpp,
 			&data->line_len, &data->endian);
 	update_player_position(data, keycode);
-	cast_rays(data);
+	if (keycode == KEY_E)
+		check_and_open_door_nearby(data, data->player_x + 0.5, data->player_y + 0.5);
 	render_scene(data);
-	draw_minimap(data);
-	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
 	return (0);
 }

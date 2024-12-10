@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:08:57 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 15:28:57 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/10 10:17:39 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,99 +14,109 @@
 
 static int	is_wall_at_position(t_data *data, double new_x, double new_y)
 {
-	int		map_x;
-	int		map_y;
-	double	radius;
-	double	dx;
-	double	dy;
-	double	check_x;
-	double	check_y;
-	int		adj_x;
-	int		adj_y;
+	t_proximity	params;
+	int			map_x;
+	int			map_y;
 
-	radius = 0.2;
 	map_x = (int)new_x;
 	map_y = (int)new_y;
-	if (map_x < 0 || map_x >= data->map.column
-		|| map_y < 0 || map_y >= data->map.row)
+	if (map_x < 0 || map_x >= data->map.column || map_y < 0 || map_y >= data->map.row)
 		return (1);
-	dx = -radius;
-	while (dx <= radius)
+	params.radius = 0.2;
+	params.dx = -params.radius;
+	while (params.dx <= params.radius)
 	{
-		dy = -radius;
-		while (dy <= radius)
+		params.dy = -params.radius;
+		while (params.dy <= params.radius)
 		{
-			check_x = new_x + dx;
-			check_y = new_y + dy;
-			if (sqrt(dx * dx + dy * dy) > radius)
+			params.check_x = new_x + params.dx;
+			params.check_y = new_y + params.dy;
+			if (sqrt(params.dx * params.dx + params.dy * params.dy) > params.radius)
 			{
-				dy += 0.1;
+				params.dy += 0.1;
 				continue ;
 			}
-			adj_x = (int)check_x;
-			adj_y = (int)check_y;
-			if (adj_x < 0 || adj_x >= data->map.column
-				|| adj_y < 0 || adj_y >= data->map.row)
+			params.adj_x = (int)params.check_x;
+			params.adj_y = (int)params.check_y;
+			if (params.adj_x < 0 || params.adj_x >= data->map.column || params.adj_y < 0 || params.adj_y >= data->map.row)
 			{
-				dy += 0.1;
+				params.dy += 0.1;
 				continue ;
 			}
-			if (data->map.map[adj_y][adj_x] == '1')
+			if (data->map.map[params.adj_y][params.adj_x] == '1')
 				return (1);
-			dy += 0.1;
+			params.dy += 0.1;
 		}
-		dx += 0.1;
+		params.dx += 0.1;
 	}
 	return (0);
 }
 
-static void	check_and_open_door_nearby(t_data *data, double new_x, double new_y)
+void	check_and_open_door_nearby(t_data *data, double new_x, double new_y)
 {
-	int		map_x;
-	int		map_y;
-	double	radius;
-	double	dx;
-	double	dy;
-	double	check_x;
-	double	check_y;
-	int		adj_x;
-	int		adj_y;
+	t_proximity	params;
+	int			map_x;
+	int			map_y;
 
-	radius = 0.5;
 	map_x = (int)new_x;
 	map_y = (int)new_y;
-	if (map_x < 0 || map_x >= data->map.column
-		|| map_y < 0 || map_y >= data->map.row)
+	if (map_x < 0 || map_x >= data->map.column || map_y < 0 || map_y >= data->map.row)
 		return ;
-	dx = -radius;
-	while (dx <= radius)
+	params.radius = 1.5;
+	params.dx = -params.radius;
+	while (params.dx <= params.radius)
 	{
-		dy = -radius;
-		while (dy <= radius)
+		params.dy = -params.radius;
+		while (params.dy <= params.radius)
 		{
-			check_x = new_x + dx;
-			check_y = new_y + dy;
-			if (sqrt(dx * dx + dy * dy) > radius)
+			params.check_x = new_x + params.dx;
+			params.check_y = new_y + params.dy;
+			if (sqrt(params.dx * params.dx + params.dy * params.dy) > params.radius)
 			{
-				dy += 0.1;
+				params.dy += 0.1;
 				continue ;
 			}
-			adj_x = (int)check_x;
-			adj_y = (int)check_y;
-			if (adj_x < 0 || adj_x >= data->map.column
-				|| adj_y < 0 || adj_y >= data->map.row)
+			params.adj_x = (int)params.check_x;
+			params.adj_y = (int)params.check_y;
+			if (params.adj_x < 0 || params.adj_x >= data->map.column || params.adj_y < 0 || params.adj_y >= data->map.row)
 			{
-				dy += 0.1;
+				params.dy += 0.1;
 				continue ;
 			}
-			if (data->map.map[adj_y][adj_x] == 'D')
+			if (data->map.map[params.adj_y][params.adj_x] == 'D')
 			{
-				data->map.map[adj_y][adj_x] = '0';
+				data->map.map[params.adj_y][params.adj_x] = 'd';
 				render_scene(data);
 			}
-			dy += 0.1;
+			params.dy += 0.1;
 		}
-		dx += 0.1;
+		params.dx += 0.1;
+	}
+}
+
+static void	check_and_close_doors(t_data *data)
+{
+	double	radius = 1.5;
+	double	player_x = data->player_x;
+	double	player_y = data->player_y;
+	double	dist;
+	int		x;
+	int		y;
+	y = 0;
+	while (y < data->map.row)
+	{
+		x = 0;
+		while (x < data->map.column)
+		{
+			if (data->map.map[y][x] == 'd')
+			{
+				dist = sqrt(pow(player_x - x, 2) + pow(player_y - y, 2));
+				if (dist > radius)
+					data->map.map[y][x] = 'D';
+			}
+			x++;
+		}
+		y++;
 	}
 }
 
@@ -121,7 +131,7 @@ static void	move_player(t_data *data, double move_x, double move_y)
 		data->player_x = new_player_x;
 	if (!is_wall_at_position(data, data->player_x + 0.5, new_player_y + 0.5))
 		data->player_y = new_player_y;
-	check_and_open_door_nearby(data, new_player_x, new_player_y);
+	check_and_close_doors(data);
 }
 
 static void	turn_player(t_data *data, int keycode)

@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 17:29:58 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/10 10:15:27 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,14 @@
 
 # define PLAYER_COLOR 0xFF0000 // Red
 # define GRID_COLOR 0xFF0000 // Red
+# define DOOR_COLOR 0xA52A2A // Brown
 
 # define KEY_ESC 65307
 # define KEY_W 119
 # define KEY_A 97
 # define KEY_S 115
 # define KEY_D 100
+# define KEY_E 101
 # define ARROW_LEFT 65361
 # define ARROW_RIGHT 65363
 
@@ -48,7 +50,8 @@ typedef enum e_dir
 	NORTH,
 	EAST,
 	SOUTH,
-	WEST
+	WEST,
+	DOOR
 }	t_dir;
 
 typedef enum e_error
@@ -155,6 +158,17 @@ typedef struct s_minimap
 	double	offset_y;
 }	t_minimap;
 
+typedef struct s_proximity
+{
+	double	radius;
+	double	dx;
+	double	dy;
+	double	check_x;
+	double	check_y;
+	int		adj_x;
+	int		adj_y;
+}	t_proximity;
+
 typedef struct s_data
 {
 	void		*mlx;
@@ -173,7 +187,7 @@ typedef struct s_data
 	int			ray_dir[WIDTH];
 	void		*texture_img;
 	int			*texture_data;
-	t_texture	textures[4];
+	t_texture	textures[5];
 	t_minimap	minimap;
 	t_rectangle	rect;
 }	t_data;
@@ -223,5 +237,6 @@ void	draw_vertical_line(t_data *data, int x, int wall_height);
 
 //movement
 void	update_player_position(t_data *data, int keycode);
+void	check_and_open_door_nearby(t_data *data, double new_x, double new_y);
 
 #endif

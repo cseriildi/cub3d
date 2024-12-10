@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:09:40 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/09 15:08:39 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/10 10:14:39 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ static void	process_hit(t_ray_trace_state *ray_state,
 		data->ray_dir[ray->index] = WEST;
 		data->texture_x[ray->index] = 1 - (ray->hit_y - floor(ray->hit_y));
 	}
+	if (data->map.map[ray_state->map_y][ray_state->map_x] == 'D')
+		data->ray_dir[ray->index] = DOOR;
 }
 
 void	check_vertical(t_data *data, double player_x,
