@@ -6,7 +6,7 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/10 10:05:57 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/10 15:33:30 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,6 +178,7 @@ typedef struct s_data
 	int			bpp;
 	int			line_len;
 	int			endian;
+	int			frame;
 	t_map		map;
 	double		player_x;
 	double		player_y;
