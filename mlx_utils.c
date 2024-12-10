@@ -6,17 +6,38 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:28:30 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/10 10:04:14 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/10 15:49:53 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+double	get_time(void)
+{
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec + tv.tv_usec / 1000000.0);
+}
+
+void	update_animation_frame(t_data *data)
+{
+	double	current_time;
+
+	current_time = get_time();
+	if (current_time - data->last_frame >= FRAME_DURATION)
+	{
+		data->frame = (data->frame + 1) % NUM_FRAMES;
+		data->last_frame = current_time;
+	}
+}
 
 void	render_scene(t_data *data)
 {
 	int	x;
 	int	wall_height;
 
+	update_animation_frame(data);
 	cast_rays(data);
 	wall_height = 0;
 	x = -1;
