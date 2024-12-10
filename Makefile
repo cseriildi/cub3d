@@ -6,16 +6,18 @@
 #    By: icseri <icseri@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/20 10:41:15 by icseri            #+#    #+#              #
-#    Updated: 2024/12/06 17:27:46 by icseri           ###   ########.fr        #
+#    Updated: 2024/12/10 11:02:07 by icseri           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = cub3d
 
+BONUS_NAME = cub3d_bonus
+
 MLX_FLAGS = -lmlx -lXext -lX11 -lm -lz -lbsd
 
-SRCS = main.c \
-		init.c \
+
+COMMON_SRCS = init.c \
 		parsing.c \
 		parsing_utils.c \
 		parsing_textures.c \
@@ -29,7 +31,13 @@ SRCS = main.c \
 		draw_utils.c \
 		movement.c \
 
+SRCS = main.c ${COMMON_SRCS}
+
+BONUS_SRCS = main_bonus.c ${COMMON_SRCS}
+
 OBJS = ${SRCS:.c=.o}
+
+BONUS_OBJS = ${BONUS_SRCS:.c=.o}
 
 COMP = cc
 
@@ -44,13 +52,17 @@ ${NAME}: ${OBJS}
 	@${MAKE} -C ./libft --no-print-directory
 	@${COMP} ${CFLAGS} ${OBJS} ./libft/libft.a -o ${NAME} $(MLX_FLAGS)
 
+bonus: ${BONUS_OBJS}
+	@${MAKE} -C ./libft --no-print-directory
+	@${COMP} ${CFLAGS} ${BONUS_OBJS} ./libft/libft.a -o ${BONUS_NAME} $(MLX_FLAGS)
+
 clean:
 	@${MAKE} -C ./libft --no-print-directory fclean
-	@rm -rf ${OBJS}
+	@rm -rf ${OBJS} ${BONUS_OBJS}
 
 fclean: clean
-	@rm -rf ${NAME}
+	@rm -rf ${NAME} ${BONUS_NAME}
 
 re: fclean all
 
-.PHONY: all clean fclean reNAME = cub3d
+.PHONY: all clean fclean bonus reNAME = cub3d

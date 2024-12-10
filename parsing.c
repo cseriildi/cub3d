@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:55:03 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 12:34:32 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/10 10:49:29 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ void	parse_file(t_map *map)
 			get_texture(line, &map->west, map);
 		else if (ft_strncmp(line, "SO ", 3) == 0)
 			get_texture(line, &map->south, map);
+		else if (map->is_bonus && ft_strncmp(line, "DO ", 3) == 0)
+			get_texture(line, &map->door, map);
 		else if (ft_strncmp(line, "C ", 2) == 0)
 			get_color(line, &map->ceiling, map);
 		else if (ft_strncmp(line, "F ", 2) == 0)
