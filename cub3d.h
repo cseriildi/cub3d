@@ -6,7 +6,7 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/11 11:38:01 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/11 12:19:17 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,6 +199,7 @@ typedef struct s_data
 	int			ray_dir[WIDTH];
 	void		*texture_img;
 	int			*texture_data;
+	int			frame_count[5];
 	t_texture	**textures;
 	t_minimap	minimap;
 	t_rectangle	rect;
@@ -220,6 +221,7 @@ void	check_map(t_map *map);
 void	list_to_arr(t_list **map_list, t_map *map);
 void	check_textures(t_map *map);
 void	safe_open(char	*filename, bool is_cub, t_map *map);
+void	allocate_textures(t_data *data);
 
 //mlx utils
 void	render_scene(t_data *data);

@@ -6,7 +6,7 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:25:09 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/11 11:44:44 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/11 12:23:40 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,9 +80,12 @@ void load_all_textures(t_data *data)
 	i = -1;
 	while (++i < data->map.door_count)
 		load_texture(data, &data->textures[4][i], data->map.door[i]);
+	data->frame_count[NORTH] = data->map.north_count;
+	data->frame_count[EAST] = data->map.east_count;
+	data->frame_count[SOUTH] = data->map.south_count;
+	data->frame_count[WEST] = data->map.west_count;
+	data->frame_count[DOOR] = data->map.door_count;
 }
-
-
 
 void	init_data(t_data *data)
 {
@@ -91,7 +94,6 @@ void	init_data(t_data *data)
 	i = -1;
 	while (++i < WIDTH)
 		data->ray_dir[i] = -1;
-	allocate_textures(data);
 	data->frame = 1;
 	data->last_frame = get_time();
 	data->map.fd = -1;
