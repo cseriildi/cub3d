@@ -6,7 +6,7 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:25:09 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/11 12:23:40 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/11 12:38:11 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,9 @@ void	init_data(t_data *data)
 		data->ray_dir[i] = -1;
 	data->frame = 1;
 	data->last_frame = get_time();
+	data->map = (t_map){0};
+	data->rect = (t_rectangle){0};
+	data->minimap = (t_minimap){0};
 	data->map.fd = -1;
 	data->map.ceiling = -1;
 	data->map.floor = -1;
