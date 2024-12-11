@@ -6,7 +6,7 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/10 15:50:31 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/11 09:49:04 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 # define FIELD_OF_VIEW 1.047198
 # define DBL_MAX 1.7976931348623157E+308
 # define MOUSE_SENSITIVITY 0.002
-# define NUM_FRAMES 5
+# define NUM_FRAMES 4
 # define FRAME_DURATION 0.1
 
 # define PLAYER_COLOR 0xFF0000 // Red
@@ -76,14 +76,16 @@ typedef struct s_map
 	int		w_size[2];
 	char	*east;
 	int		e_size[2];
+	char	*door;
+	int		d_size[2];
 	int		floor;
 	int		ceiling;
 	char	**map;
 	int		row;
 	int		column;
 	int		player[2];
-	int		enemy[2];
 	int		fd;
+	bool	is_bonus;
 }	t_map;
 
 typedef struct s_texture

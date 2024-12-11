@@ -6,7 +6,7 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:08:57 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/10 10:05:40 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/11 09:51:50 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static int	is_wall_at_position(t_data *data, double new_x, double new_y)
 				params.dy += 0.1;
 				continue ;
 			}
-			if (data->map.map[params.adj_y][params.adj_x] == '1')
+			if (ft_strchr("1D", data->map.map[params.adj_y][params.adj_x]) != 0)
 				return (1);
 			params.dy += 0.1;
 		}

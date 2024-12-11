@@ -6,7 +6,7 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:25:09 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/10 15:41:09 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/11 09:49:38 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ void	load_all_textures(t_data *data)
 	load_texture(data, &data->textures[EAST], data->map.east);
 	load_texture(data, &data->textures[SOUTH], data->map.south);
 	load_texture(data, &data->textures[WEST], data->map.west);
-	load_texture(data, &data->textures[4], "./textures/door.xpm");
+	if (data->map.door)
+		load_texture(data, &data->textures[DOOR], data->map.door);
 }
 
 void	init_data(t_data *data)
@@ -54,8 +55,6 @@ void	init_data(t_data *data)
 	data->frame = 1;
 	data->last_frame = get_time();
 	data->map.fd = -1;
-	data->map.enemy[0] = -1;
-	data->map.enemy[1] = -1;
 	data->map.ceiling = -1;
 	data->map.floor = -1;
 }
