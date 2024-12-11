@@ -6,7 +6,7 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:25:09 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/11 09:49:38 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/11 11:44:44 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,59 @@ void	load_texture(t_data *data, t_texture *texture, char *file)
 	}
 }
 
-void	load_all_textures(t_data *data)
+void allocate_textures(t_data *data)
 {
-	load_texture(data, &data->textures[NORTH], data->map.north);
-	load_texture(data, &data->textures[EAST], data->map.east);
-	load_texture(data, &data->textures[SOUTH], data->map.south);
-	load_texture(data, &data->textures[WEST], data->map.west);
-	if (data->map.door)
-		load_texture(data, &data->textures[DOOR], data->map.door);
+	int i;
+	int j;
+
+	data->textures = malloc(5 * sizeof(t_texture *));
+	if (!data->textures)
+		safe_exit(&data->map, MALLOC);
+	data->textures[0] = malloc(data->map.north_count * sizeof(t_texture));
+	data->textures[1] = malloc(data->map.east_count * sizeof(t_texture));
+	data->textures[2] = malloc(data->map.south_count * sizeof(t_texture));
+	data->textures[3] = malloc(data->map.west_count * sizeof(t_texture));
+	data->textures[4] = malloc(data->map.door_count * sizeof(t_texture));
+	i = 0;
+	while (i < 5)
+	{
+		if (!data->textures[i])
+		{
+			j = 0;
+			while (j < i)
+			{
+				free(data->textures[j]);
+				j++;
+			}
+			free(data->textures);
+			safe_exit(&data->map, MALLOC);
+		}
+		i++;
+	}
 }
+
+void load_all_textures(t_data *data)
+{
+	int i;
+
+	i = -1;
+	while (++i < data->map.north_count)
+		load_texture(data, &data->textures[0][i], data->map.north[i]);
+	i = -1;
+	while (++i < data->map.east_count)
+		load_texture(data, &data->textures[1][i], data->map.east[i]);
+	i = -1;
+	while (++i < data->map.south_count)
+		load_texture(data, &data->textures[2][i], data->map.south[i]);
+	i = -1;
+	while (++i < data->map.west_count)
+		load_texture(data, &data->textures[3][i], data->map.west[i]);
+	i = -1;
+	while (++i < data->map.door_count)
+		load_texture(data, &data->textures[4][i], data->map.door[i]);
+}
+
+
 
 void	init_data(t_data *data)
 {
@@ -47,11 +91,7 @@ void	init_data(t_data *data)
 	i = -1;
 	while (++i < WIDTH)
 		data->ray_dir[i] = -1;
-	data->textures[0] = (t_texture){0};
-	data->textures[1] = (t_texture){0};
-	data->textures[2] = (t_texture){0};
-	data->textures[3] = (t_texture){0};
-	data->map = (t_map){0};
+	allocate_textures(data);
 	data->frame = 1;
 	data->last_frame = get_time();
 	data->map.fd = -1;

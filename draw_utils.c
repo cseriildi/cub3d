@@ -6,7 +6,7 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:01:37 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/11 09:46:06 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/11 11:38:56 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ void	draw_vertical_line(t_data *data, int x, int wall_height)
 	int			wall_top;
 	int			wall_bottom;
 	int			texture_y;
-	int			index;
 	double		step;
 	double		texture_pos;
 	int			original_wall_top;
@@ -97,8 +96,7 @@ void	draw_vertical_line(t_data *data, int x, int wall_height)
 
 	if (data->ray_dir[x] < 0 || data->ray_dir[x] >= 5)
 		data->ray_dir[x] = NORTH;
-	index = (data->ray_dir[x] + data->frame) % 4;
-	texture = &data->textures[index];
+	texture = &data->textures[data->ray_dir[x]][0];
 	wall_top = (HEIGHT - wall_height) / 2;
 	wall_bottom = wall_top + wall_height - 1;
 	original_wall_top = wall_top;
