@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:25:09 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/11 14:26:19 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:43:02 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void	load_texture(t_data *data, t_texture *texture, char *file)
 {
+	//do we really need this file to be separated from the bonus? it seem to be the same
 	texture->img = mlx_xpm_file_to_image(data->mlx, file,
 			&texture->width, &texture->height);
 	if (!texture->img)
@@ -94,7 +95,6 @@ void	load_all_textures(t_data *data)
 	i = -1;
 	while (++i < data->map.door.count)
 		load_texture(data, &data->textures[4][i], data->map.door.textures[i]);
-	set_counts(data);
 }
 
 void	init_data(t_data *data)
@@ -109,6 +109,11 @@ void	init_data(t_data *data)
 	data->map = (t_map){0};
 	data->rect = (t_rectangle){0};
 	data->minimap = (t_minimap){0};
+	data->map.north = (t_sprite){0};
+	data->map.east = (t_sprite){0};
+	data->map.south = (t_sprite){0};
+	data->map.west = (t_sprite){0};
+	data->map.door = (t_sprite){0};
 	data->map.fd = -1;
 	data->map.ceiling = -1;
 	data->map.floor = -1;

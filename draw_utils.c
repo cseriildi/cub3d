@@ -6,21 +6,11 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:01:37 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/11 14:22:32 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:38:12 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
-{
-	char	*dst;
-
-	if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
-		return ;
-	dst = data->addr + (y * data->line_len + x * (data->bpp / 8));
-	*(unsigned int *)dst = color;
-}
 
 void	draw_rectangle(t_data *data, t_rectangle *rect)
 {
@@ -83,13 +73,33 @@ void	draw_line(t_data *data, t_line *line)
 	draw_line_with_params(data, line, &params);
 }
 
+void	something(double step, int x, int *wall, t_texture	*texture)
+{
+	int	texture_y;
+	int	y;
+
+	y = 0;
+	while (y < wall[0])
+		my_mlx_pixel_put(texture->data_struct, x, y++,
+			texture->data_struct->map.ceiling);
+	while (y <= wall[1])
+	{
+		texture_y = (int)texture->position % texture->height;
+		my_mlx_pixel_put(texture->data_struct, x, y++,
+			texture->data[texture_y * texture->width
+			+ ((int)(texture->data_struct->texture_x[x] * texture->width)
+				% texture->width)]);
+		texture->position += step;
+	}
+	while (y < HEIGHT)
+		my_mlx_pixel_put(texture->data_struct, x, y++,
+			texture->data_struct->map.floor);
+}
+
 void	draw_vertical_line(t_data *data, int x, int wall_height)
 {
-	int			y;
 	int			wall[2];
-	int			texture_y;
 	double		step;
-	double		texture_pos;
 	int			original_wall_top;
 	t_texture	*texture;
 
@@ -97,6 +107,7 @@ void	draw_vertical_line(t_data *data, int x, int wall_height)
 		data->ray_dir[x] = NORTH;
 	texture = &data->textures[data->ray_dir[x]][data->frame
 		% data->frame_count[data->ray_dir[x]]];
+	texture->data_struct = data;
 	wall[0] = (HEIGHT - wall_height) / 2;
 	wall[1] = wall[0] + wall_height - 1;
 	original_wall_top = wall[0];
@@ -106,20 +117,9 @@ void	draw_vertical_line(t_data *data, int x, int wall_height)
 		wall[1] = HEIGHT - 1;
 	step = (double)texture->height / wall_height;
 	if (original_wall_top < 0)
-		texture_pos = -original_wall_top * step;
+		texture->position = -original_wall_top * step;
 	else
-		texture_pos = 0;
-	y = 0;
-	while (y < wall[0])
-		my_mlx_pixel_put(data, x, y++, data->map.ceiling);
-	while (y <= wall[1])
-	{
-		texture_y = (int)texture_pos % texture->height;
-		my_mlx_pixel_put(data, x, y++,
-			texture->data[texture_y * texture->width
-			+ ((int)(data->texture_x[x] * texture->width) % texture->width)]);
-		texture_pos += step;
-	}
-	while (y < HEIGHT)
-		my_mlx_pixel_put(data, x, y++, data->map.floor);
+		texture->position = 0;
+	//rename
+	something(step, x, wall, texture);
 }

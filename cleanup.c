@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
+/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:51:15 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/11 12:40:05 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/11 18:05:01 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,22 @@ void	free_array(char ***arr)
 		*arr = NULL;
 	}
 }
+/* 
+void	free_texture(t_sprite *texture)
+{
+	int	i;
+
+	free_array(&texture->textures);
+	i = 0;
+	if (texture)
+	{
+		while (i < texture->count)
+			free(texture->sizes[i++]);
+		free(*texture->sizes);
+		*texture->sizes = NULL;
+	}
+	texture = NULL;
+} */
 
 void	free_list(t_list **list)
 {
@@ -77,6 +93,13 @@ void	errors(int exit_code)
 void	safe_exit(t_map *map, int exit_code)
 {
 	free_array(&map->map);
+	/* free_texture(&map->north);
+	free_texture(&map->east);
+	free_texture(&map->west);
+	free_texture(&map->south);
+	free_texture(&map->door);
+	mlx_destroy_img
+	*/
 	if (map->fd != -1)
 	{
 		close(map->fd);

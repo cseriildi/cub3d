@@ -6,30 +6,20 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:28:30 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/11 14:25:57 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/11 19:40:22 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	render_scene(t_data *data)
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
-	int	x;
-	int	wall_height;
+	char	*dst;
 
-	cast_rays(data);
-	wall_height = 0;
-	x = -1;
-	while (++x < WIDTH)
-	{
-		if (data->ray_distance[x] > 0)
-		{
-			wall_height = (TILE_SIZE / data->ray_distance[x]) * (HEIGHT / 55);
-			draw_vertical_line(data, x, wall_height);
-		}
-	}
-	draw_minimap(data);
-	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
+	if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
+		return ;
+	dst = data->addr + (y * data->line_len + x * (data->bpp / 8));
+	*(unsigned int *)dst = color;
 }
 
 int	close_window(t_data *data)
@@ -69,24 +59,6 @@ int	track_mouse(void *param)
 	}
 	data->addr = mlx_get_data_addr(data->img, &data->bpp,
 			&data->line_len, &data->endian);
-	render_scene(data);
-	return (0);
-}
-
-int	key_hook(int keycode, t_data *data)
-{
-	if (keycode == KEY_ESC)
-		close_window(data);
-	mlx_destroy_image(data->mlx, data->img);
-	data->img = mlx_new_image(data->mlx, WIDTH, HEIGHT);
-	if (!data->img)
-	{
-		print_error(1, "Error: Failed to create new image\n");
-		close_window(data);
-	}
-	data->addr = mlx_get_data_addr(data->img, &data->bpp,
-			&data->line_len, &data->endian);
-	update_player_position(data, keycode);
 	render_scene(data);
 	return (0);
 }
