@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:51:15 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 13:00:45 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/11 11:38:24 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,10 +76,11 @@ void	errors(int exit_code)
 
 void	safe_exit(t_map *map, int exit_code)
 {
-	ft_free(&map->north);
-	ft_free(&map->south);
-	ft_free(&map->west);
-	ft_free(&map->east);
+	free_array(&map->north);
+	free_array(&map->south);
+	free_array(&map->west);
+	free_array(&map->east);
+	free_array(&map->door);
 	free_array(&map->map);
 	if (map->fd != -1)
 	{

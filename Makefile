@@ -3,19 +3,19 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: icseri <icseri@student.42.fr>              +#+  +:+       +#+         #
+#    By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/20 10:41:15 by icseri            #+#    #+#              #
-#    Updated: 2024/12/10 11:02:07 by icseri           ###   ########.fr        #
+#    Updated: 2024/12/11 09:56:06 by dcsicsak         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
 
 NAME = cub3d
 
 BONUS_NAME = cub3d_bonus
 
 MLX_FLAGS = -lmlx -lXext -lX11 -lm -lz -lbsd
-
 
 COMMON_SRCS = init.c \
 		parsing.c \

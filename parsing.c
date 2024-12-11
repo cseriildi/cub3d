@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:55:03 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/10 10:49:29 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/11 11:45:18 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,15 +55,15 @@ void	parse_file(t_map *map)
 	while (line)
 	{
 		if (ft_strncmp(line, "NO ", 3) == 0)
-			get_texture(line, &map->north, map);
+			get_texture(line, &map->north, &map->n_size, &map->north_count, map);
 		else if (ft_strncmp(line, "EA ", 3) == 0)
-			get_texture(line, &map->east, map);
+			get_texture(line, &map->east, &map->e_size, &map->east_count, map);
 		else if (ft_strncmp(line, "WE ", 3) == 0)
-			get_texture(line, &map->west, map);
+			get_texture(line, &map->west, &map->w_size, &map->west_count, map);
 		else if (ft_strncmp(line, "SO ", 3) == 0)
-			get_texture(line, &map->south, map);
+			get_texture(line, &map->south, &map->s_size, &map->south_count, map);
 		else if (map->is_bonus && ft_strncmp(line, "DO ", 3) == 0)
-			get_texture(line, &map->door, map);
+			get_texture(line, &map->door, &map->d_size, &map->door_count, map);
 		else if (ft_strncmp(line, "C ", 2) == 0)
 			get_color(line, &map->ceiling, map);
 		else if (ft_strncmp(line, "F ", 2) == 0)

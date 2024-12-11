@@ -15,7 +15,6 @@
 int	main(int argc, char **argv)
 {
 	t_data	data;
-
 	init_data(&data);
 	data.map.is_bonus = true;
 	parsing(argc, argv, &data.map);

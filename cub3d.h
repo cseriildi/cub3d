@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/10 11:09:41 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/11 11:38:01 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <mlx.h>
 # include <stdlib.h>
 # include <math.h>
+# include <sys/time.h>
 
 # define WIDTH 800
 # define HEIGHT 600
@@ -31,6 +32,8 @@
 # define FIELD_OF_VIEW 1.047198
 # define DBL_MAX 1.7976931348623157E+308
 # define MOUSE_SENSITIVITY 0.002
+# define NUM_FRAMES 4
+# define FRAME_DURATION 0.1
 
 # define PLAYER_COLOR 0xFF0000 // Red
 # define GRID_COLOR 0xFF0000 // Red
@@ -65,16 +68,21 @@ typedef enum e_error
 
 typedef struct s_map
 {
-	char	*north;
-	int		n_size[2];
-	char	*south;
-	int		s_size[2];
-	char	*west;
-	int		w_size[2];
-	char	*east;
-	int		e_size[2];
-	char	*door;
-	int		d_size[2];
+	char	**north;
+	int		**n_size;
+	int		north_count;
+	char	**south;
+	int		**s_size;
+	int		south_count;
+	char	**west;
+	int		**w_size;
+	int		west_count;
+	char	**east;
+	int		**e_size;
+	int		east_count;
+	char	**door;
+	int		**d_size;
+	int		door_count;
 	int		floor;
 	int		ceiling;
 	char	**map;
@@ -180,6 +188,8 @@ typedef struct s_data
 	int			bpp;
 	int			line_len;
 	int			endian;
+	int			frame;
+	double		last_frame;
 	t_map		map;
 	double		player_x;
 	double		player_y;
@@ -189,7 +199,7 @@ typedef struct s_data
 	int			ray_dir[WIDTH];
 	void		*texture_img;
 	int			*texture_data;
-	t_texture	textures[5];
+	t_texture	**textures;
 	t_minimap	minimap;
 	t_rectangle	rect;
 }	t_data;
@@ -203,7 +213,7 @@ void	set_player(t_data *data);
 
 //parsing
 void	parsing(int argc, char **argv, t_map *map);
-void	get_texture(char *line, char **texture, t_map *map);
+void	get_texture(char *line, char ***textures, int ***sizes, int *count, t_map *map);
 void	get_color(char *line, int *color, t_map *map);
 void	get_map(char *line, t_map *map);
 void	check_map(t_map *map);
@@ -216,6 +226,7 @@ void	render_scene(t_data *data);
 int		close_window(t_data *data);
 int		track_mouse(void *param);
 int		key_hook(int keycode, t_data *data);
+double	get_time(void);
 
 //cleanup
 void	print_error(int count, ...);
