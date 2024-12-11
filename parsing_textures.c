@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:34:28 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 12:57:38 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/10 11:11:43 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,14 @@ void	set_size(int *size, char *texture, t_map *map)
 
 void	check_textures(t_map *map)
 {
-	if (map->ceiling < 0 || map->floor < 0
-		|| !map->east || !map->west || !map->north || !map->south)
+	if (map->ceiling < 0 || map->floor < 0)
 		safe_exit(map, COLOR);
+	if (!map->east || !map->west || !map->north || !map->south)
+		safe_exit(map, TEXTURE);
 	set_size(map->n_size, map->north, map);
 	set_size(map->s_size, map->south, map);
 	set_size(map->w_size, map->west, map);
 	set_size(map->e_size, map->east, map);
+	if (map->door)
+		set_size(map->d_size, map->door, map);
 }
