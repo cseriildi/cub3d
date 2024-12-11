@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   mlx_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
+/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:28:30 by icseri            #+#    #+#             */
 /*   Updated: 2024/12/10 15:49:53 by dcsicsak         ###   ########.fr       */
@@ -109,7 +109,8 @@ int	key_hook(int keycode, t_data *data)
 			&data->line_len, &data->endian);
 	update_player_position(data, keycode);
 	if (keycode == KEY_E)
-		check_and_open_door_nearby(data, data->player_x + 0.5, data->player_y + 0.5);
+		check_and_open_door_nearby(data, data->player_x + 0.5,
+			data->player_y + 0.5);
 	render_scene(data);
 	return (0);
 }

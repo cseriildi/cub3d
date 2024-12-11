@@ -47,7 +47,6 @@ bool	is_valid(int row, int col, int *player_count, t_map *map)
 		return (false);
 	else if (!ft_strchr("D1 ", map->map[row][col]))
 	{
-
 		if (map->map[row][col] != '0')
 		{
 			(*player_count)++;

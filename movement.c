@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   movement.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
+/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:08:57 by icseri            #+#    #+#             */
 /*   Updated: 2024/12/11 09:51:50 by dcsicsak         ###   ########.fr       */
@@ -96,17 +96,21 @@ void	check_and_open_door_nearby(t_data *data, double new_x, double new_y)
 
 static void	check_and_close_doors(t_data *data)
 {
-	double	radius = 1.5;
-	double	player_x = data->player_x;
-	double	player_y = data->player_y;
+	double	radius;
+	double	player_x;
+	double	player_y;
 	double	dist;
 	int		x;
 	int		y;
-	y = 0;
-	while (y < data->map.row)
+
+	player_x = data->player_x;
+	player_y = data->player_y;
+	radius = 1.5;
+	y = -1;
+	while (++y < data->map.row)
 	{
-		x = 0;
-		while (x < data->map.column)
+		x = -1;
+		while (++x < data->map.column)
 		{
 			if (data->map.map[y][x] == 'd')
 			{
@@ -114,9 +118,7 @@ static void	check_and_close_doors(t_data *data)
 				if (dist > radius)
 					data->map.map[y][x] = 'D';
 			}
-			x++;
 		}
-		y++;
 	}
 }
 
