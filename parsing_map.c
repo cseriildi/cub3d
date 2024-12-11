@@ -6,7 +6,7 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 12:32:37 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/11 09:54:36 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/11 13:40:25 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ bool	door_is_good(int row, int col, t_map *map)
 	west = map->map[row][col - 1] == '1';
 	south = map->map[row + 1][col] == '1';
 	north = map->map[row - 1][col] == '1';
-	if (map->is_bonus == false || map->door == NULL
+	if (map->is_bonus == false || map->door.textures == NULL
 		|| is_in(row, col, map) == false
 		|| (east && (west == false || south || north))
 		|| (north && (south == false || east || west))
@@ -47,7 +47,6 @@ bool	is_valid(int row, int col, int *player_count, t_map *map)
 		return (false);
 	else if (!ft_strchr("D1 ", map->map[row][col]))
 	{
-
 		if (map->map[row][col] != '0')
 		{
 			(*player_count)++;

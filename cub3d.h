@@ -6,7 +6,7 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/11 12:19:17 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/11 13:47:36 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,31 +66,28 @@ typedef enum e_error
 	WORNG_FILE
 }	t_erorr;
 
+typedef struct s_sprite
+{
+	char	**textures;
+	int		**sizes;
+	int		count;
+}	t_sprite;
+
 typedef struct s_map
 {
-	char	**north;
-	int		**n_size;
-	int		north_count;
-	char	**south;
-	int		**s_size;
-	int		south_count;
-	char	**west;
-	int		**w_size;
-	int		west_count;
-	char	**east;
-	int		**e_size;
-	int		east_count;
-	char	**door;
-	int		**d_size;
-	int		door_count;
-	int		floor;
-	int		ceiling;
-	char	**map;
-	int		row;
-	int		column;
-	int		player[2];
-	int		fd;
-	bool	is_bonus;
+	t_sprite	north;
+	t_sprite	east;
+	t_sprite	south;
+	t_sprite	west;
+	t_sprite	door;
+	int			floor;
+	int			ceiling;
+	char		**map;
+	int			row;
+	int			column;
+	int			player[2];
+	int			fd;
+	bool		is_bonus;
 }	t_map;
 
 typedef struct s_texture
@@ -214,7 +211,7 @@ void	set_player(t_data *data);
 
 //parsing
 void	parsing(int argc, char **argv, t_map *map);
-void	get_texture(char *line, char ***textures, int ***sizes, int *count, t_map *map);
+void	get_texture(char *line, t_sprite *sprite, t_map *map);
 void	get_color(char *line, int *color, t_map *map);
 void	get_map(char *line, t_map *map);
 void	check_map(t_map *map);

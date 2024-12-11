@@ -6,7 +6,7 @@
 #    By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/20 10:41:15 by icseri            #+#    #+#              #
-#    Updated: 2024/12/11 09:56:06 by dcsicsak         ###   ########.fr        #
+#    Updated: 2024/12/11 14:29:22 by dcsicsak         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,23 +17,20 @@ BONUS_NAME = cub3d_bonus
 
 MLX_FLAGS = -lmlx -lXext -lX11 -lm -lz -lbsd
 
-COMMON_SRCS = init.c \
-		parsing.c \
+COMMON_SRCS = parsing.c \
 		parsing_utils.c \
 		parsing_textures.c \
 		parsing_map.c \
-		mlx_utils.c \
 		cleanup.c \
 		cast_rays.c \
 		cast_rays_horizontal.c \
 		cast_rays_vertical.c \
 		minimap.c \
 		draw_utils.c \
-		movement.c \
 
-SRCS = main.c ${COMMON_SRCS}
+SRCS = main.c movement.c mlx_utils.c init.c ${COMMON_SRCS}
 
-BONUS_SRCS = main_bonus.c ${COMMON_SRCS}
+BONUS_SRCS = main_bonus.c mlx_utils_bonus.c movement_bonus.c init_bonus.c ${COMMON_SRCS}
 
 OBJS = ${SRCS:.c=.o}
 

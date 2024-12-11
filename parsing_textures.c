@@ -6,13 +6,14 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:34:28 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/11 12:35:00 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/11 13:43:06 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	*ft_realloc_array(void *array, size_t old_count, size_t new_count, size_t elem_size)
+void	*ft_realloc_array(void *array, size_t old_count, size_t new_count,
+	size_t elem_size)
 {
 	void	*new_array;
 
@@ -27,7 +28,7 @@ void	*ft_realloc_array(void *array, size_t old_count, size_t new_count, size_t e
 	return (new_array);
 }
 
-void	get_texture(char *line, char ***textures, int ***sizes, int *count, t_map *map)
+void	get_texture(char *line, t_sprite *sprite, t_map *map)
 {
 	char	*new_texture;
 
@@ -36,28 +37,30 @@ void	get_texture(char *line, char ***textures, int ***sizes, int *count, t_map *
 	new_texture = ft_substr(line, 3, ft_strlen(line) - 4);
 	if (!new_texture)
 		return (ft_free(&line), safe_exit(map, MALLOC));
-	*textures = ft_realloc_array(*textures, *count, *count + 1, sizeof(char *));
-	*sizes = ft_realloc_array(*sizes, *count, *count + 1, sizeof(int *));
-	if (!*textures || !*sizes)
+	sprite->textures = ft_realloc_array(sprite->textures, sprite->count,
+			sprite->count + 1, sizeof(char *));
+	sprite->sizes = ft_realloc_array(sprite->sizes, sprite->count,
+			sprite->count + 1, sizeof(int *));
+	if (!sprite->textures || !sprite->sizes)
 	{
 		ft_free(&new_texture);
 		safe_exit(map, MALLOC);
 	}
-	(*textures)[*count] = new_texture;
-	(*sizes)[*count] = malloc(sizeof(int) * 2);
-	if (!(*sizes)[*count])
+	sprite->textures[sprite->count] = new_texture;
+	sprite->sizes[sprite->count] = malloc(sizeof(int) * 2);
+	if (!sprite->sizes[sprite->count])
 		safe_exit(map, MALLOC);
-	(*sizes)[*count][0] = 0;
-	(*sizes)[*count][1] = 0;
-	(*count)++;
+	sprite->sizes[sprite->count][0] = 0;
+	sprite->sizes[sprite->count][1] = 0;
+	sprite->count++;
 	ft_free(&line);
 }
 
 void	set_sizes(int **sizes, char **textures, int count, t_map *map)
 {
-	int i;
-	char *line;
-	char **numbers;
+	int		i;
+	char	*line;
+	char	**numbers;
 
 	i = 0;
 	while (i < count)
@@ -82,16 +85,17 @@ void	set_sizes(int **sizes, char **textures, int count, t_map *map)
 	}
 }
 
-void check_textures(t_map *map)
+void	check_textures(t_map *map)
 {
 	if (map->ceiling < 0 || map->floor < 0)
 		safe_exit(map, COLOR);
-	if (!map->north || !map->south || !map->west || !map->east)
+	if (!map->north.textures || !map->south.textures
+		|| !map->west.textures || !map->east.textures)
 		safe_exit(map, TEXTURE);
-	set_sizes(map->n_size, map->north, map->north_count, map);
-	set_sizes(map->s_size, map->south, map->south_count, map);
-	set_sizes(map->w_size, map->west, map->west_count, map);
-	set_sizes(map->e_size, map->east, map->east_count, map);
-	if (map->door)
-		set_sizes(map->d_size, map->door, map->door_count, map);
+	set_sizes(map->north.sizes, map->north.textures, map->north.count, map);
+	set_sizes(map->south.sizes, map->south.textures, map->south.count, map);
+	set_sizes(map->west.sizes, map->west.textures, map->west.count, map);
+	set_sizes(map->east.sizes, map->east.textures, map->east.count, map);
+	if (map->door.textures)
+		set_sizes(map->door.sizes, map->door.textures, map->door.count, map);
 }

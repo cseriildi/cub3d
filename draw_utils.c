@@ -6,7 +6,7 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:01:37 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/11 12:21:11 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/11 14:22:32 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,7 @@ void	draw_line(t_data *data, t_line *line)
 void	draw_vertical_line(t_data *data, int x, int wall_height)
 {
 	int			y;
-	int			wall_top;
-	int			wall_bottom;
+	int			wall[2];
 	int			texture_y;
 	double		step;
 	double		texture_pos;
@@ -96,23 +95,24 @@ void	draw_vertical_line(t_data *data, int x, int wall_height)
 
 	if (data->ray_dir[x] < 0 || data->ray_dir[x] >= 5)
 		data->ray_dir[x] = NORTH;
-	texture = &data->textures[data->ray_dir[x]][data->frame % data->frame_count[data->ray_dir[x]]];
-	wall_top = (HEIGHT - wall_height) / 2;
-	wall_bottom = wall_top + wall_height - 1;
-	original_wall_top = wall_top;
-	if (wall_top < 0)
-		wall_top = 0;
-	if (wall_bottom >= HEIGHT)
-		wall_bottom = HEIGHT - 1;
+	texture = &data->textures[data->ray_dir[x]][data->frame
+		% data->frame_count[data->ray_dir[x]]];
+	wall[0] = (HEIGHT - wall_height) / 2;
+	wall[1] = wall[0] + wall_height - 1;
+	original_wall_top = wall[0];
+	if (wall[0] < 0)
+		wall[0] = 0;
+	if (wall[1] >= HEIGHT)
+		wall[1] = HEIGHT - 1;
 	step = (double)texture->height / wall_height;
 	if (original_wall_top < 0)
 		texture_pos = -original_wall_top * step;
 	else
 		texture_pos = 0;
 	y = 0;
-	while (y < wall_top)
+	while (y < wall[0])
 		my_mlx_pixel_put(data, x, y++, data->map.ceiling);
-	while (y <= wall_bottom)
+	while (y <= wall[1])
 	{
 		texture_y = (int)texture_pos % texture->height;
 		my_mlx_pixel_put(data, x, y++,

@@ -1,4 +1,8 @@
 NO ./textures/NO.xpm
+NO ./textures/SO.xpm
+NO ./textures/WE.xpm
+NO ./textures/EA.xpm
+NO ./textures/DO.xpm
 SO ./textures/SO.xpm
 WE ./textures/WE.xpm
 EA ./textures/EA.xpm
