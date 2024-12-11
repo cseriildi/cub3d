@@ -6,7 +6,7 @@
 /*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:25:09 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/11 12:38:11 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/11 13:00:59 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,15 @@ void load_all_textures(t_data *data)
 	data->frame_count[SOUTH] = data->map.south_count;
 	data->frame_count[WEST] = data->map.west_count;
 	data->frame_count[DOOR] = data->map.door_count;
+	if (!data->map.is_bonus)
+	{
+		if(data->map.door_count != 0 || data->map.west_count != 1
+			|| data->map.east_count != 1 || data->map.south_count != 1
+			|| data->map.north_count != 1)
+			safe_exit(&data->map, MAP);
+	}
+	else if (data->map.door_count != 1)
+		safe_exit(&data->map, MAP);
 }
 
 void	init_data(t_data *data)
