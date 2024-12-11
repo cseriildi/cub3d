@@ -15,9 +15,11 @@
 int	main(int argc, char **argv)
 {
 	t_data	data;
+
 	init_data(&data);
 	data.map.is_bonus = true;
 	parsing(argc, argv, &data.map);
+	allocate_textures(&data);
 	init_mlx(&data);
 	mlx_mouse_move(data.mlx, data.win, WIDTH / 2, HEIGHT / 2);
 	mlx_mouse_hide(data.mlx, data.win);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:25:09 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/11 14:26:19 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/11 13:49:33 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void	init_data(t_data *data)
 	while (++i < WIDTH)
 		data->ray_dir[i] = -1;
 	data->frame = 1;
-	data->last_frame = 0;
+	data->last_frame = get_time();
 	data->map = (t_map){0};
 	data->rect = (t_rectangle){0};
 	data->minimap = (t_minimap){0};
