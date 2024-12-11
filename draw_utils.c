@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   draw_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
+/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:01:37 by icseri            #+#    #+#             */
 /*   Updated: 2024/12/11 14:22:32 by dcsicsak         ###   ########.fr       */

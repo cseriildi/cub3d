@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   movement.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
+/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:08:57 by icseri            #+#    #+#             */
 /*   Updated: 2024/12/11 14:24:32 by dcsicsak         ###   ########.fr       */

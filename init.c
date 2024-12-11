@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
+/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:25:09 by icseri            #+#    #+#             */
 /*   Updated: 2024/12/11 14:26:19 by dcsicsak         ###   ########.fr       */

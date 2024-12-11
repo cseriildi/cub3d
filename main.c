@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
+/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:22 by icseri            #+#    #+#             */
 /*   Updated: 2024/12/11 12:23:13 by dcsicsak         ###   ########.fr       */
