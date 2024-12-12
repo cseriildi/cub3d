@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:51:15 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/11 18:05:01 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/12 16:46:34 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,22 +25,31 @@ void	free_array(char ***arr)
 		*arr = NULL;
 	}
 }
-/* 
+
 void	free_texture(t_sprite *texture)
 {
 	int	i;
 
-	free_array(&texture->textures);
-	i = 0;
 	if (texture)
 	{
-		while (i < texture->count)
-			free(texture->sizes[i++]);
-		free(*texture->sizes);
-		*texture->sizes = NULL;
+/* 		i = 0;
+		if (texture->textures)
+		{
+			while (texture->textures[i])
+				ft_free(&texture->textures[i++]);
+			free(texture->textures);
+			texture->textures = NULL;
+		} */
+		i = 0;
+		if (texture->sizes)
+		{
+			while (i < texture->count)
+				free(texture->sizes[i++]);
+			free(texture->sizes);
+			texture->sizes = NULL;
+		}
 	}
-	texture = NULL;
-} */
+}
 
 void	free_list(t_list **list)
 {
@@ -93,18 +102,35 @@ void	errors(int exit_code)
 void	safe_exit(t_map *map, int exit_code)
 {
 	free_array(&map->map);
-	/* free_texture(&map->north);
+	free_texture(&map->north);
 	free_texture(&map->east);
 	free_texture(&map->west);
 	free_texture(&map->south);
 	free_texture(&map->door);
-	mlx_destroy_img
-	*/
-	if (map->fd != -1)
+
+	int i = 0;
+	if (map->data->textures)
 	{
-		close(map->fd);
-		map->fd = -1;
+		while (i < 5 && map->data->textures[i])
+		{
+			if (map->data->mlx && map->data->textures[i]->img)
+				mlx_destroy_image(map->data->mlx, map->data->textures[i]->img);
+			free(map->data->textures[i]);
+			i++;
+		}
+		free(map->data->textures);
 	}
+	if (map->data->img)
+		mlx_destroy_image(map->data->mlx, map->data->img);
+	if (map->data->win)
+		mlx_destroy_window(map->data->mlx, map->data->win);
+	if (map->data->mlx)
+	{
+		mlx_destroy_display(map->data->mlx);
+		free(map->data->mlx);
+	}
+	if (map->fd != -1)
+		close(map->fd);
 	get_next_line(-1);
 	errors(exit_code);
 	exit(exit_code);

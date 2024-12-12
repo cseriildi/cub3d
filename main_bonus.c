@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:22 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/12 14:39:43 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/12 15:19:59 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	main(int argc, char **argv)
 {
 	t_data	data;
 
-	data.map.is_bonus = true;
+	data = (t_data){0};
 	init_data(&data);
 	data.map.is_bonus = true;
 	parsing(argc, argv, &data.map);

@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:28:30 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/11 19:40:22 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/12 15:15:28 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,6 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 
 int	close_window(t_data *data)
 {
-	if (data->img)
-		mlx_destroy_image(data->mlx, data->img);
-	if (data->win)
-		mlx_destroy_window(data->mlx, data->win);
-	if (data->mlx)
-	{
-		mlx_destroy_display(data->mlx);
-		free(data->mlx);
-	}
 	safe_exit(&data->map, EXIT_SUCCESS);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 14:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/12 14:44:08 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/12 16:37:14 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,27 +33,31 @@ void	load_texture(t_data *data, t_texture *texture, char *file)
 void	allocate_textures(t_data *data)
 {
 	int	i;
-	int	j;
 
-	data->textures = malloc(5 * sizeof(t_texture *));
+	data->textures = ft_calloc(5, sizeof(t_texture *));
 	if (!data->textures)
 		safe_exit(&data->map, MALLOC);
-	data->textures[0] = malloc(data->map.north.count * sizeof(t_texture));
-	data->textures[1] = malloc(data->map.east.count * sizeof(t_texture));
-	data->textures[2] = malloc(data->map.south.count * sizeof(t_texture));
-	data->textures[3] = malloc(data->map.west.count * sizeof(t_texture));
-	data->textures[4] = malloc(data->map.door.count * sizeof(t_texture));
-	i = -1;
-	while (++i < 5)
+	data->textures[0] = ft_calloc(data->map.north.count, sizeof(t_texture));
+	data->textures[1] = ft_calloc(data->map.east.count, sizeof(t_texture));
+	data->textures[2] = ft_calloc(data->map.south.count, sizeof(t_texture));
+	data->textures[3] = ft_calloc(data->map.west.count, sizeof(t_texture));
+	data->textures[4] = ft_calloc(data->map.door.count, sizeof(t_texture));
+	if (!data->textures[0] || !data->textures[1] || !data->textures[2]
+		|| !data->textures[3] || !data->textures[4])
 	{
-		if (!data->textures[i])
+		i = -1;
+		while (++i < 5)
 		{
-			j = -1;
-			while (++j < i)
-				free(data->textures[j]);
-			free(data->textures);
-			safe_exit(&data->map, MALLOC);
+			if (data->textures[i])
+			{
+
+				free(data->textures[i]);
+				data->textures[i] = NULL;
+			}
 		}
+		free(data->textures);
+		data->textures = NULL;
+		safe_exit(&data->map, MALLOC);
 	}
 }
 

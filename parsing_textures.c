@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:34:28 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/12 14:33:50 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/12 15:43:11 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	*ft_realloc_array(void *array, size_t old_count, size_t new_count,
 	if (array)
 	{
 		ft_memcpy(new_array, array, old_count * elem_size);
-		free(array);
+		free_array(array);
 	}
 	return (new_array);
 }
@@ -35,13 +35,12 @@ void	get_texture(char *line, t_sprite *sprite, t_map *map)
 	if (ft_strlen(line) <= 3)
 		return (ft_free(&line), safe_exit(map, TEXTURE));
 	new_texture = ft_substr(line, 3, ft_strlen(line) - 4);
-	if (!new_texture)
-		return (ft_free(&line), safe_exit(map, MALLOC));
+	ft_free(&line);
 	sprite->textures = ft_realloc_array(sprite->textures, sprite->count,
 			sprite->count + 1, sizeof(char *));
 	sprite->sizes = ft_realloc_array(sprite->sizes, sprite->count,
 			sprite->count + 1, sizeof(int *));
-	if (!sprite->textures || !sprite->sizes)
+	if (!sprite->textures || !sprite->sizes || !new_texture)
 	{
 		ft_free(&new_texture);
 		safe_exit(map, MALLOC);
@@ -53,7 +52,6 @@ void	get_texture(char *line, t_sprite *sprite, t_map *map)
 	sprite->sizes[sprite->count][0] = 0;
 	sprite->sizes[sprite->count][1] = 0;
 	sprite->count++;
-	ft_free(&line);
 }
 
 void	set_sizes(int **sizes, char **textures, int count, t_map *map)
