@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/11 19:39:25 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/12 14:29:29 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,7 +223,7 @@ void	get_map(char *line, t_map *map);
 void	check_map(t_map *map);
 void	list_to_arr(t_list **map_list, t_map *map);
 void	check_textures(t_map *map);
-void	safe_open(char	*filename, bool is_cub, t_map *map);
+int		safe_open(char	*filename, bool is_cub, t_map *map);
 void	allocate_textures(t_data *data);
 
 //mlx & mlx_monus

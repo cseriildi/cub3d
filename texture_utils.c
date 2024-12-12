@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   texture_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
+/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/06 13:25:09 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/11 13:49:33 by dcsicsak         ###   ########.fr       */
+/*   Created: 2024/12/12 14:43:35 by icseri            #+#    #+#             */
+/*   Updated: 2024/12/12 14:44:08 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ void	set_counts(t_data *data)
 			|| data->map.north.count != 1)
 			safe_exit(&data->map, MAP);
 	}
-	else if (data->map.door.count != 1)
-		safe_exit(&data->map, MAP);
+	/* else if (data->map.door.count != 1)
+		safe_exit(&data->map, MAP); */
 }
 
 void	load_all_textures(t_data *data)
@@ -94,65 +94,4 @@ void	load_all_textures(t_data *data)
 	i = -1;
 	while (++i < data->map.door.count)
 		load_texture(data, &data->textures[4][i], data->map.door.textures[i]);
-	set_counts(data);
-}
-
-void	init_data(t_data *data)
-{
-	int	i;
-
-	i = -1;
-	while (++i < WIDTH)
-		data->ray_dir[i] = -1;
-	data->frame = 1;
-	data->last_frame = get_time();
-	data->map = (t_map){0};
-	data->rect = (t_rectangle){0};
-	data->minimap = (t_minimap){0};
-	data->map.fd = -1;
-	data->map.ceiling = -1;
-	data->map.floor = -1;
-}
-
-void	init_mlx(t_data *data)
-{
-	data->mlx = mlx_init();
-	if (!data->mlx)
-	{
-		print_error(1, "Error: Failed to initialize mlx\n");
-		safe_exit(&data->map, EXIT_FAILURE);
-	}
-	data->win = mlx_new_window(data->mlx, WIDTH, HEIGHT, "cub3d");
-	if (!data->win)
-	{
-		mlx_destroy_display(data->mlx);
-		free(data->mlx);
-		print_error(1, "Error: Failed to create window\n");
-		safe_exit(&data->map, EXIT_FAILURE);
-	}
-	data->img = mlx_new_image(data->mlx, WIDTH, HEIGHT);
-	if (!data->img)
-	{
-		mlx_destroy_window(data->mlx, data->win);
-		mlx_destroy_display(data->mlx);
-		free(data->mlx);
-		print_error(1, "Error: Failed to create image\n");
-		safe_exit(&data->map, EXIT_FAILURE);
-	}
-	data->addr = mlx_get_data_addr(data->img,
-			&data->bpp, &data->line_len, &data->endian);
-}
-
-void	set_player(t_data *data)
-{
-	data->player_x = data->map.player[1];
-	data->player_y = data->map.player[0];
-	if (data->map.map[data->map.player[0]][data->map.player[1]] == 'N')
-		data->player_angle = 3 * M_PI / 2;
-	else if (data->map.map[data->map.player[0]][data->map.player[1]] == 'S')
-		data->player_angle = M_PI / 2;
-	else if (data->map.map[data->map.player[0]][data->map.player[1]] == 'E')
-		data->player_angle = 0;
-	else if (data->map.map[data->map.player[0]][data->map.player[1]] == 'W')
-		data->player_angle = M_PI;
 }

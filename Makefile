@@ -6,7 +6,7 @@
 #    By: icseri <icseri@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/20 10:41:15 by icseri            #+#    #+#              #
-#    Updated: 2024/12/11 19:40:04 by icseri           ###   ########.fr        #
+#    Updated: 2024/12/12 14:44:33 by icseri           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,22 +17,24 @@ BONUS_NAME = cub3d_bonus
 
 MLX_FLAGS = -lmlx -lXext -lX11 -lm -lz -lbsd
 
-COMMON_SRCS = parsing.c \
-		parsing_utils.c \
-		parsing_textures.c \
-		parsing_map.c \
-		cleanup.c \
-		cast_rays.c \
-		cast_rays_horizontal.c \
-		cast_rays_vertical.c \
-		minimap.c \
-		draw_utils.c \
-		movement_utils.c \
-		mlx_utils.c
+COMMON_SRCS = init.c \
+				parsing.c \
+				parsing_utils.c \
+				parsing_textures.c \
+				texture_utils.c \
+				parsing_map.c \
+				cleanup.c \
+				cast_rays.c \
+				cast_rays_horizontal.c \
+				cast_rays_vertical.c \
+				minimap.c \
+				draw_utils.c \
+				movement_utils.c \
+				mlx_utils.c \
 
-SRCS = main.c movement.c init.c mlx.c ${COMMON_SRCS}
+SRCS = main.c movement.c mlx.c ${COMMON_SRCS}
 
-BONUS_SRCS = main_bonus.c mlx_bonus.c movement_bonus.c init_bonus.c ${COMMON_SRCS}
+BONUS_SRCS = main_bonus.c mlx_bonus.c movement_bonus.c ${COMMON_SRCS}
 
 OBJS = ${SRCS:.c=.o}
 
