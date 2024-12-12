@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
+/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:51:15 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/11 12:40:05 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/12 16:52:45 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,31 @@ void	free_array(char ***arr)
 			ft_free(&(*arr)[i++]);
 		free(*arr);
 		*arr = NULL;
+	}
+}
+
+void	free_texture(t_sprite *texture)
+{
+	int	i;
+
+	if (texture)
+	{
+/* 		i = 0;
+		if (texture->textures)
+		{
+			while (texture->textures[i])
+				ft_free(&texture->textures[i++]);
+			free(texture->textures);
+			texture->textures = NULL;
+		} */
+		i = 0;
+		if (texture->sizes)
+		{
+			while (i < texture->count)
+				free(texture->sizes[i++]);
+			free(texture->sizes);
+			texture->sizes = NULL;
+		}
 	}
 }
 
@@ -76,12 +101,37 @@ void	errors(int exit_code)
 
 void	safe_exit(t_map *map, int exit_code)
 {
+	int	i;
+
 	free_array(&map->map);
-	if (map->fd != -1)
+	free_texture(&map->north);
+	free_texture(&map->east);
+	free_texture(&map->west);
+	free_texture(&map->south);
+	free_texture(&map->door);
+	if (map->data->textures)
 	{
-		close(map->fd);
-		map->fd = -1;
+		i = 0;
+		while (i < 5 && map->data->textures[i])
+		{
+			if (map->data->mlx && map->data->textures[i]->img)
+				mlx_destroy_image(map->data->mlx, map->data->textures[i]->img);
+			free(map->data->textures[i]);
+			i++;
+		}
+		free(map->data->textures);
 	}
+	if (map->data->img)
+		mlx_destroy_image(map->data->mlx, map->data->img);
+	if (map->data->win)
+		mlx_destroy_window(map->data->mlx, map->data->win);
+	if (map->data->mlx)
+	{
+		mlx_destroy_display(map->data->mlx);
+		free(map->data->mlx);
+	}
+	if (map->fd != -1)
+		close(map->fd);
 	get_next_line(-1);
 	errors(exit_code);
 	exit(exit_code);

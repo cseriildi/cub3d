@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/11 13:47:36 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/12 14:29:29 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ typedef struct s_sprite
 	int		count;
 }	t_sprite;
 
+typedef struct s_data	t_data;
+
 typedef struct s_map
 {
 	t_sprite	north;
@@ -88,6 +90,7 @@ typedef struct s_map
 	int			player[2];
 	int			fd;
 	bool		is_bonus;
+	t_data		*data;
 }	t_map;
 
 typedef struct s_texture
@@ -96,6 +99,8 @@ typedef struct s_texture
 	int		*data;
 	int		width;
 	int		height;
+	double	position;
+	t_data	*data_struct;
 }	t_texture;
 
 typedef struct s_line
@@ -208,6 +213,7 @@ void	load_all_textures(t_data *data);
 void	init_data(t_data *data);
 void	init_mlx(t_data *data);
 void	set_player(t_data *data);
+void	set_counts(t_data *data);
 
 //parsing
 void	parsing(int argc, char **argv, t_map *map);
@@ -217,15 +223,18 @@ void	get_map(char *line, t_map *map);
 void	check_map(t_map *map);
 void	list_to_arr(t_list **map_list, t_map *map);
 void	check_textures(t_map *map);
-void	safe_open(char	*filename, bool is_cub, t_map *map);
+int		safe_open(char	*filename, bool is_cub, t_map *map);
 void	allocate_textures(t_data *data);
 
-//mlx utils
+//mlx & mlx_monus
 void	render_scene(t_data *data);
-int		close_window(t_data *data);
-int		track_mouse(void *param);
 int		key_hook(int keycode, t_data *data);
 double	get_time(void);
+
+//mlx utils
+int		close_window(t_data *data);
+int		track_mouse(void *param);
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 
 //cleanup
 void	print_error(int count, ...);
@@ -242,13 +251,22 @@ void	check_vertical(t_data *data, double x, double y, t_ray *ray);
 void	draw_minimap(t_data *data);
 
 //draw_utils
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 void	draw_rectangle(t_data *data, t_rectangle *rect);
 void	draw_line(t_data *data, t_line *line);
 void	draw_vertical_line(t_data *data, int x, int wall_height);
 
 //movement
+void	move_player(t_data *data, double move_x, double move_y);
+
+//movement utils
+int		is_wall(t_data *data, double check_x, double check_y);
+int		check_wall_in_radius(t_data *data, double new_x, double new_y,
+			double radius);
+int		is_wall_at_position(t_data *data, double new_x, double new_y);
+void	turn_player(t_data *data, int keycode);
 void	update_player_position(t_data *data, int keycode);
+
+//movement bonus
 void	check_and_open_door_nearby(t_data *data, double new_x, double new_y);
 
 #endif
