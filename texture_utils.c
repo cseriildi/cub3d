@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 14:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/12 16:37:14 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/12 16:51:30 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,12 @@ void	allocate_textures(t_data *data)
 		{
 			if (data->textures[i])
 			{
-
 				free(data->textures[i]);
 				data->textures[i] = NULL;
 			}
 		}
 		free(data->textures);
-		data->textures = NULL;
-		safe_exit(&data->map, MALLOC);
+		return (data->textures = NULL, safe_exit(&data->map, MALLOC));
 	}
 }
 

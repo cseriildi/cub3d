@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:51:15 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/12 16:46:34 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/12 16:52:45 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,16 +101,17 @@ void	errors(int exit_code)
 
 void	safe_exit(t_map *map, int exit_code)
 {
+	int	i;
+
 	free_array(&map->map);
 	free_texture(&map->north);
 	free_texture(&map->east);
 	free_texture(&map->west);
 	free_texture(&map->south);
 	free_texture(&map->door);
-
-	int i = 0;
 	if (map->data->textures)
 	{
+		i = 0;
 		while (i < 5 && map->data->textures[i])
 		{
 			if (map->data->mlx && map->data->textures[i]->img)
