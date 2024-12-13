@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 14:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/13 13:06:48 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/13 13:50:50 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,35 +30,6 @@ void	load_texture(t_data *data, t_texture *texture, char *file)
 	}
 }
 
-void	allocate_textures(t_data *data)
-{
-	int	i;
-
-	data->textures = ft_calloc(5, sizeof(t_texture *));
-	if (!data->textures)
-		safe_exit(&data->map, MALLOC);
-	data->textures[0] = ft_calloc(data->map.north.count + 1, sizeof(t_texture));
-	data->textures[1] = ft_calloc(data->map.east.count + 1, sizeof(t_texture));
-	data->textures[2] = ft_calloc(data->map.south.count + 1, sizeof(t_texture) );
-	data->textures[3] = ft_calloc(data->map.west.count + 1, sizeof(t_texture));
-	data->textures[4] = ft_calloc(data->map.door.count + 1, sizeof(t_texture));
-	if (!data->textures[0] || !data->textures[1] || !data->textures[2]
-		|| !data->textures[3] || !data->textures[4])
-	{
-		i = -1;
-		while (++i < 5)
-		{
-			if (data->textures[i])
-			{
-				free(data->textures[i]);
-				data->textures[i] = NULL;
-			}
-		}
-		free(data->textures);
-		return (data->textures = NULL, safe_exit(&data->map, MALLOC));
-	}
-}
-
 void	set_counts(t_data *data)
 {
 	data->frame_count[NORTH] = data->map.north.count;
@@ -78,8 +49,9 @@ void	set_counts(t_data *data)
 	data->map.south.sizes = ft_calloc(data->map.south.count, sizeof(int *));
 	data->map.west.sizes = ft_calloc(data->map.west.count, sizeof(int *));
 	data->map.door.sizes = ft_calloc(data->map.door.count, sizeof(int *));
-	if (!data->map.north.sizes || !data->map.east.sizes || !data->map.south.sizes
-		|| !data->map.west.sizes || !data->map.door.sizes)
+	if (!data->map.north.sizes || !data->map.east.sizes
+		|| !data->map.south.sizes || !data->map.west.sizes
+		|| !data->map.door.sizes)
 		safe_exit(&data->map, MALLOC);
 }
 
@@ -89,17 +61,47 @@ void	load_all_textures(t_data *data)
 
 	i = -1;
 	while (++i < data->map.north.count)
-		load_texture(data, &data->textures[0][i], data->map.north.textures[i]);
+		load_texture(data, &data->textures[NORTH][i],
+			data->map.north.textures[i]);
 	i = -1;
 	while (++i < data->map.east.count)
-		load_texture(data, &data->textures[1][i], data->map.east.textures[i]);
+		load_texture(data, &data->textures[EAST][i],
+			data->map.east.textures[i]);
 	i = -1;
 	while (++i < data->map.south.count)
-		load_texture(data, &data->textures[2][i], data->map.south.textures[i]);
+		load_texture(data, &data->textures[SOUTH][i],
+			data->map.south.textures[i]);
 	i = -1;
 	while (++i < data->map.west.count)
-		load_texture(data, &data->textures[3][i], data->map.west.textures[i]);
+		load_texture(data, &data->textures[WEST][i],
+			data->map.west.textures[i]);
 	i = -1;
 	while (++i < data->map.door.count)
-		load_texture(data, &data->textures[4][i], data->map.door.textures[i]);
+		load_texture(data, &data->textures[DOOR][i],
+			data->map.door.textures[i]);
+}
+
+void	free_texture(t_sprite *texture)
+{
+	int	i;
+
+	if (texture)
+	{
+		i = 0;
+		if (texture->textures)
+		{
+			while (texture->textures[i])
+				ft_free(&texture->textures[i++]);
+			free(texture->textures);
+			texture->textures = NULL;
+		}
+		i = 0;
+		if (texture->sizes)
+		{
+			while (i < texture->count)
+				free(texture->sizes[i++]);
+			free(texture->sizes);
+			texture->sizes = NULL;
+		}
+	}
 }

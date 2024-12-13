@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 12:32:37 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/13 12:58:08 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/13 13:44:23 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ bool	door_is_good(int row, int col, t_map *map)
 		|| (east && (west == false || south || north))
 		|| (north && (south == false || east || west))
 		|| (east == false && north == false)
-		|| map->door.count != 1) //We can only have one door texture in bonus?
+		|| map->door.count != 1)
 		return (false);
 	return (true);
 }
@@ -45,7 +45,6 @@ bool	door_is_good(int row, int col, t_map *map)
 bool	is_valid(int row, int col, int *player_count, t_map *map)
 {
 	if (!ft_strchr("WENS01D ", map->map[row][col]))
-
 		return (false);
 	else if (!ft_strchr("D1 ", map->map[row][col]))
 	{
@@ -53,7 +52,7 @@ bool	is_valid(int row, int col, int *player_count, t_map *map)
 		{
 			(*player_count)++;
 			if (*player_count > 1)
-				return (false);	
+				return (false);
 			map->player[0] = row;
 			map->player[1] = col;
 		}
@@ -96,15 +95,15 @@ void	list_to_arr(t_list **map_list, char ***arr, t_map *map)
 	column = 0;
 	*arr = ft_calloc(sizeof(char *), ft_lstsize(*map_list) + 1);
 	if (!*arr)
-		return (free_list(map_list), safe_exit(map, MALLOC));
+		return (ft_lstclear(map_list, &free), safe_exit(map, MALLOC));
 	current = *map_list;
 	row = -1;
 	while (current)
 	{
 		(*arr)[++row] = ft_strdup(current->content);
 		if (!(*arr)[row])
-			return (free_list(map_list), safe_exit(map, MALLOC));
+			return (ft_lstclear(map_list, &free), safe_exit(map, MALLOC));
 		current = current->next;
 	}
-	//free_list(map_list);
+	ft_lstclear(map_list, &free);
 }

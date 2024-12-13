@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 15:27:07 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/13 10:19:01 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/13 13:35:51 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,8 @@ char	*get_next_line(int fd)
 {
 	static t_gnl_list	*list;
 	t_gnl_list			*read_chars;
-	char			*line;
-	char			*tmp;
+	char				*line;
+	char				*tmp;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (ft_listclear(&list, &free), NULL);

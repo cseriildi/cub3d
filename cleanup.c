@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:51:15 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/13 13:06:33 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/13 13:47:53 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,51 +24,6 @@ void	free_array(char ***arr)
 		free(*arr);
 		*arr = NULL;
 	}
-}
-
-void	free_texture(t_sprite *texture)
-{
-	int	i;
-
-	if (texture)
-	{
-/* 		i = 0;
-		if (texture->textures)
-		{
-			while (texture->textures[i])
-				ft_free(&texture->textures[i++]);
-			free(texture->textures);
-			texture->textures = NULL;
-		} */
-		i = 0;
-		if (texture->sizes)
-		{
-			while (i < texture->count)
-				free(texture->sizes[i++]);
-			free(texture->sizes);
-			texture->sizes = NULL;
-		}
-	}
-}
-
-void	free_list(t_list **list)
-{
-	t_list	*current;
-	t_list	*next;
-
-	if (list && *list)
-	{
-		current = *list;
-		while (current != NULL)
-		{
-			next = current->next;
-			ft_free((char **)&current->content);
-			free(current);
-			current = next;
-		}
-		*list = NULL;
-	}
-	free(list);
 }
 
 void	print_error(int count, ...)
@@ -99,43 +54,43 @@ void	errors(int exit_code)
 		print_error(1, "Error\nInvalid map");
 }
 
-void	safe_exit(t_map *map, int exit_code)
+void	free_mlx(t_data *data)
 {
 	int	i;
 	int	j;
 
+	if (data->textures)
+	{
+		i = -1;
+		while (++i < 5 && data->textures[i])
+		{
+			j = -1;
+			while (data->mlx && data->textures[i][++j].img != NULL)
+				mlx_destroy_image(data->mlx, data->textures[i][j].img);
+			free(data->textures[i]);
+		}
+		free(data->textures);
+	}
+	if (data->img)
+		mlx_destroy_image(data->mlx, data->img);
+	if (data->win)
+		mlx_destroy_window(data->mlx, data->win);
+	if (data->mlx)
+	{
+		mlx_destroy_display(data->mlx);
+		free(data->mlx);
+	}
+}
+
+void	safe_exit(t_map *map, int exit_code)
+{
 	free_array(&map->map);
 	free_texture(&map->north);
 	free_texture(&map->east);
 	free_texture(&map->west);
 	free_texture(&map->south);
 	free_texture(&map->door);
-
-	i = 0;
-	if (map->data->textures)
-	{
-		i = 0;
-		while (i < 5 && map->data->textures[i])
-		{
-			j = -1;
-			while (map->data->mlx && map->data->textures[i][++j].img != NULL)
-			{
-				mlx_destroy_image(map->data->mlx, map->data->textures[i][j].img);
-			}
-			free(map->data->textures[i]);
-			i++;
-		}
-		free(map->data->textures);
-	}
-	if (map->data->img)
-		mlx_destroy_image(map->data->mlx, map->data->img);
-	if (map->data->win)
-		mlx_destroy_window(map->data->mlx, map->data->win);
-	if (map->data->mlx)
-	{
-		mlx_destroy_display(map->data->mlx);
-		free(map->data->mlx);
-	}
+	free_mlx(map->data);
 	if (map->fd != -1)
 		close(map->fd);
 	get_next_line(-1);
