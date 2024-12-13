@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:28:30 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/12 15:15:28 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/13 10:43:34 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	track_mouse(void *param)
 		data->player_angle += (x - WIDTH / 2) * MOUSE_SENSITIVITY;
 	data->player_angle = fmod(data->player_angle + 2 * M_PI, 2 * M_PI);
 	mlx_mouse_move(data->mlx, data->win, WIDTH / 2, HEIGHT / 2);
-	mlx_mouse_hide(data->mlx, data->win);
+	//mlx_mouse_hide(data->mlx, data->win);
 	mlx_destroy_image(data->mlx, data->img);
 	data->img = mlx_new_image(data->mlx, WIDTH, HEIGHT);
 	if (!data->img)

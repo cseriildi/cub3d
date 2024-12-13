@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/12 14:29:29 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/13 11:06:55 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ typedef struct s_sprite
 	char	**textures;
 	int		**sizes;
 	int		count;
+	t_list	*texture_list;
 }	t_sprite;
 
 typedef struct s_data	t_data;
@@ -221,7 +222,7 @@ void	get_texture(char *line, t_sprite *sprite, t_map *map);
 void	get_color(char *line, int *color, t_map *map);
 void	get_map(char *line, t_map *map);
 void	check_map(t_map *map);
-void	list_to_arr(t_list **map_list, t_map *map);
+void	list_to_arr(t_list **map_list, char ***arr, t_map *map);
 void	check_textures(t_map *map);
 int		safe_open(char	*filename, bool is_cub, t_map *map);
 void	allocate_textures(t_data *data);

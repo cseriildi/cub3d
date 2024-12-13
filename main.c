@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:22 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/12 15:19:42 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/13 10:42:52 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	main(int argc, char **argv)
 	parsing(argc, argv, &data.map);
 	init_mlx(&data);
 	mlx_mouse_move(data.mlx, data.win, WIDTH / 2, HEIGHT / 2);
-	mlx_mouse_hide(data.mlx, data.win);
+	//mlx_mouse_hide(data.mlx, data.win);
 	set_player(&data);
 	cast_rays(&data);
 	load_all_textures(&data);
