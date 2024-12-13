@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:51:15 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/13 13:47:53 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/13 15:47:31 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,12 +84,18 @@ void	free_mlx(t_data *data)
 
 void	safe_exit(t_map *map, int exit_code)
 {
+	ft_free(&map->data->line);
 	free_array(&map->map);
 	free_texture(&map->north);
 	free_texture(&map->east);
 	free_texture(&map->west);
 	free_texture(&map->south);
 	free_texture(&map->door);
+	ft_lstclear(&map->north.texture_list, &free);
+	ft_lstclear(&map->east.texture_list, &free);
+	ft_lstclear(&map->west.texture_list, &free);
+	ft_lstclear(&map->south.texture_list, &free);
+	ft_lstclear(&map->door.texture_list, &free);
 	free_mlx(map->data);
 	if (map->fd != -1)
 		close(map->fd);

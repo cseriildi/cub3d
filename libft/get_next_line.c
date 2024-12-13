@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 15:27:07 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/13 13:35:51 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/13 16:07:17 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ static void	ft_listclear(t_gnl_list **lst, void (*del)(void *))
 		{
 			current = (*lst)->next;
 			del((*lst)->content);
+			free(*lst);
 			*lst = current;
 		}
 	}
