@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 16:26:07 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/06 14:52:51 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/12 14:31:57 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ void	get_map(char *line, t_map *map)
 {
 	t_list	**map_list;
 
+	check_textures(map);
 	map_list = malloc(sizeof(t_list *));
 	if (!map_list)
 		return (ft_free(&line), safe_exit(map, MALLOC));
@@ -69,7 +70,6 @@ void	get_map(char *line, t_map *map)
 	}
 	list_to_arr(map_list, map);
 	check_map(map);
-	check_textures(map);
 }
 
 void	set_colors(char **colors, int *color, t_map *map)
