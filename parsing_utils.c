@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 16:26:07 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/12 14:31:57 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/13 13:45:10 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,47 +28,50 @@ void	get_color(char *line, int *color, t_map *map)
 	set_colors(color_list, color, map);
 }
 
-void	create_and_add(char *line, t_list **map_list, t_map *map)
+void	fix_map(t_list **map_list, t_map *map)
 {
-	t_list	*new;
-	char	*content;
+	t_list	*current;
+	char	*fixed_content;
 
-	content = ft_strtrim(line, "\n");
-	ft_free(&line);
-	if (!content)
-		return (free_list(map_list), safe_exit(map, MALLOC));
-	new = ft_lstnew(content);
-	if (!new)
+	current = *map_list;
 	{
-		ft_free(&content);
-		free_list(map_list);
-		safe_exit(map, MALLOC);
+		if ((int)ft_strlen(current->content) < map->column)
+		{
+			fixed_content = ft_calloc(map->column + 1, sizeof(char));
+			if (!fixed_content)
+				return (ft_lstclear(map_list, &free), safe_exit(map, MALLOC));
+			ft_memset(fixed_content, ' ', map->column);
+			ft_memcpy(fixed_content, current->content,
+				ft_strlen(current->content));
+			free(current->content);
+			current->content = fixed_content;
+		}
+		current = current->next;
 	}
-	ft_lstadd_back(map_list, new);
 }
 
 void	get_map(char *line, t_map *map)
 {
-	t_list	**map_list;
+	t_list	*map_list;
 
 	check_textures(map);
-	map_list = malloc(sizeof(t_list *));
-	if (!map_list)
-		return (ft_free(&line), safe_exit(map, MALLOC));
-	*map_list = NULL;
+	map_list = NULL;
 	while (line)
 	{
+		if ((int)(ft_strlen(line)) > map->column)
+			map->column = ft_strlen(line);
 		map->row++;
 		if (*line == '\n')
 		{
 			ft_free(&line);
-			free_list(map_list);
+			ft_lstclear(&map_list, &free);
 			safe_exit(map, MAP);
 		}
-		create_and_add(line, map_list, map);
+		create_and_add(line, &map_list, map);
 		line = get_next_line(map->fd);
 	}
-	list_to_arr(map_list, map);
+	fix_map(&map_list, map);
+	list_to_arr(&map_list, &(map->map), map);
 	check_map(map);
 }
 

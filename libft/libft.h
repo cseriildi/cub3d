@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 16:31:33 by icseri            #+#    #+#             */
-/*   Updated: 2024/11/28 15:31:51 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/13 10:19:09 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,13 @@ int		ft_putnbr_hex(unsigned int nb, char format);
 int		ft_putnbr_ptr(uintptr_t nb);
 int		ft_putnbr_unsigned(unsigned int nb);
 int		ft_printf(const char *str, ...);
+
+typedef struct s_gnl_list
+{
+	int					fd;
+	char				*content;
+	struct s_gnl_list	*next;
+}	t_gnl_list;
 
 char	*get_next_line(int fd);
 char	*line_search(char *s);

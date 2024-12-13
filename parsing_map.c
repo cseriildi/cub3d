@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_map.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
+/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 12:32:37 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/11 13:40:25 by dcsicsak         ###   ########.fr       */
+/*   Updated: 2024/12/13 13:44:23 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ bool	door_is_good(int row, int col, t_map *map)
 		|| is_in(row, col, map) == false
 		|| (east && (west == false || south || north))
 		|| (north && (south == false || east || west))
-		|| (east == false && north == false))
+		|| (east == false && north == false)
+		|| map->door.count != 1)
 		return (false);
 	return (true);
 }
@@ -83,31 +84,26 @@ void	check_map(t_map *map)
 		safe_exit(map, MAP);
 }
 
-void	list_to_arr(t_list **map_list, t_map *map)
+void	list_to_arr(t_list **map_list, char ***arr, t_map *map)
 {
 	int		row;
+	int		column;
 	t_list	*current;
 
-	map->map = ft_calloc(sizeof(char *), map->row + 1);
-	if (!map->map)
-		return (free_list(map_list), safe_exit(map, MALLOC));
-	current = *map_list;
-	while (current)
-	{
-		if ((int)(ft_strlen(current->content)) > map->column)
-			map->column = ft_strlen(current->content);
-		current = current->next;
-	}
+	if (!map_list)
+		return ;
+	column = 0;
+	*arr = ft_calloc(sizeof(char *), ft_lstsize(*map_list) + 1);
+	if (!*arr)
+		return (ft_lstclear(map_list, &free), safe_exit(map, MALLOC));
 	current = *map_list;
 	row = -1;
 	while (current)
 	{
-		map->map[++row] = ft_calloc(map->column + 1, 1);
-		if (!map->map[row])
-			return (free_list(map_list), safe_exit(map, MALLOC));
-		ft_memset(map->map[row], ' ', map->column);
-		ft_memcpy(map->map[row], current->content, ft_strlen(current->content));
+		(*arr)[++row] = ft_strdup(current->content);
+		if (!(*arr)[row])
+			return (ft_lstclear(map_list, &free), safe_exit(map, MALLOC));
 		current = current->next;
 	}
-	free_list(map_list);
+	ft_lstclear(map_list, &free);
 }

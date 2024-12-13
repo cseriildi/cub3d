@@ -6,55 +6,32 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:34:28 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/12 15:43:11 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/13 13:44:52 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	*ft_realloc_array(void *array, size_t old_count, size_t new_count,
-	size_t elem_size)
-{
-	void	*new_array;
-
-	new_array = malloc(new_count * elem_size);
-	if (!new_array)
-		return (NULL);
-	if (array)
-	{
-		ft_memcpy(new_array, array, old_count * elem_size);
-		free_array(array);
-	}
-	return (new_array);
-}
-
 void	get_texture(char *line, t_sprite *sprite, t_map *map)
 {
 	char	*new_texture;
+	t_list	*new_element;
 
 	if (ft_strlen(line) <= 3)
 		return (ft_free(&line), safe_exit(map, TEXTURE));
 	new_texture = ft_substr(line, 3, ft_strlen(line) - 4);
 	ft_free(&line);
-	sprite->textures = ft_realloc_array(sprite->textures, sprite->count,
-			sprite->count + 1, sizeof(char *));
-	sprite->sizes = ft_realloc_array(sprite->sizes, sprite->count,
-			sprite->count + 1, sizeof(int *));
-	if (!sprite->textures || !sprite->sizes || !new_texture)
+	new_element = ft_lstnew(new_texture);
+	if (!new_texture || !new_element)
 	{
 		ft_free(&new_texture);
 		safe_exit(map, MALLOC);
 	}
-	sprite->textures[sprite->count] = new_texture;
-	sprite->sizes[sprite->count] = malloc(sizeof(int) * 2);
-	if (!sprite->sizes[sprite->count])
-		safe_exit(map, MALLOC);
-	sprite->sizes[sprite->count][0] = 0;
-	sprite->sizes[sprite->count][1] = 0;
+	ft_lstadd_back(&sprite->texture_list, new_element);
 	sprite->count++;
 }
 
-void	set_sizes(int **sizes, char **textures, int count, t_map *map)
+void	set_sizes(t_sprite *sprite, t_map *map)
 {
 	int		i;
 	char	*line;
@@ -62,9 +39,9 @@ void	set_sizes(int **sizes, char **textures, int count, t_map *map)
 	int		fd;
 
 	i = -1;
-	while (++i < count)
+	while (sprite->textures && sprite->textures[++i])
 	{
-		fd = safe_open(textures[i], false, map);
+		fd = safe_open(sprite->textures[i], false, map);
 		line = get_next_line(fd);
 		ft_free(&line);
 		line = get_next_line(fd);
@@ -77,8 +54,8 @@ void	set_sizes(int **sizes, char **textures, int count, t_map *map)
 		ft_free(&line);
 		if (!numbers)
 			safe_exit(map, MALLOC);
-		sizes[i][0] = ft_atoi(numbers[0]);
-		sizes[i][1] = ft_atoi(numbers[1]);
+		sprite->sizes[i][0] = ft_atoi(numbers[0]);
+		sprite->sizes[i][1] = ft_atoi(numbers[1]);
 		free_array(&numbers);
 	}
 }
@@ -87,15 +64,66 @@ void	check_textures(t_map *map)
 {
 	if (map->ceiling < 0 || map->floor < 0)
 		safe_exit(map, COLOR);
-	if (!map->north.textures || !map->south.textures
-		|| !map->west.textures || !map->east.textures)
+	if (!map->north.texture_list || !map->south.texture_list
+		|| !map->west.texture_list || !map->east.texture_list)
 		safe_exit(map, TEXTURE);
-	set_sizes(map->north.sizes, map->north.textures, map->north.count, map);
-	set_sizes(map->south.sizes, map->south.textures, map->south.count, map);
-	set_sizes(map->west.sizes, map->west.textures, map->west.count, map);
-	set_sizes(map->east.sizes, map->east.textures, map->east.count, map);
-	if (map->door.textures)
-		set_sizes(map->door.sizes, map->door.textures, map->door.count, map);
 	set_counts(map->data);
-	allocate_textures(map->data);
+	set_sizes(&map->north, map);
+	set_sizes(&map->south, map);
+	set_sizes(&map->west, map);
+	set_sizes(&map->east, map);
+	set_sizes(&map->door, map);
+	list_to_arr(&map->north.texture_list, &map->north.textures, map);
+	list_to_arr(&map->south.texture_list, &map->south.textures, map);
+	list_to_arr(&map->west.texture_list, &map->west.textures, map);
+	list_to_arr(&map->east.texture_list, &map->east.textures, map);
+	list_to_arr(&map->door.texture_list, &map->door.textures, map);
+}
+
+void	create_and_add(char *line, t_list **map_list, t_map *map)
+{
+	t_list	*new;
+	char	*content;
+
+	content = ft_strtrim(line, "\n");
+	ft_free(&line);
+	if (!content)
+		return (ft_lstclear(map_list, &free), safe_exit(map, MALLOC));
+	new = ft_lstnew(content);
+	if (!new)
+	{
+		ft_free(&content);
+		ft_lstclear(map_list, &free);
+		safe_exit(map, MALLOC);
+	}
+	ft_lstadd_back(map_list, new);
+}
+
+void	allocate_textures(t_data *data)
+{
+	int	i;
+
+	data->textures = ft_calloc(5, sizeof(t_texture *));
+	if (!data->textures)
+		safe_exit(&data->map, MALLOC);
+	data->textures[0] = ft_calloc(data->map.north.count + 1, sizeof(t_texture));
+	data->textures[1] = ft_calloc(data->map.east.count + 1, sizeof(t_texture));
+	data->textures[2] = ft_calloc(data->map.south.count + 1, sizeof(t_texture));
+	data->textures[3] = ft_calloc(data->map.west.count + 1, sizeof(t_texture));
+	data->textures[4] = ft_calloc(data->map.door.count + 1, sizeof(t_texture));
+	if (!data->textures[0] || !data->textures[1] || !data->textures[2]
+		|| !data->textures[3] || !data->textures[4])
+	{
+		i = -1;
+		while (++i < 5)
+		{
+			if (data->textures[i])
+			{
+				free(data->textures[i]);
+				data->textures[i] = NULL;
+			}
+		}
+		free(data->textures);
+		return (data->textures = NULL, safe_exit(&data->map, MALLOC));
+	}
 }

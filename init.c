@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:25:09 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/12 15:19:33 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/13 13:27:07 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,17 +46,12 @@ void	init_mlx(t_data *data)
 	data->win = mlx_new_window(data->mlx, WIDTH, HEIGHT, "cub3d");
 	if (!data->win)
 	{
-		mlx_destroy_display(data->mlx);
-		free(data->mlx);
 		print_error(1, "Error: Failed to create window\n");
 		safe_exit(&data->map, EXIT_FAILURE);
 	}
 	data->img = mlx_new_image(data->mlx, WIDTH, HEIGHT);
 	if (!data->img)
 	{
-		mlx_destroy_window(data->mlx, data->win);
-		mlx_destroy_display(data->mlx);
-		free(data->mlx);
 		print_error(1, "Error: Failed to create image\n");
 		safe_exit(&data->map, EXIT_FAILURE);
 	}

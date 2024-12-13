@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:01:37 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/11 17:38:12 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/13 09:01:23 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	draw_line(t_data *data, t_line *line)
 	draw_line_with_params(data, line, &params);
 }
 
-void	something(double step, int x, int *wall, t_texture	*texture)
+void	draw_texture_column(double step, int x, int *wall, t_texture *texture)
 {
 	int	texture_y;
 	int	y;
@@ -120,6 +120,5 @@ void	draw_vertical_line(t_data *data, int x, int wall_height)
 		texture->position = -original_wall_top * step;
 	else
 		texture->position = 0;
-	//rename
-	something(step, x, wall, texture);
+	draw_texture_column(step, x, wall, texture);
 }

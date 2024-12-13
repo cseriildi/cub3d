@@ -3,11 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csicsi <csicsi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:35 by icseri            #+#    #+#             */
-
-/*   Updated: 2024/12/13 12:55:59 by csicsi           ###   ########.fr       */
+/*   Updated: 2024/12/13 13:45:15 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +71,7 @@ typedef struct s_sprite
 	char	**textures;
 	int		**sizes;
 	int		count;
+	t_list	*texture_list;
 }	t_sprite;
 
 typedef struct s_data	t_data;
@@ -222,7 +222,7 @@ void	get_texture(char *line, t_sprite *sprite, t_map *map);
 void	get_color(char *line, int *color, t_map *map);
 void	get_map(char *line, t_map *map);
 void	check_map(t_map *map);
-void	list_to_arr(t_list **map_list, t_map *map);
+void	list_to_arr(t_list **map_list, char ***arr, t_map *map);
 void	check_textures(t_map *map);
 int		safe_open(char	*filename, bool is_cub, t_map *map);
 void	allocate_textures(t_data *data);
@@ -241,7 +241,6 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 void	print_error(int count, ...);
 void	safe_exit(t_map *map, int exit_code);
 void	free_array(char ***arr);
-void	free_list(t_list **list);
 
 //raycasting
 void	cast_rays(t_data *data);
@@ -269,5 +268,8 @@ void	update_player_position(t_data *data, int keycode);
 
 //movement bonus
 void	check_and_open_door_nearby(t_data *data, double new_x, double new_y);
+
+void	create_and_add(char *line, t_list **map_list, t_map *map);
+void	free_texture(t_sprite *texture);
 
 #endif
