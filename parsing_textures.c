@@ -6,21 +6,21 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:34:28 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/13 13:44:52 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/13 15:52:55 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	get_texture(char *line, t_sprite *sprite, t_map *map)
+void	get_texture(t_sprite *sprite, t_map *map)
 {
 	char	*new_texture;
 	t_list	*new_element;
 
-	if (ft_strlen(line) <= 3)
-		return (ft_free(&line), safe_exit(map, TEXTURE));
-	new_texture = ft_substr(line, 3, ft_strlen(line) - 4);
-	ft_free(&line);
+	if (ft_strlen(map->data->line) <= 3)
+		return (safe_exit(map, TEXTURE));
+	new_texture = ft_substr(map->data->line, 3, ft_strlen(map->data->line) - 4);
+	ft_free(&map->data->line);
 	new_element = ft_lstnew(new_texture);
 	if (!new_texture || !new_element)
 	{
@@ -34,7 +34,6 @@ void	get_texture(char *line, t_sprite *sprite, t_map *map)
 void	set_sizes(t_sprite *sprite, t_map *map)
 {
 	int		i;
-	char	*line;
 	char	**numbers;
 	int		fd;
 
@@ -42,16 +41,16 @@ void	set_sizes(t_sprite *sprite, t_map *map)
 	while (sprite->textures && sprite->textures[++i])
 	{
 		fd = safe_open(sprite->textures[i], false, map);
-		line = get_next_line(fd);
-		ft_free(&line);
-		line = get_next_line(fd);
-		ft_free(&line);
-		line = get_next_line(fd);
+		map->data->line = get_next_line(fd);
+		ft_free(&map->data->line);
+		map->data->line = get_next_line(fd);
+		ft_free(&map->data->line);
+		map->data->line = get_next_line(fd);
 		close(fd);
-		if (!line || ft_strlen(line) < 10)
-			return (ft_free(&line), safe_exit(map, TEXTURE));
-		numbers = ft_split(line + 1, ' ');
-		ft_free(&line);
+		if (!map->data->line || ft_strlen(map->data->line) < 10)
+			safe_exit(map, TEXTURE);
+		numbers = ft_split(map->data->line + 1, ' ');
+		ft_free(&map->data->line);
 		if (!numbers)
 			safe_exit(map, MALLOC);
 		sprite->sizes[i][0] = ft_atoi(numbers[0]);
@@ -80,13 +79,13 @@ void	check_textures(t_map *map)
 	list_to_arr(&map->door.texture_list, &map->door.textures, map);
 }
 
-void	create_and_add(char *line, t_list **map_list, t_map *map)
+void	create_and_add(t_list **map_list, t_map *map)
 {
 	t_list	*new;
 	char	*content;
 
-	content = ft_strtrim(line, "\n");
-	ft_free(&line);
+	content = ft_strtrim(map->data->line, "\n");
+	ft_free(&map->data->line);
 	if (!content)
 		return (ft_lstclear(map_list, &free), safe_exit(map, MALLOC));
 	new = ft_lstnew(content);

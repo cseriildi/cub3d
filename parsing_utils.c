@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 16:26:07 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/13 13:45:10 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/13 15:57:24 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,14 @@
 void	set_colors(char **colors, int *color, t_map *map);
 int		get_number(char *str, char **colors, t_map *map);
 
-void	get_color(char *line, int *color, t_map *map)
+void	get_color(int *color, t_map *map)
 {
 	char	**color_list;
 
-	if (*color != -1 || ft_strlen(line) <= 2)
-		return (ft_free(&line), safe_exit(map, COLOR));
-	color_list = ft_split(line + 2, ',');
-	ft_free(&line);
+	if (*color != -1 || ft_strlen(map->data->line) <= 2)
+		return (safe_exit(map, COLOR));
+	color_list = ft_split(map->data->line + 2, ',');
+	ft_free(&map->data->line);
 	if (!color_list)
 		safe_exit(map, MALLOC);
 	set_colors(color_list, color, map);
@@ -34,6 +34,7 @@ void	fix_map(t_list **map_list, t_map *map)
 	char	*fixed_content;
 
 	current = *map_list;
+	while (current)
 	{
 		if ((int)ft_strlen(current->content) < map->column)
 		{
@@ -50,25 +51,25 @@ void	fix_map(t_list **map_list, t_map *map)
 	}
 }
 
-void	get_map(char *line, t_map *map)
+void	get_map(t_map *map)
 {
 	t_list	*map_list;
 
 	check_textures(map);
 	map_list = NULL;
-	while (line)
+	while (map->data->line)
 	{
-		if ((int)(ft_strlen(line)) > map->column)
-			map->column = ft_strlen(line);
+		if ((int)(ft_strlen(map->data->line)) > map->column)
+			map->column = ft_strlen(map->data->line);
 		map->row++;
-		if (*line == '\n')
+		if (*(map->data->line) == '\n')
 		{
-			ft_free(&line);
 			ft_lstclear(&map_list, &free);
 			safe_exit(map, MAP);
 		}
-		create_and_add(line, &map_list, map);
-		line = get_next_line(map->fd);
+		create_and_add(&map_list, map);
+		ft_free(&map->data->line);
+		map->data->line = get_next_line(map->fd);
 	}
 	fix_map(&map_list, map);
 	list_to_arr(&map_list, &(map->map), map);

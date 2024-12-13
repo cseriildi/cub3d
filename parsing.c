@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:55:03 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/12 14:28:26 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/13 15:53:09 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,29 +51,26 @@ int	safe_open(char	*filename, bool is_cub, t_map *map)
 
 void	parse_file(t_map *map)
 {
-	char	*line;
-
-	line = get_next_line(map->fd);
-	while (line)
+	map->data->line = get_next_line(map->fd);
+	while (map->data->line)
 	{
-		if (ft_strncmp(line, "NO ", 3) == 0)
-			get_texture(line, &map->north, map);
-		else if (ft_strncmp(line, "EA ", 3) == 0)
-			get_texture(line, &map->east, map);
-		else if (ft_strncmp(line, "WE ", 3) == 0)
-			get_texture(line, &map->west, map);
-		else if (ft_strncmp(line, "SO ", 3) == 0)
-			get_texture(line, &map->south, map);
-		else if (map->is_bonus && ft_strncmp(line, "DO ", 3) == 0)
-			get_texture(line, &map->door, map);
-		else if (ft_strncmp(line, "C ", 2) == 0)
-			get_color(line, &map->ceiling, map);
-		else if (ft_strncmp(line, "F ", 2) == 0)
-			get_color(line, &map->floor, map);
-		else if (ft_strncmp(line, "\n", 2) != 0)
-			return (get_map(line, map));
-		else
-			ft_free(&line);
-		line = get_next_line(map->fd);
+		if (ft_strncmp(map->data->line, "NO ", 3) == 0)
+			get_texture(&map->north, map);
+		else if (ft_strncmp(map->data->line, "EA ", 3) == 0)
+			get_texture(&map->east, map);
+		else if (ft_strncmp(map->data->line, "WE ", 3) == 0)
+			get_texture(&map->west, map);
+		else if (ft_strncmp(map->data->line, "SO ", 3) == 0)
+			get_texture(&map->south, map);
+		else if (map->is_bonus && ft_strncmp(map->data->line, "DO ", 3) == 0)
+			get_texture(&map->door, map);
+		else if (ft_strncmp(map->data->line, "C ", 2) == 0)
+			get_color(&map->ceiling, map);
+		else if (ft_strncmp(map->data->line, "F ", 2) == 0)
+			get_color(&map->floor, map);
+		else if (ft_strncmp(map->data->line, "\n", 2) != 0)
+			return (get_map(map));
+		ft_free(&map->data->line);
+		map->data->line = get_next_line(map->fd);
 	}
 }
