@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:51:15 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/13 13:05:14 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/13 13:06:33 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ void	safe_exit(t_map *map, int exit_code)
 	i = 0;
 	if (map->data->textures)
 	{
+		i = 0;
 		while (i < 5 && map->data->textures[i])
 		{
 			j = -1;

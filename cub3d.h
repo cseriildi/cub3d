@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/13 11:06:55 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/13 13:06:39 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 # define FIELD_OF_VIEW 1.047198
 # define DBL_MAX 1.7976931348623157E+308
 # define MOUSE_SENSITIVITY 0.002
-# define NUM_FRAMES 4
+# define NUM_FRAMES 100
 # define FRAME_DURATION 0.1
 
 # define PLAYER_COLOR 0xFF0000 // Red
