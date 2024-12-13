@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 16:26:07 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/13 13:45:10 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/13 15:01:12 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	fix_map(t_list **map_list, t_map *map)
 	char	*fixed_content;
 
 	current = *map_list;
+	while (current)
 	{
 		if ((int)ft_strlen(current->content) < map->column)
 		{
