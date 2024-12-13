@@ -6,14 +6,14 @@
 #    By: icseri <icseri@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/20 10:41:15 by icseri            #+#    #+#              #
-#    Updated: 2024/12/12 14:44:33 by icseri           ###   ########.fr        #
+#    Updated: 2024/12/13 16:40:26 by icseri           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
-NAME = cub3d
+NAME = cub3D
 
-BONUS_NAME = cub3d_bonus
+BONUS_NAME = cub3D_bonus
 
 MLX_FLAGS = -lmlx -lXext -lX11 -lm -lz -lbsd
 
@@ -42,7 +42,7 @@ BONUS_OBJS = ${BONUS_SRCS:.c=.o}
 
 COMP = cc
 
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 
 all: ${NAME}
 
@@ -66,4 +66,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean bonus reNAME = cub3d
+.PHONY: all clean fclean bonus reNAME = cub3D

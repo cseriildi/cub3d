@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 12:32:37 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/13 13:44:23 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/13 16:38:14 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,12 +87,10 @@ void	check_map(t_map *map)
 void	list_to_arr(t_list **map_list, char ***arr, t_map *map)
 {
 	int		row;
-	int		column;
 	t_list	*current;
 
 	if (!map_list)
 		return ;
-	column = 0;
 	*arr = ft_calloc(sizeof(char *), ft_lstsize(*map_list) + 1);
 	if (!*arr)
 		return (ft_lstclear(map_list, &free), safe_exit(map, MALLOC));
