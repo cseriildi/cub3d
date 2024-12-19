@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pvass <pvass@student.42.fr>                +#+  +:+       +#+         #
+#    By: icseri <icseri@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/04 10:47:29 by icseri            #+#    #+#              #
-#    Updated: 2024/09/17 14:38:42 by pvass            ###   ########.fr        #
+#    Updated: 2024/12/13 16:41:25 by icseri           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ get_next_line.c get_next_line_utils.c
 
 OBJS = ${SRCS:.c=.o}
 
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 
 all: ${NAME}
 

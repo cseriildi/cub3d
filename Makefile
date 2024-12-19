@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: icseri <icseri@student.42.fr>              +#+  +:+       +#+         #
+#    By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/20 10:41:15 by icseri            #+#    #+#              #
-#    Updated: 2024/12/12 14:44:33 by icseri           ###   ########.fr        #
+#    Updated: 2024/12/19 07:55:28 by dcsicsak         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
-NAME = cub3d
+NAME = cub3D
 
-BONUS_NAME = cub3d_bonus
+BONUS_NAME = cub3D_bonus
 
 MLX_FLAGS = -lmlx -lXext -lX11 -lm -lz -lbsd
 
@@ -31,10 +31,12 @@ COMMON_SRCS = init.c \
 				draw_utils.c \
 				movement_utils.c \
 				mlx_utils.c \
+				movement.c \
+				mlx.c
 
-SRCS = main.c movement.c mlx.c ${COMMON_SRCS}
+SRCS = main.c  ${COMMON_SRCS}
 
-BONUS_SRCS = main_bonus.c mlx_bonus.c movement_bonus.c ${COMMON_SRCS}
+BONUS_SRCS = main_bonus.c ${COMMON_SRCS}
 
 OBJS = ${SRCS:.c=.o}
 
@@ -42,7 +44,7 @@ BONUS_OBJS = ${BONUS_SRCS:.c=.o}
 
 COMP = cc
 
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 
 all: ${NAME}
 
@@ -66,4 +68,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean bonus reNAME = cub3d
+.PHONY: all clean fclean bonus reNAME = cub3D
