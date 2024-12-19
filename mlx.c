@@ -3,20 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   mlx.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 19:36:26 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/12 14:41:38 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/19 07:53:57 by dcsicsak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+
+double	get_time(void)
+{
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec + tv.tv_usec / 1000000.0);
+}
+
+void	update_animation_frame(t_data *data)
+{
+	double	current_time;
+
+	current_time = get_time();
+	if (current_time - data->last_frame >= FRAME_DURATION)
+	{
+		data->frame = (data->frame + 1) % NUM_FRAMES;
+		data->last_frame = current_time;
+	}
+}
 
 void	render_scene(t_data *data)
 {
 	int	x;
 	int	wall_height;
 
+	update_animation_frame(data);
 	cast_rays(data);
 	wall_height = 0;
 	x = -1;
@@ -46,6 +68,9 @@ int	key_hook(int keycode, t_data *data)
 	data->addr = mlx_get_data_addr(data->img, &data->bpp,
 			&data->line_len, &data->endian);
 	update_player_position(data, keycode);
+	if (keycode == KEY_E)
+		check_and_open_door_nearby(data, data->player_x + 0.5,
+			data->player_y + 0.5);
 	render_scene(data);
 	return (0);
 }

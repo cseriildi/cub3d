@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: icseri <icseri@student.42.fr>              +#+  +:+       +#+         #
+#    By: dcsicsak <dcsicsak@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/20 10:41:15 by icseri            #+#    #+#              #
-#    Updated: 2024/12/13 16:40:26 by icseri           ###   ########.fr        #
+#    Updated: 2024/12/19 07:55:28 by dcsicsak         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,10 +31,12 @@ COMMON_SRCS = init.c \
 				draw_utils.c \
 				movement_utils.c \
 				mlx_utils.c \
+				movement.c \
+				mlx.c
 
-SRCS = main.c movement.c mlx.c ${COMMON_SRCS}
+SRCS = main.c  ${COMMON_SRCS}
 
-BONUS_SRCS = main_bonus.c mlx_bonus.c movement_bonus.c ${COMMON_SRCS}
+BONUS_SRCS = main_bonus.c ${COMMON_SRCS}
 
 OBJS = ${SRCS:.c=.o}
 
