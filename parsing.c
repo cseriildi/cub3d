@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:55:03 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/13 15:53:09 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/19 08:45:43 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,12 @@ void	parsing(int argc, char **argv, t_map *map)
 	}
 	map->fd = safe_open(argv[1], true, map);
 	parse_file(map);
-	close(map->fd);
+	if (close(map->fd) == -1)
+	{
+		print_error(4, "Error\n", argv[1], " ", strerror(errno));
+		safe_exit(map, EXIT_FAILURE);
+	}
+	check_map(map);
 }
 
 int	safe_open(char	*filename, bool is_cub, t_map *map)

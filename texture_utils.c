@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 14:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/13 15:20:29 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/19 11:01:10 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,27 +81,50 @@ void	load_all_textures(t_data *data)
 			data->map.door.textures[i]);
 }
 
-void	free_texture(t_sprite *texture)
+static void	free_texture(t_sprite *texture)
 {
 	int	i;
 
 	if (texture)
 	{
-		i = 0;
-		if (texture->textures)
-		{
-			while (texture->textures[i])
-				ft_free(&texture->textures[i++]);
-			free(texture->textures);
-			texture->textures = NULL;
-		}
-		i = 0;
+		free_array(&texture->textures);
+		i = -1;
 		if (texture->sizes)
 		{
-			while (i < texture->count)
-				free(texture->sizes[i++]);
+			while (++i < texture->count)
+				free(texture->sizes[i]);
 			free(texture->sizes);
 			texture->sizes = NULL;
 		}
+		ft_lstclear(&texture->texture_list, &free);
 	}
+}
+
+void	free_textures(t_data *data)
+{
+	int	i;
+	int	j;
+
+	if (data->textures)
+	{
+		i = -1;
+		while (++i < 5 && data->textures[i])
+		{
+			j = -1;
+			while (data->textures[i][++j].img != NULL)
+				mlx_destroy_image(data->mlx, data->textures[i][j].img);
+			free(data->textures[i]);
+		}
+		free(data->textures);
+	}
+	free_texture(&data->map.north);
+	free_texture(&data->map.east);
+	free_texture(&data->map.west);
+	free_texture(&data->map.south);
+	free_texture(&data->map.door);
+	ft_lstclear(&data->map.north.texture_list, &free);
+	ft_lstclear(&data->map.east.texture_list, &free);
+	ft_lstclear(&data->map.west.texture_list, &free);
+	ft_lstclear(&data->map.south.texture_list, &free);
+	ft_lstclear(&data->map.door.texture_list, &free);
 }
