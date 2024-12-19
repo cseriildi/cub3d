@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:34:28 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/13 15:52:55 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/19 08:47:30 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	get_texture(t_sprite *sprite, t_map *map)
 	if (!new_texture || !new_element)
 	{
 		ft_free(&new_texture);
+		ft_lstdelone(new_element, &free);
 		safe_exit(map, MALLOC);
 	}
 	ft_lstadd_back(&sprite->texture_list, new_element);
@@ -46,7 +47,8 @@ void	set_sizes(t_sprite *sprite, t_map *map)
 		map->data->line = get_next_line(fd);
 		ft_free(&map->data->line);
 		map->data->line = get_next_line(fd);
-		close(fd);
+		if (close(fd) == -1)
+			safe_exit(map, TEXTURE);
 		if (!map->data->line || ft_strlen(map->data->line) < 10)
 			safe_exit(map, TEXTURE);
 		numbers = ft_split(map->data->line + 1, ' ');

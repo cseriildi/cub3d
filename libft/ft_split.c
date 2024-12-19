@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cseriildii <cseriildii@student.42.fr>      +#+  +:+       +#+        */
+/*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 08:55:08 by icseri            #+#    #+#             */
-/*   Updated: 2024/05/24 22:27:15 by cseriildii       ###   ########.fr       */
+/*   Updated: 2024/12/19 11:09:50 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,20 @@ static int	occ(char const *str, char c)
 		str++;
 	}
 	return (counter);
+}
+
+static void	free_array(char ***arr)
+{
+	int	i;
+
+	i = 0;
+	if (arr && *arr)
+	{
+		while ((*arr)[i])
+			ft_free(&(*arr)[i++]);
+		free(*arr);
+		*arr = NULL;
+	}
 }
 
 static char	**create_empty_array(char const *str, char c)
@@ -53,7 +67,7 @@ static char	**create_empty_array(char const *str, char c)
 		}
 		words[i] = ft_calloc(len + 1, 1);
 		if (words[i] == NULL)
-			return (ft_free(words), NULL);
+			return (free_array(&words), NULL);
 	}
 	return (words);
 }

@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 16:26:07 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/13 15:57:24 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/19 09:35:53 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,13 @@ void	get_map(t_map *map)
 		}
 		create_and_add(&map_list, map);
 		ft_free(&map->data->line);
+		errno = 0;
 		map->data->line = get_next_line(map->fd);
+		if (errno)
+			return (ft_lstclear(&map_list, &free), safe_exit(map, MALLOC));
 	}
 	fix_map(&map_list, map);
 	list_to_arr(&map_list, &(map->map), map);
-	check_map(map);
 }
 
 void	set_colors(char **colors, int *color, t_map *map)

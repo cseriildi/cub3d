@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 12:32:37 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/13 16:41:07 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/19 10:34:20 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ void	check_map(t_map *map)
 	int		row;
 	int		column;
 
+	if (!map->map)
+		safe_exit(map, MAP);
 	player_count = 0;
 	row = -1;
 	while (map->map[++row])
@@ -100,7 +102,10 @@ void	list_to_arr(t_list **map_list, char ***arr, t_map *map)
 	{
 		(*arr)[++row] = ft_strdup(current->content);
 		if (!(*arr)[row])
-			return (ft_lstclear(map_list, &free), safe_exit(map, MALLOC));
+		{
+			ft_lstclear(map_list, &free);
+			safe_exit(map, MALLOC);
+		}
 		current = current->next;
 	}
 	ft_lstclear(map_list, &free);

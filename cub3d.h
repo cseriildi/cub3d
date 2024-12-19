@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:43:35 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/13 15:52:55 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/19 10:56:25 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -271,6 +271,6 @@ void	update_player_position(t_data *data, int keycode);
 void	check_and_open_door_nearby(t_data *data, double new_x, double new_y);
 
 void	create_and_add(t_list **map_list, t_map *map);
-void	free_texture(t_sprite *texture);
+void	free_textures(t_data *data);
 
 #endif

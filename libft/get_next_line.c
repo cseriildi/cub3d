@@ -6,7 +6,7 @@
 /*   By: icseri <icseri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 15:27:07 by icseri            #+#    #+#             */
-/*   Updated: 2024/12/13 16:07:17 by icseri           ###   ########.fr       */
+/*   Updated: 2024/12/19 08:35:19 by icseri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ char	*get_next_line(int fd)
 		return (ft_listclear(&list, &free), NULL);
 	read_chars = get_node(&list, fd);
 	if (!read_chars)
-		return (NULL);
+		return (ft_listclear(&list, &free), NULL);
 	read_chars->content = read_fd(fd, read_chars->content);
 	if (!read_chars->content)
 		return (remove_node(&list, read_chars), NULL);
